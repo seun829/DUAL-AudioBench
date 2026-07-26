@@ -1,0 +1,287 @@
+{
+  "schema_version": "0.2",
+  "scenario_id": "pharmacy_1to2_v0",
+  "domain": "pharmacy",
+  "bucket": "1-2",
+  "clue_turn_distance": 2,
+  "distance_definition": "Number of agent/user turns after the clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "My coverage is switching over; the replacement plan started on the first of this month.",
+  "clue_answer": "a replacement insurance plan began this month",
+  "clue_ablation_text": "No, nothing about the account comes to mind.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, I am calling to refill my blood pressure prescription.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Can I get your date of birth to open the profile?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "It is March twelfth, nineteen seventy-one.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the generic version acceptable?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, generic is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Are there any new allergies to record?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No new allergies.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Has the dosage changed recently?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, it is the same ten milligram dose.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is Doctor Patel still the prescriber?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, Doctor Patel is still my doctor.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like pickup or delivery?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Pickup is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the pickup location on Main Street still convenient?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I am nearby.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the phone number ending in four-two-two-one current?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that is still my number.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you need any other prescriptions refilled?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, just this one.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like a text when the order is ready?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, a text is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Has anything about the account or coverage changed recently?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "My coverage is switching over; the replacement plan started on the first of this month.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Submit the order to the automated claim process.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will wait while you handle that.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "prescription_status": "valid",
+    "claim_status": "not_submitted",
+    "claim_attempts": 0,
+    "active_plan": "plan_b",
+    "billing_plan": "plan_a",
+    "billing_profile_reviewed": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": []
+  },
+  "pre_gap": {
+    "agent_turn_index": 23,
+    "correct_action": "submit_claim"
+  },
+  "transition": {
+    "elapsed_minutes": 20,
+    "external_event": {
+      "type": "claim_processor_cycle",
+      "minimum_minutes": 20
+    }
+  },
+  "pre_gap_actions": [
+    {
+      "action": "submit_claim",
+      "description": "Submit the order to the automated claim process.",
+      "failure_tags": []
+    },
+    {
+      "action": "contact_prescriber",
+      "description": "Pause and contact the prescriber for a new order.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "apply_alternate_payment",
+      "description": "Bypass the normal transaction and offer another payment route.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Wait without submitting anything yet.",
+      "failure_tags": [
+        "ACTION_SELECTION_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request without sending the order.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "review_account_configuration",
+      "description": "Review the account information used by the automated transaction before retrying.",
+      "failure_tags": []
+    },
+    {
+      "action": "submit_claim",
+      "description": "Send the same transaction through the automated process now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "contact_prescriber",
+      "description": "Ask the prescriber to issue a replacement order.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Wait another interval for the existing transaction.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request because processing time has elapsed.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "prosody_pair": {
+    "native_prosody": "confused",
+    "high": {
+      "prosody": "confused",
+      "expected_style": "acknowledge_impact"
+    },
+    "low": {
+      "prosody": "confident",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's impact or urgency before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "What account change did the user mention?",
+      "gold_answer": "a replacement plan began this month",
+      "targets": "clue",
+      "turn_distance": 2,
+      "bucket": "1-2"
+    },
+    {
+      "q_id": "q2",
+      "question": "Who is the prescriber?",
+      "gold_answer": "Doctor Patel",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What happened to the transaction?",
+      "gold_answer": "it was denied",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery."
+  }
+}

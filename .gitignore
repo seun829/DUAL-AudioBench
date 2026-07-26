@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+
+# Runtime-generated turn/replay audio.
+data/turn_audio/
+data/replay_audio/
+
+# Local smoke artifact created during development.
+results/fake_closed_loop_smoke_retention.png
