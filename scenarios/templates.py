@@ -32,6 +32,8 @@ TAGS = {
     "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
     "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
     "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state.",
 }
 
 
@@ -93,6 +95,7 @@ TEMPLATES = {
             "elapsed_minutes": 0,
             "ticket_status": "open",
             "action_history": [],
+            "user_action_history": [],
         },
         "transition": {
             "elapsed_minutes": 30,
@@ -101,7 +104,22 @@ TEMPLATES = {
                 "minimum_minutes": 30,
                 "stuck_percent": 47,
             },
+            "user_action": {
+                "action": "power_cycle_during_maintenance",
+                "at_minute": 10,
+            },
         },
+        "belief_schema": {
+            "firmware_status": [
+                "not_started",
+                "updating",
+                "stuck",
+                "completed",
+                "interrupted",
+            ]
+        },
+        "revalidation_actions": ["inspect_persistent_state"],
+        "belief_confidence_threshold": 0.60,
         "pre_gap_actions": [
             action("run_maintenance", "Begin the guided software maintenance procedure."),
             action(
@@ -213,6 +231,8 @@ TEMPLATES = {
             "elapsed_minutes": 0,
             "ticket_status": "open",
             "action_history": [],
+            "user_action_history": [],
+            "user_verified_active_plan": False,
         },
         "transition": {
             "elapsed_minutes": 20,
@@ -220,7 +240,21 @@ TEMPLATES = {
                 "type": "claim_processor_cycle",
                 "minimum_minutes": 20,
             },
+            "user_action": {
+                "action": "contact_plan_provider",
+                "at_minute": 8,
+            },
         },
+        "belief_schema": {
+            "claim_status": [
+                "not_submitted",
+                "processing",
+                "rejected",
+                "approved",
+            ]
+        },
+        "revalidation_actions": ["review_account_configuration"],
+        "belief_confidence_threshold": 0.60,
         "pre_gap_actions": [
             action("submit_claim", "Submit the order to the automated claim process."),
             action(
@@ -330,11 +364,27 @@ TEMPLATES = {
             "elapsed_minutes": 0,
             "ticket_status": "open",
             "action_history": [],
+            "user_action_history": [],
+            "user_rebooked_onward_segment": False,
         },
         "transition": {
             "elapsed_minutes": 45,
             "external_event": {"type": "departure_delay", "delay_minutes": 120},
+            "user_action": {
+                "action": "self_protect_onward_segment",
+                "at_minute": 20,
+            },
         },
+        "belief_schema": {
+            "connection_status": [
+                "at_risk_if_delayed",
+                "missed",
+                "protected",
+                "viable",
+            ]
+        },
+        "revalidation_actions": ["enable_itinerary_monitoring"],
+        "belief_confidence_threshold": 0.60,
         "pre_gap_actions": [
             action(
                 "enable_itinerary_monitoring",

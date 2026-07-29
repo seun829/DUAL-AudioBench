@@ -16,6 +16,8 @@ class Observation:
     instruction: str = ""
     action_menu: tuple[dict[str, str], ...] = ()
     style_menu: tuple[dict[str, str], ...] = ()
+    belief_schema: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    prior_state_belief: dict[str, dict[str, float]] = field(default_factory=dict)
     # Test adapters may use private metadata. Production prompts never serialize it.
     private: dict[str, Any] = field(default_factory=dict, repr=False, compare=False)
 
@@ -27,4 +29,6 @@ class AgentResponse:
     message: str = ""
     action: str | None = None
     response_style: str | None = None
+    state_belief: dict[str, dict[str, float]] = field(default_factory=dict)
+    needs_revalidation: bool | None = None
     raw: str | None = None

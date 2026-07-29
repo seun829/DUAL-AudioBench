@@ -19,8 +19,21 @@ class OracleAgent:
     def respond(self, observation, history):
         if observation.stage == "dialogue":
             return AgentResponse(message=observation.instruction)
-        action = observation.private["expected_action_label"]
-        if observation.stage == "pre_gap" and self.wrong_pre_description:
+        belief = {
+            variable: {
+                value: (
+                    1.0
+                    if value == str(observation.private["belief_targets"][variable])
+                    else 0.0
+                )
+                for value in values
+            }
+            for variable, values in observation.belief_schema.items()
+        }
+        action = observation.private.get("expected_action_label")
+        if not observation.action_menu:
+            action = None
+        elif observation.stage == "pre_gap" and self.wrong_pre_description:
             action = next(
                 item["label"]
                 for item in observation.action_menu
@@ -30,6 +43,8 @@ class OracleAgent:
         return AgentResponse(
             action=action,
             response_style=observation.private.get("expected_style_label"),
+            state_belief=belief,
+            needs_revalidation=False,
         )
 
 
@@ -135,6 +150,28 @@ class TransitionTests(unittest.TestCase):
         self.assertEqual(updated["departure_delay_minutes"], 120)
         self.assertEqual(updated["connection_status"], "missed")
 
+    def test_hidden_user_action_is_a_deterministic_transition_input(self):
+        task = build("router", "1-2", 0)
+        state = execute_action(
+            task["domain"], task["initial_state"], "run_maintenance"
+        )
+        args = (
+            task["domain"],
+            state,
+            "run_maintenance",
+            30,
+            task["transition"]["external_event"],
+            task["transition"]["user_action"],
+        )
+        first = transition(*args)
+        second = transition(*args)
+        self.assertEqual(first, second)
+        self.assertEqual(first["firmware_status"], "interrupted")
+        self.assertIn(
+            "power_cycle_during_maintenance",
+            first["user_action_history"],
+        )
+
 
 class RunnerTests(unittest.TestCase):
     def setUp(self):
@@ -151,6 +188,13 @@ class RunnerTests(unittest.TestCase):
         self.assertTrue(result["post_gap_success"])
         self.assertTrue(result["trajectory_success"])
         self.assertGreater(len(result["model_calls"]), 2)
+        self.assertEqual(set(result["belief_checkpoints"]), {
+            "pre_gap",
+            "post_observation",
+            "pre_final_action",
+        })
+        self.assertTrue(result["state_belief_success"])
+        self.assertGreater(result["belief_revision"]["mean_revision_gain"], 0)
 
     def test_wrong_pre_gap_action_changes_resumed_world(self):
         task = build("router", "5-8", 0)
@@ -200,6 +244,36 @@ class RunnerTests(unittest.TestCase):
         )
         self.assertTrue(high["response_style_success"])
         self.assertTrue(low["response_style_success"])
+
+    def test_hidden_user_action_changes_shared_world_and_answer(self):
+        task = build("flight", "5-8", 0)
+        full = self.runner.execute(
+            OracleAgent(), task, CONDITIONS["full_audio"], seed=2
+        )
+        dual = self.runner.execute(
+            OracleAgent(), task, CONDITIONS["hidden_user_action"], seed=2
+        )
+        self.assertEqual(full["state_after_gap"]["connection_status"], "missed")
+        self.assertEqual(
+            dual["state_after_gap"]["connection_status"], "protected"
+        )
+        self.assertEqual(
+            dual["gap_user_action"]["action"],
+            "self_protect_onward_segment",
+        )
+        self.assertEqual(
+            dual["state_after_user_action"]["connection_status"],
+            "protected",
+        )
+        self.assertIn("I changed my later flight", dual["post_gap_observation"])
+        self.assertEqual(
+            dual["expected_post_gap_action"],
+            "enable_itinerary_monitoring",
+        )
+        self.assertNotEqual(
+            full["expected_post_gap_action"],
+            dual["expected_post_gap_action"],
+        )
 
 
 if __name__ == "__main__":

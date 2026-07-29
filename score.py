@@ -40,6 +40,39 @@ def _mean(values) -> float:
     return sum(values) / len(values) if values else math.nan
 
 
+def _fmt_percent(value: float) -> str:
+    """Format a fraction or render unavailable values as a dash."""
+
+    return "-" if math.isnan(value) else f"{value:.1%}"
+
+
+def expected_calibration_error(
+    predictions: list[tuple[float, bool]],
+    bins: int = 10,
+) -> float:
+    """Compute top-state expected calibration error over fixed-width bins."""
+
+    if not predictions:
+        return math.nan
+    total = len(predictions)
+    error = 0.0
+    for index in range(bins):
+        lower = index / bins
+        upper = (index + 1) / bins
+        members = [
+            (confidence, correct)
+            for confidence, correct in predictions
+            if lower <= confidence < upper
+            or (index == bins - 1 and confidence == 1.0)
+        ]
+        if not members:
+            continue
+        mean_confidence = _mean(confidence for confidence, _ in members)
+        accuracy = _mean(correct for _, correct in members)
+        error += len(members) / total * abs(mean_confidence - accuracy)
+    return error
+
+
 def clustered_bootstrap_ci(
     rows: list[dict],
     field: str = "trajectory_success",
@@ -101,8 +134,29 @@ def summarize(rows: list[dict]) -> dict:
         "ci": (ci_low, ci_high),
         "all_trials": _mean(rate == 1.0 for rate in scenario_rates.values()),
         "pass_at_5": _mean(any(values) for values in first_five.values()),
-        "trajectory_chance": _mean(
+        "two_action_chance": _mean(
             1 / (row["pre_gap_menu_size"] * row["post_gap_menu_size"])
+            for row in rows
+        ),
+        "action_trajectory_chance": _mean(
+            1
+            / (
+                row["pre_gap_menu_size"]
+                * row["post_gap_menu_size"]
+                * row.get("response_style_menu_size", 1)
+            )
+            for row in rows
+        ),
+        "trajectory_chance": _mean(
+            (
+                1
+                / (
+                    row["pre_gap_menu_size"]
+                    * row["post_gap_menu_size"]
+                    * row.get("response_style_menu_size", 1)
+                )
+            )
+            * row.get("belief_checkpoint_chance", 1.0) ** 3
             for row in rows
         ),
         "action_chance": _mean(1 / row["post_gap_menu_size"] for row in rows),
@@ -132,15 +186,154 @@ def condition_table(rows: list[dict]) -> None:
     print("\nSupplemental repeated-sampling metric")
     print(
         f"{'condition':<23}{'pass@5':>9}{'action chance':>15}"
-        f"{'trajectory chance':>19}"
+        f"{'2-action chance':>18}{'full chance':>14}"
     )
     for condition, group in groups.items():
         stats = summarize(group)
         print(
             f"{condition:<23}{stats['pass_at_5']:>9.1%}"
             f"{stats['action_chance']:>15.1%}"
-            f"{stats['trajectory_chance']:>19.1%}"
+            f"{stats['two_action_chance']:>18.1%}"
+            f"{stats['trajectory_chance']:>14.3%}"
         )
+
+
+def summarize_beliefs(rows: list[dict]) -> dict:
+    """Aggregate checkpoint accuracy, revision, calibration, and consistency."""
+
+    checkpoint_names = ("pre_gap", "post_observation", "pre_final_action")
+    checkpoint_accuracy = {}
+    checkpoint_validity = {}
+    calibration_predictions = []
+    brier_scores = []
+    action_consistency = {"pre_gap": [], "pre_final_action": []}
+    risk_consistency = []
+    uncertainty = Counter()
+    outcome_matrix = Counter()
+
+    for checkpoint_name in checkpoint_names:
+        checkpoints = [
+            row["belief_checkpoints"][checkpoint_name] for row in rows
+        ]
+        checkpoint_accuracy[checkpoint_name] = _mean(
+            checkpoint["evaluation"]["all_correct"]
+            for checkpoint in checkpoints
+        )
+        checkpoint_validity[checkpoint_name] = _mean(
+            checkpoint["report_valid"] for checkpoint in checkpoints
+        )
+        for checkpoint in checkpoints:
+            risk_consistency.append(
+                checkpoint["risk_calibration_consistent"]
+            )
+            uncertainty[checkpoint["uncertainty_behavior"]] += 1
+            outcome = checkpoint.get("belief_action_outcome")
+            if outcome:
+                outcome_matrix[outcome] += 1
+            consistency = checkpoint.get("action_belief_consistent")
+            if (
+                checkpoint_name in action_consistency
+                and consistency is not None
+            ):
+                action_consistency[checkpoint_name].append(consistency)
+            for variable in checkpoint["evaluation"]["variables"].values():
+                if not variable["valid"]:
+                    continue
+                calibration_predictions.append(
+                    (variable["confidence"], variable["correct"])
+                )
+                brier_scores.append(variable["brier"])
+
+    revision = [
+        row["belief_revision"]["mean_revision_gain"]
+        for row in rows
+        if row["belief_revision"]["mean_revision_gain"] is not None
+    ]
+    final_revision = [
+        row["belief_revision"]["mean_final_revision_gain"]
+        for row in rows
+        if row["belief_revision"]["mean_final_revision_gain"] is not None
+    ]
+    stale = [
+        row["belief_revision"]["mean_stale_belief_persistence"]
+        for row in rows
+        if row["belief_revision"]["mean_stale_belief_persistence"] is not None
+    ]
+    return {
+        "checkpoint_accuracy": checkpoint_accuracy,
+        "checkpoint_validity": checkpoint_validity,
+        "revision_gain": _mean(revision),
+        "final_revision_gain": _mean(final_revision),
+        "stale_belief_persistence": _mean(stale),
+        "mean_brier": _mean(brier_scores),
+        "ece": expected_calibration_error(calibration_predictions),
+        "pre_action_belief_consistency": _mean(action_consistency["pre_gap"]),
+        "final_action_belief_consistency": _mean(
+            action_consistency["pre_final_action"]
+        ),
+        "risk_calibration_consistency": _mean(risk_consistency),
+        "uncertainty_behavior": uncertainty,
+        "outcome_matrix": outcome_matrix,
+    }
+
+
+def belief_report(rows: list[dict]) -> None:
+    """Print explicit belief-state, revision, calibration, and coupling metrics."""
+
+    groups = defaultdict(list)
+    for row in rows:
+        groups[row["condition"]].append(row)
+
+    print("\nExplicit hidden-state belief tracking")
+    print(
+        f"{'condition':<23}{'valid':>8}{'pre':>8}{'post obs':>10}"
+        f"{'pre-final':>11}{'revision':>10}{'stale':>9}"
+        f"{'Brier':>9}{'ECE':>8}"
+    )
+    for condition, group in groups.items():
+        stats = summarize_beliefs(group)
+        accuracy = stats["checkpoint_accuracy"]
+        validity = _mean(stats["checkpoint_validity"].values())
+        print(
+            f"{condition:<23}{_fmt_percent(validity):>8}"
+            f"{_fmt_percent(accuracy['pre_gap']):>8}"
+            f"{_fmt_percent(accuracy['post_observation']):>10}"
+            f"{_fmt_percent(accuracy['pre_final_action']):>11}"
+            f"{_fmt_percent(stats['revision_gain']):>10}"
+            f"{_fmt_percent(stats['stale_belief_persistence']):>9}"
+            f"{stats['mean_brier']:>9.3f}{_fmt_percent(stats['ece']):>8}"
+        )
+
+    print("\nBelief-action and risk consistency")
+    print(
+        f"{'condition':<23}{'pre A-B':>10}{'final A-B':>11}"
+        f"{'risk flag':>11}{'uncertain act':>15}{'uncertain check':>17}"
+    )
+    all_outcomes = Counter()
+    for condition, group in groups.items():
+        stats = summarize_beliefs(group)
+        uncertainty = stats["uncertainty_behavior"]
+        total = sum(uncertainty.values())
+        all_outcomes.update(stats["outcome_matrix"])
+        print(
+            f"{condition:<23}"
+            f"{_fmt_percent(stats['pre_action_belief_consistency']):>10}"
+            f"{_fmt_percent(stats['final_action_belief_consistency']):>11}"
+            f"{_fmt_percent(stats['risk_calibration_consistency']):>11}"
+            f"{_fmt_percent(uncertainty['UNCERTAIN_ACTED'] / total):>15}"
+            f"{_fmt_percent(uncertainty['UNCERTAIN_RECHECKED'] / total):>17}"
+        )
+
+    print("\nBelief x action outcome matrix (pre-gap and final decisions)")
+    total_outcomes = sum(all_outcomes.values())
+    for outcome in (
+        "FULL_SUCCESS",
+        "ACTION_SELECTION_FAILURE",
+        "LUCKY_ACTION",
+        "STATE_SYNCHRONIZATION_FAILURE",
+    ):
+        count = all_outcomes[outcome]
+        print(f"  {outcome:<34}{count:>5}  {count / total_outcomes:.1%}")
 
 
 def paired_control_report(rows: list[dict]) -> None:
@@ -205,6 +398,15 @@ def paired_control_report(rows: list[dict]) -> None:
             "pairs selected the expected approach in both deliveries."
         )
 
+    n, user_action_delta = paired_delta(
+        "hidden_user_action", "full_audio", "post_gap_success"
+    )
+    if n:
+        print(
+            f"Hidden-user-action check: dual-control minus external-only "
+            f"post-gap accuracy = {user_action_delta:+.1%} across {n} paired trials."
+        )
+
 
 def failure_report(rows: list[dict]) -> None:
     """Print multilabel failure incidence among unsuccessful trajectories."""
@@ -258,6 +460,9 @@ def retention_curve(rows: list[dict], path: Path) -> None:
     trajectory_chance = _mean(
         stats["trajectory_chance"] for _, stats in points
     )
+    action_trajectory_chance = _mean(
+        stats["two_action_chance"] for _, stats in points
+    )
     action_chance = _mean(stats["action_chance"] for _, stats in points)
     plt.axhline(
         action_chance,
@@ -266,10 +471,19 @@ def retention_curve(rows: list[dict], path: Path) -> None:
         label=f"random action chance ({action_chance:.0%})",
     )
     plt.axhline(
-        trajectory_chance,
+        action_trajectory_chance,
         color="silver",
         linestyle="-.",
-        label=f"random two-action chance ({trajectory_chance:.0%})",
+        label=(
+            f"random two-action chance "
+            f"({action_trajectory_chance:.0%})"
+        ),
+    )
+    plt.axhline(
+        trajectory_chance,
+        color="lightgray",
+        linestyle="--",
+        label=f"random action+belief chance ({trajectory_chance:.2%})",
     )
     plt.ylim(0, 1.05)
     plt.xlabel("clue-to-gap turn-distance bucket")
@@ -288,6 +502,7 @@ def score_closed_loop(path: str | Path) -> None:
     models = sorted({row["model"] for row in rows})
     print(f"Models: {', '.join(models)} | completed trajectories: {len(rows)}")
     condition_table(rows)
+    belief_report(rows)
     paired_control_report(rows)
     failure_report(rows)
     output = Path(path).with_name(Path(path).stem + "_retention.png")

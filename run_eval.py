@@ -61,6 +61,11 @@ def load_done(path: Path) -> set[tuple[str, str, int]]:
         if not line.strip():
             continue
         row = json.loads(line)
+        if row.get("schema_version") != "0.3":
+            raise ValueError(
+                f"{path} contains pre-v0.3 trajectories; choose a new output "
+                "path before running the belief-tracking benchmark."
+            )
         if not row.get("error"):
             done.add((row["scenario_id"], row["condition"], row["seed"]))
     return done
@@ -94,9 +99,9 @@ def main() -> None:
         for path in sorted(Path(args.scenarios).glob("*.json"))
     ]
     for task in tasks:
-        if task.get("schema_version") != "0.2":
+        if task.get("schema_version") != "0.3":
             raise SystemExit(
-                f"{task.get('scenario_id')} is not schema 0.2; regenerate tasks "
+                f"{task.get('scenario_id')} is not schema 0.3; regenerate tasks "
                 "with `python scenarios/generate.py`."
             )
 
@@ -139,7 +144,7 @@ def main() -> None:
                     failed = trajectory is None
                     if trajectory is None:
                         trajectory = {
-                            "schema_version": "0.2",
+                            "schema_version": "0.3",
                             "scenario_id": task["scenario_id"],
                             "domain": task["domain"],
                             "bucket": task["bucket"],

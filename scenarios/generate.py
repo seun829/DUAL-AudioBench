@@ -1,4 +1,4 @@
-"""Generate closed-loop tasks with audited clue-to-gap distances."""
+"""Generate schema-v0.3 closed-loop tasks with audited clue distances."""
 
 from __future__ import annotations
 
@@ -85,7 +85,7 @@ def _mark(turns, kind):
 
 
 def build(template_name: str, bucket: str, variant_seed: int) -> dict:
-    """Build and validate one deterministic schema-v0.2 scenario.
+    """Build and validate one deterministic schema-v0.3 scenario.
 
     Filler pairs are shuffled, a realizable even clue distance is selected,
     alternation and exact distance are asserted, and lexical leak guards run
@@ -162,7 +162,7 @@ def build(template_name: str, bucket: str, variant_seed: int) -> dict:
 
     scenario_id = f"{template_name}_{bucket.replace('-', 'to')}_v{variant_seed}"
     scenario = {
-        "schema_version": "0.2",
+        "schema_version": "0.3",
         "scenario_id": scenario_id,
         "domain": template["domain"],
         "bucket": bucket,
@@ -181,6 +181,9 @@ def build(template_name: str, bucket: str, variant_seed: int) -> dict:
             "correct_action": template["pre_gap_correct"],
         },
         "transition": template["transition"],
+        "belief_schema": template["belief_schema"],
+        "revalidation_actions": template["revalidation_actions"],
+        "belief_confidence_threshold": template["belief_confidence_threshold"],
         "pre_gap_actions": template["pre_gap_actions"],
         "post_gap_actions": template["post_gap_actions"],
         "prosody_pair": template["prosody_pair"],

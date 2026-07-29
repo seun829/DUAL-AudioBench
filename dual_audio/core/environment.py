@@ -60,22 +60,79 @@ def execute_action(
     return state
 
 
+def execute_user_action(
+    domain: str,
+    current_state: dict[str, Any],
+    user_action: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Execute a hidden user tool call that occurs while the agent is absent.
+
+    The action specification is part of the task transition input. It is not
+    shown to the agent before the gap. The resumed observation reports its
+    outcome, allowing the agent to resynchronize its belief afterward.
+    """
+
+    state = copy.deepcopy(current_state)
+    if not user_action:
+        return state
+    action = user_action["action"]
+    state.setdefault("user_action_history", []).append(action)
+    state["last_gap_user_action"] = action
+    state["gap_user_action_minute"] = user_action.get("at_minute")
+
+    if domain == "tech_support":
+        if action != "power_cycle_during_maintenance":
+            raise InvalidStateError(f"Unknown tech-support user action: {action}")
+        state["restart_attempts"] += 1
+        if state["firmware_status"] == "updating":
+            state["firmware_status"] = "interrupted"
+            state["firmware_progress"] = 0
+    elif domain == "pharmacy":
+        if action != "contact_plan_provider":
+            raise InvalidStateError(f"Unknown pharmacy user action: {action}")
+        state["user_verified_active_plan"] = True
+    elif domain == "travel":
+        if action != "self_protect_onward_segment":
+            raise InvalidStateError(f"Unknown travel user action: {action}")
+        state["user_rebooked_onward_segment"] = True
+        state["connection_status"] = "protected"
+    else:
+        raise InvalidStateError(f"Unknown domain: {domain}")
+    return state
+
+
 def transition(
     domain: str,
     current_state: dict[str, Any],
     agent_action: str,
     elapsed_minutes: int,
     external_event: dict[str, Any] | None,
+    user_action: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Pure deterministic time transition.
 
     The result is computed from the prior state, executed action, elapsed time,
-    and external event. No scenario embeds a precomputed post-gap state.
+    external event, and optional hidden user action. No scenario embeds a
+    precomputed post-gap state.
+
+    Ordering is explicit: the user's gap action is applied first at its task
+    timestamp, then elapsed-time/exogenous rules are evaluated. Current tasks
+    use user actions that occur before the external transition threshold.
     """
 
     if elapsed_minutes < 0:
         raise ValueError("elapsed_minutes must be non-negative")
-    state = copy.deepcopy(current_state)
+    if user_action:
+        at_minute = user_action.get("at_minute")
+        if (
+            not isinstance(at_minute, (int, float))
+            or at_minute < 0
+            or at_minute > elapsed_minutes
+        ):
+            raise ValueError(
+                "user_action.at_minute must fall within the elapsed gap"
+            )
+    state = execute_user_action(domain, current_state, user_action)
     state["elapsed_minutes"] = state.get("elapsed_minutes", 0) + elapsed_minutes
     state["last_pre_gap_action"] = agent_action
     event = external_event or {"type": "none"}
@@ -123,7 +180,7 @@ def correct_action(domain: str, state: dict[str, Any]) -> str:
 
     if domain == "tech_support":
         status = state["firmware_status"]
-        if status in {"stuck", "completed"}:
+        if status in {"stuck", "completed", "interrupted"}:
             return "inspect_persistent_state"
         if status == "not_started":
             return "run_maintenance"
@@ -152,6 +209,12 @@ def post_gap_observation(domain: str, state: dict[str, Any]) -> str:
 
     if domain == "tech_support":
         status = state["firmware_status"]
+        if status == "interrupted":
+            return (
+                "While you were unavailable, I unplugged the router and plugged "
+                "it back in. The maintenance screen disappeared, and the "
+                "connection is still dropping."
+            )
         if status == "stuck":
             return (
                 f"It has been half an hour and the update is still at "
@@ -163,6 +226,12 @@ def post_gap_observation(domain: str, state: dict[str, Any]) -> str:
                 "but it has not shown an error."
             )
         if status == "not_started":
+            if state.get("last_gap_user_action"):
+                return (
+                    "While you were unavailable, I unplugged the router and "
+                    "plugged it back in. The maintenance never started, and the "
+                    "connection still drops."
+                )
             return (
                 "It has been half an hour, but the maintenance never started and "
                 "the connection still drops."
@@ -172,16 +241,34 @@ def post_gap_observation(domain: str, state: dict[str, Any]) -> str:
     elif domain == "pharmacy":
         status = state["claim_status"]
         if status == "rejected":
+            if state.get("user_verified_active_plan"):
+                return (
+                    "While you were unavailable, I called the plan provider and "
+                    "they confirmed my current plan is active. I came back after "
+                    "twenty minutes and the pharmacy claim was still denied."
+                )
             return (
                 "I came back after twenty minutes and the message says the claim "
                 "was denied. That has never happened before."
             )
         if status == "processing":
+            if state.get("user_verified_active_plan"):
+                return (
+                    "While you were unavailable, I called the plan provider and "
+                    "they confirmed my current plan is active. The pharmacy claim "
+                    "still says it is processing."
+                )
             return (
                 "It has been twenty minutes and the claim still says it is processing, "
                 "with no decision yet."
             )
         if status == "not_submitted":
+            if state.get("user_verified_active_plan"):
+                return (
+                    "While you were unavailable, I called the plan provider and "
+                    "they confirmed my current plan is active, but there is still "
+                    "no pharmacy claim on the order."
+                )
             return (
                 "I came back after twenty minutes, but there is no claim on the order yet."
             )
@@ -189,9 +276,20 @@ def post_gap_observation(domain: str, state: dict[str, Any]) -> str:
             return "I came back and the claim was approved. Is there anything else?"
     elif domain == "travel":
         if state["flight_status"] == "delayed":
+            if state.get("user_rebooked_onward_segment"):
+                return (
+                    f"While you were unavailable, I changed my later flight and "
+                    f"received confirmation. I have now been told this departure "
+                    f"is delayed {state['departure_delay_minutes']} minutes."
+                )
             return (
                 f"I just got a notice that the flight is delayed "
                 f"{state['departure_delay_minutes']} minutes. What should I do now?"
+            )
+        if state.get("user_rebooked_onward_segment"):
+            return (
+                "While you were unavailable, I changed my later flight and "
+                "received confirmation. This departure still shows on time."
             )
         return "I checked again after forty-five minutes and the flight still shows on time."
     raise InvalidStateError(f"No observation rule for {domain}: {state}")

@@ -17,6 +17,10 @@ The benchmark is:
 - alternating-turn: user and evaluated agent turns are processed separately;
 - audio-conditioned: real-model runs hear individual/replayed WAV turns;
 - tool-using: model choices execute symbolic Python actions;
+- belief-explicit: the model reports calibrated hidden-state distributions at
+  three checkpoints;
+- dual-control: a matched condition lets the user execute a hidden tool action
+  during the gap;
 - deterministic at the environment layer: equal transition inputs produce
   equal outputs;
 - trajectory-scored: both decisions and the resulting state are logged.
@@ -41,14 +45,16 @@ trajectory follows this sequence:
 2. Present one scripted user turn as text or audio.
 3. Ask the evaluated model for the corresponding agent turn.
 4. Repeat steps 2-3 for the pre-gap dialogue.
-5. Present a randomized pre-gap action menu.
+5. Present a randomized pre-gap action menu and collect belief checkpoint 1.
 6. Execute the model-selected symbolic action against hidden state.
 7. Add a deterministic user acknowledgement.
-8. Advance time and apply the condition's external event.
-9. Generate the resumed user observation from the resulting state.
-10. Present a randomized post-gap action menu.
-11. Execute and score the model-selected post-gap action.
-12. Store the complete trajectory as one JSONL record.
+8. Optionally execute a hidden user tool action during the gap.
+9. Advance time and apply the condition's external event.
+10. Generate the resumed user observation from the resulting state.
+11. Collect belief checkpoint 2 without allowing an action yet.
+12. Collect belief checkpoint 3 with the randomized final action menu.
+13. Execute and score the model-selected post-gap action.
+14. Store the complete trajectory as one JSONL record.
 ```
 
 In compact form:
@@ -59,9 +65,10 @@ task.initial_state
   -> evaluated agent turn(s)
   -> evaluated pre-gap action
   -> execute_action(...)
-  -> transition(state, action, elapsed_time, external_event)
+  -> transition(state, action, elapsed_time, external_event, user_action)
   -> post_gap_observation(resulting_state)
-  -> evaluated post-gap action
+  -> resumed state belief
+  -> final state belief + evaluated post-gap action
   -> state-based evaluation
 ```
 
@@ -129,9 +136,10 @@ class Agent(Protocol):
         ...
 ```
 
-`Observation` contains the current text/audio turn, stage, public menu, and
-instruction. `AgentResponse` contains a natural-language message and/or public
-action labels. See
+`Observation` contains the current text/audio turn, stage, public menu,
+allowed belief-state values, and instruction. `AgentResponse` contains a
+natural-language message, public action labels, probabilistic `state_belief`,
+and `needs_revalidation`. See
 [`dual_audio/core/types.py`](dual_audio/core/types.py).
 
 Production prompts never contain canonical action names, gold actions, hidden
@@ -171,6 +179,7 @@ state_after_gap = transition(
     agent_action=selected_action,
     elapsed_minutes=task["transition"]["elapsed_minutes"],
     external_event=event,
+    user_action=gap_user_action,
 )
 ```
 
@@ -187,12 +196,12 @@ Consequently, a wrong pre-gap action can change:
 
 ## Task schema
 
-Tasks are generated JSON documents with schema version `0.2`. Important fields
+Tasks are generated JSON documents with schema version `0.3`. Important fields
 are:
 
 ```json
 {
-  "schema_version": "0.2",
+  "schema_version": "0.3",
   "scenario_id": "router_12to20_v0",
   "domain": "tech_support",
   "bucket": "12-20",
@@ -205,8 +214,19 @@ are:
   "pre_gap": {"correct_action": "run_maintenance"},
   "transition": {
     "elapsed_minutes": 30,
-    "external_event": {"type": "maintenance_window_elapsed"}
+    "external_event": {"type": "maintenance_window_elapsed"},
+    "user_action": {
+      "action": "power_cycle_during_maintenance",
+      "at_minute": 10
+    }
   },
+  "belief_schema": {
+    "firmware_status": [
+      "not_started", "updating", "stuck", "completed", "interrupted"
+    ]
+  },
+  "revalidation_actions": ["inspect_persistent_state"],
+  "belief_confidence_threshold": 0.6,
   "pre_gap_actions": [],
   "post_gap_actions": [],
   "prosody_pair": {},
@@ -229,7 +249,7 @@ model. Canonical names are used internally for tool execution and evaluation.
 
 ## Deterministic environment
 
-The transition engine uses four explicit inputs:
+The transition engine uses five explicit inputs:
 
 ```python
 next_state = transition(
@@ -237,6 +257,7 @@ next_state = transition(
     agent_action,
     elapsed_minutes,
     external_event,
+    user_action,
 )
 ```
 
@@ -251,6 +272,32 @@ Current domain mechanics include:
 Unit tests verify that identical inputs return equal states and that changing
 the pre-gap action changes the result where expected.
 
+### Hidden user actions during the gap
+
+The `hidden_user_action` condition activates the task's
+`transition.user_action` input. The action occurs while the agent is absent and
+before the external transition threshold:
+
+```text
+agent tool action
+  -> hidden user tool action at a task-defined minute
+  -> elapsed-time/external transition
+  -> state-conditioned user report
+  -> agent belief resynchronization
+```
+
+Current hidden user tools are:
+
+| Domain | Hidden user action | Shared-world effect |
+|---|---|---|
+| Router support | Power-cycles during maintenance | Interrupts an active maintenance process |
+| Pharmacy | Calls the plan provider | Records independent confirmation that the active plan is valid |
+| Travel | Rebooks the onward segment independently | Protects the connection before the delay event |
+
+The action is not exposed before the gap. The resumed utterance reports what
+the user did and the observable outcome. The final answer is recomputed from
+the resulting shared state, so the user action can change the correct action.
+
 ## Experimental controls
 
 Use a comma-separated subset with `--conditions`, or use
@@ -264,6 +311,7 @@ Use a comma-separated subset with `--conditions`, or use
 | `clue_removed` | Replaces only the clue response with a matched ablation utterance | Whether the model actually uses the clue |
 | `transcript_only` | Presents text instead of audio | Text reasoning baseline |
 | `neutral_audio` | Neutralizes resumed-turn prosody | Audio-processing baseline |
+| `hidden_user_action` | Executes a task-defined user tool during the gap and reports it afterward | Temporally separated dual control and belief resynchronization |
 | `prosody_high` | High-affect delivery of the resumed transcript | Prosody-sensitive secondary response choice |
 | `prosody_low` | Low-affect delivery of the identical resumed transcript | Contrastive pair for `prosody_high` |
 
@@ -334,17 +382,23 @@ One JSONL row represents one complete evaluation attempt. It includes:
 - model, scenario, condition, and seed;
 - initial state;
 - selected and expected pre-gap action;
+- pre-gap state-belief distribution and revalidation flag;
 - public pre-gap menu and menu size;
 - state immediately after tool execution;
+- hidden user action and state immediately after that user tool;
 - elapsed time and applied external event;
 - post-transition hidden state;
 - generated resumed observation and prosody;
+- state belief immediately after hearing the resumed observation;
+- state belief repeated immediately before the final action;
 - selected and expected post-gap action;
 - optional selected and expected response style;
 - final state;
 - all alternating user/agent turns;
 - raw model outputs;
-- component successes, trajectory success, and multilabel failure tags.
+- component successes, trajectory success, and multilabel failure tags;
+- belief revision, stale-belief persistence, calibration, risk, and
+  action-belief consistency fields.
 
 This makes failures auditable without reconstructing state from a final answer.
 
@@ -366,6 +420,28 @@ Primary metrics:
 - scenario-clustered bootstrap 95% confidence intervals;
 - fraction of scenarios that succeed on every repeated trial.
 
+Belief-state metrics:
+
+- state-belief top-state accuracy at all three checkpoints;
+- belief-report validity;
+- Brier score and negative log likelihood per checkpoint;
+- expected calibration error over top-state confidence;
+- probability gain assigned to the new state after resumed evidence;
+- probability mass that persists on the stale pre-gap state;
+- reflection-only gain between the resumed and pre-final checkpoints;
+- action-belief consistency;
+- `needs_revalidation` consistency with the model's own confidence;
+- uncertain-act versus uncertain-recheck rates.
+
+The scorer also reports the belief/action matrix:
+
+| Belief | Action | Reported interpretation |
+|---|---|---|
+| Correct | Correct | Full success |
+| Correct | Wrong | Action-selection failure |
+| Wrong | Correct | Lucky action |
+| Wrong | Wrong | State-synchronization failure |
+
 Supplemental metrics and diagnostics:
 
 - pass@5;
@@ -379,8 +455,14 @@ Chance is calculated from logged menu sizes:
 - one five-choice action: `1/5 = 20%`;
 - two independent five-choice actions: `1/25 = 4%`.
 
-The retention plot shows both the post-gap action floor and full-trajectory
-floor. It does not use the previous incorrect `1/6` constant.
+Schema-v0.3 full success additionally requires correct top-state beliefs at
+three checkpoints. The scorer therefore reports a dynamic full
+action-plus-belief chance baseline based on each task's belief-state space.
+Prosodic conditions additionally include their response-style choice.
+
+The retention plot shows the post-gap action, two-action, and full
+action-plus-belief floors. It does not use the previous incorrect `1/6`
+constant.
 
 ## Failure tags and annotation
 
@@ -433,11 +515,15 @@ The report checks intended-prosody identification and listener agreement.
 - Condition is excluded from menu-order seeds to preserve paired comparisons.
 - Environment functions copy state rather than mutating input objects.
 - Task JSON contains transition inputs, not precomputed post-gap state.
+- Hidden user actions include a validated timestamp within the elapsed gap.
+- Belief distributions are validated, normalized, and scored only against
+  task-declared state values.
 - JSONL is flushed after every trajectory.
 - Successful trajectories are skipped on restart; failed rows are retried.
 - The fake model is deterministic for a scenario/stage/seed.
 - Tests cover distance, alternation, transition determinism, action dependence,
-  controls, prosodic pairs, and chance calculations.
+  controls, prosodic pairs, hidden user tools, belief revision, calibration,
+  action-belief consistency, and chance calculations.
 
 ## Extending the benchmark
 
@@ -454,8 +540,8 @@ Keep agent/user turns alternating. Do not add a hard-coded post-gap state.
 ### Add a domain
 
 1. Add the task template and symbolic action descriptions.
-2. Add domain branches to `execute_action`, `transition`, `correct_action`, and
-   `post_gap_observation`.
+2. Add domain branches to `execute_action`, `execute_user_action`,
+   `transition`, `correct_action`, and `post_gap_observation`.
 3. Add deterministic and action-dependence tests.
 4. Ensure every state-reachable correct action exists in the post-gap menu.
 5. Run clue-leak and distance generation checks.
@@ -484,14 +570,16 @@ adapter, implement `Agent.respond` directly.
 
 During the closed-loop implementation:
 
-- 18 schema-v0.2 tasks were regenerated;
+- 18 schema-v0.3 tasks were regenerated;
 - all pre-gap and post-gap menus were verified to contain five choices;
 - generated tasks were verified not to contain hard-coded `state_update`
   objects;
-- 10 focused unit tests passed;
-- a 720-trajectory fake-agent run completed across all eight conditions;
+- 16 focused unit tests passed;
+- an 810-trajectory schema-v0.3 fake-agent run completed across all nine
+  conditions and five seeds;
 - the fake run demonstrated dynamic chance floors, clue-ablation reporting,
-  prosodic-pair scoring, and multilabel failure reporting.
+  prosodic-pair scoring, hidden user actions, explicit belief revision,
+  calibration, action-belief coupling, and multilabel failure reporting.
 
 The fake agent is an orchestration test only. Human task solvability,
 independent trap annotation, audible-prosody validation, and real-model
@@ -510,14 +598,17 @@ dual_audio/
 audio/             gold-path individual-turn rendering CLI
 scenarios/         domain templates, leak guards, audited generator
 models/            Gemini, Qwen, and fake compatibility modules
-data/scenarios/    generated schema-v0.2 benchmark tasks
+data/scenarios/    generated schema-v0.3 benchmark tasks
 tests/             transitions, controls, runner, generator, metrics
 run_eval.py        crash-resumable batch trajectory runner
 score.py           metrics, control comparisons, tags, retention plot
 ```
 
-## Implementation summary
+## Implementation summaries
 
-A file-by-file summary of the passive-to-agentic conversion performed in this
-revision is available in
+The original passive-to-agentic conversion is documented in
 [`docs/IMPLEMENTATION_SUMMARY.md`](docs/IMPLEMENTATION_SUMMARY.md).
+
+The belief-tracking and hidden-user-action extension added afterward is
+documented in
+[`docs/IMPLEMENTATION_SUMMARY_V2.md`](docs/IMPLEMENTATION_SUMMARY_V2.md).

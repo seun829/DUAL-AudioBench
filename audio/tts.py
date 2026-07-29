@@ -64,6 +64,11 @@ def render_task(task: dict, condition_name: str, renderer: TurnAudioRenderer) ->
             if condition.apply_external_event
             else None
         ),
+        (
+            task["transition"].get("user_action")
+            if condition.apply_user_action
+            else None
+        ),
     )
     text = post_gap_observation(task["domain"], state)
     prosody, expected_style = prosody_for(task, condition)
@@ -96,7 +101,10 @@ def main() -> None:
     parser.add_argument("--out", default="data/turn_audio")
     parser.add_argument(
         "--conditions",
-        default="full_audio,neutral_audio,prosody_high,prosody_low",
+        default=(
+            "full_audio,neutral_audio,hidden_user_action,"
+            "prosody_high,prosody_low"
+        ),
     )
     parser.add_argument("--only", default=None)
     args = parser.parse_args()

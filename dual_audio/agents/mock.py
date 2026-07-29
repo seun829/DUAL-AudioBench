@@ -39,15 +39,53 @@ class MockAgent:
             private.get("seed"),
             observation.stage,
         )
-        expected = private["expected_action_label"]
         probability = P_CORRECT.get(private.get("bucket"), 0.7)
         if private.get("condition") == "clue_removed":
             probability = max(0.2, probability - 0.35)
 
-        labels = [item["label"] for item in observation.action_menu]
-        action = expected if rng.random() < probability else rng.choice(
-            [label for label in labels if label != expected]
-        )
+        state_belief: dict[str, dict[str, float]] = {}
+        confidences = []
+        for variable, allowed_values in observation.belief_schema.items():
+            values = list(allowed_values)
+            target = str(private["belief_targets"][variable])
+            uncertain = rng.random() < 0.12
+            belief_correct = rng.random() < probability
+            if uncertain:
+                target_probability = 0.45
+                remainder = (1.0 - target_probability) / (len(values) - 1)
+                distribution = {
+                    value: target_probability if value == target else remainder
+                    for value in values
+                }
+            elif belief_correct:
+                target_probability = 0.78
+                remainder = (1.0 - target_probability) / (len(values) - 1)
+                distribution = {
+                    value: target_probability if value == target else remainder
+                    for value in values
+                }
+            else:
+                wrong = rng.choice([value for value in values if value != target])
+                distribution = {
+                    value: (
+                        0.68
+                        if value == wrong
+                        else 0.12
+                        if value == target
+                        else 0.20 / (len(values) - 2)
+                    )
+                    for value in values
+                }
+            state_belief[variable] = distribution
+            confidences.append(max(distribution.values()))
+
+        action = None
+        if observation.action_menu:
+            expected = private["expected_action_label"]
+            labels = [item["label"] for item in observation.action_menu]
+            action = expected if rng.random() < probability else rng.choice(
+                [label for label in labels if label != expected]
+            )
 
         style = None
         if observation.style_menu:
@@ -56,4 +94,13 @@ class MockAgent:
             style = expected_style if rng.random() < 0.85 else rng.choice(
                 [label for label in style_labels if label != expected_style]
             )
-        return AgentResponse(action=action, response_style=style)
+        return AgentResponse(
+            action=action,
+            response_style=style,
+            state_belief=state_belief,
+            needs_revalidation=(
+                sum(confidences) / len(confidences) < 0.60
+                if confidences
+                else None
+            ),
+        )

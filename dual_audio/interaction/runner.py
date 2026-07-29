@@ -7,8 +7,19 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from dual_audio.core.beliefs import (
+    evaluate_state_belief,
+    normalize_state_belief,
+    probability_of,
+    top_state_assignment,
+)
 from dual_audio.core.conditions import Condition, condition_turns, prosody_for
-from dual_audio.core.environment import correct_action, execute_action, transition
+from dual_audio.core.environment import (
+    correct_action,
+    execute_action,
+    execute_user_action,
+    transition,
+)
 from dual_audio.core.types import AgentResponse, Observation
 from dual_audio.users.scripted import ScriptedUserSimulator
 
@@ -63,6 +74,166 @@ def _failure_tags(task: dict, stage: str, action: str | None) -> list[str]:
         if item["action"] == action:
             return list(item.get("failure_tags", []))
     return ["OFF_MENU_RESPONSE"]
+
+
+def _belief_checkpoint(
+    task: dict,
+    state: dict[str, Any],
+    response: AgentResponse,
+    selected_action: str | None = None,
+    expected_action: str | None = None,
+) -> dict[str, Any]:
+    """Evaluate one explicit belief report and its optional action coupling."""
+
+    schema = {
+        variable: tuple(values)
+        for variable, values in task["belief_schema"].items()
+    }
+    belief = normalize_state_belief(response.state_belief, schema)
+    evaluation = evaluate_state_belief(belief, schema, state)
+    assignments = top_state_assignment(evaluation)
+    implied_action = None
+    if len(assignments) == len(schema):
+        hypothetical = copy.deepcopy(state)
+        hypothetical.update(assignments)
+        implied_action = correct_action(task["domain"], hypothetical)
+
+    confidence = evaluation["mean_confidence"]
+    threshold = task["belief_confidence_threshold"]
+    low_confidence = confidence is None or confidence < threshold
+    revalidation_action = (
+        selected_action in task["revalidation_actions"]
+        if selected_action is not None
+        else None
+    )
+    action_correct = (
+        selected_action == expected_action if expected_action is not None else None
+    )
+    action_belief_consistent = (
+        selected_action == implied_action
+        if selected_action is not None and implied_action is not None
+        else None
+    )
+    outcome = None
+    if action_correct is not None:
+        if evaluation["all_correct"] and action_correct:
+            outcome = "FULL_SUCCESS"
+        elif evaluation["all_correct"] and not action_correct:
+            outcome = "ACTION_SELECTION_FAILURE"
+        elif not evaluation["all_correct"] and action_correct:
+            outcome = "LUCKY_ACTION"
+        else:
+            outcome = "STATE_SYNCHRONIZATION_FAILURE"
+
+    if low_confidence and selected_action is not None:
+        uncertainty_behavior = (
+            "UNCERTAIN_RECHECKED"
+            if revalidation_action
+            else "UNCERTAIN_ACTED"
+        )
+    elif low_confidence:
+        uncertainty_behavior = "UNCERTAIN_BELIEF_REPORTED"
+    else:
+        uncertainty_behavior = "CONFIDENT"
+
+    return {
+        "state_belief": belief,
+        "needs_revalidation": response.needs_revalidation,
+        "report_valid": (
+            evaluation["valid"]
+            and isinstance(response.needs_revalidation, bool)
+        ),
+        "evaluation": evaluation,
+        "low_confidence": low_confidence,
+        "confidence_threshold": threshold,
+        "risk_calibration_consistent": (
+            response.needs_revalidation == low_confidence
+            if isinstance(response.needs_revalidation, bool)
+            else False
+        ),
+        "selected_action": selected_action,
+        "expected_action": expected_action,
+        "implied_action_from_top_belief": implied_action,
+        "action_belief_consistent": action_belief_consistent,
+        "action_correct": action_correct,
+        "revalidation_action": revalidation_action,
+        "uncertainty_behavior": uncertainty_behavior,
+        "belief_action_outcome": outcome,
+    }
+
+
+def _belief_revision(
+    task: dict,
+    state_before: dict[str, Any],
+    state_after: dict[str, Any],
+    before_checkpoint: dict[str, Any],
+    after_checkpoint: dict[str, Any],
+    final_checkpoint: dict[str, Any],
+) -> dict[str, Any]:
+    """Measure evidence-driven revision, stale mass, and reflection-only change."""
+
+    variables = {}
+    for variable in task["belief_schema"]:
+        old_value = str(state_before[variable])
+        new_value = str(state_after[variable])
+        before_belief = before_checkpoint["state_belief"]
+        after_belief = after_checkpoint["state_belief"]
+        final_belief = final_checkpoint["state_belief"]
+        changed = old_value != new_value
+        variables[variable] = {
+            "old_state": old_value,
+            "new_state": new_value,
+            "state_changed": changed,
+            "probability_new_state_before_gap": probability_of(
+                before_belief, variable, new_value
+            ),
+            "probability_new_state_after_observation": probability_of(
+                after_belief, variable, new_value
+            ),
+            "probability_new_state_before_final_action": probability_of(
+                final_belief, variable, new_value
+            ),
+            "belief_revision_gain": (
+                probability_of(after_belief, variable, new_value)
+                - probability_of(before_belief, variable, new_value)
+            ),
+            "final_revision_gain": (
+                probability_of(final_belief, variable, new_value)
+                - probability_of(before_belief, variable, new_value)
+            ),
+            "reflection_gain": (
+                probability_of(final_belief, variable, new_value)
+                - probability_of(after_belief, variable, new_value)
+            ),
+            "stale_belief_persistence": (
+                probability_of(after_belief, variable, old_value)
+                if changed
+                else None
+            ),
+        }
+
+    changed_rows = [row for row in variables.values() if row["state_changed"]]
+    return {
+        "variables": variables,
+        "mean_revision_gain": (
+            sum(row["belief_revision_gain"] for row in changed_rows)
+            / len(changed_rows)
+            if changed_rows
+            else None
+        ),
+        "mean_final_revision_gain": (
+            sum(row["final_revision_gain"] for row in changed_rows)
+            / len(changed_rows)
+            if changed_rows
+            else None
+        ),
+        "mean_stale_belief_persistence": (
+            sum(row["stale_belief_persistence"] for row in changed_rows)
+            / len(changed_rows)
+            if changed_rows
+            else None
+        ),
+    }
 
 
 class ClosedLoopRunner:
@@ -129,6 +300,13 @@ class ClosedLoopRunner:
         state = copy.deepcopy(state_initial)
         history: list[dict] = []
         calls: list[dict] = []
+        belief_schema = {
+            variable: tuple(values)
+            for variable, values in task["belief_schema"].items()
+        }
+        belief_state_space_size = 1
+        for values in belief_schema.values():
+            belief_state_space_size *= len(values)
         pre_turns = self.user.pre_gap_turns(task, condition)
         mock_bucket = "1-2" if condition.name == "state_change_short" else task["bucket"]
 
@@ -177,12 +355,16 @@ class ClosedLoopRunner:
                 stage=stage,
                 instruction=guidance,
                 action_menu=pre_menu if is_checkpoint else (),
+                belief_schema=belief_schema if is_checkpoint else {},
                 private={
                     "scenario_id": task["scenario_id"],
                     "condition": condition.name,
                     "seed": seed,
                     "bucket": mock_bucket,
                     "expected_action_label": expected_pre_label,
+                    "belief_targets": {
+                        variable: state[variable] for variable in belief_schema
+                    },
                 },
             )
             response = agent.respond(observation, history[:-1])
@@ -191,6 +373,8 @@ class ClosedLoopRunner:
                     "stage": stage,
                     "raw": response.raw,
                     "action_label": response.action,
+                    "state_belief": response.state_belief,
+                    "needs_revalidation": response.needs_revalidation,
                 }
             )
             public_description = next(
@@ -215,6 +399,13 @@ class ClosedLoopRunner:
             i += 2
 
         selected_pre = pre_map.get(pre_response.action)
+        pre_belief_checkpoint = _belief_checkpoint(
+            task=task,
+            state=state,
+            response=pre_response,
+            selected_action=selected_pre,
+            expected_action=expected_pre,
+        )
         # An invalid selection is a no-op tool call but remains visible in the log.
         if selected_pre is not None:
             state = execute_action(task["domain"], state, selected_pre)
@@ -240,12 +431,23 @@ class ClosedLoopRunner:
             if condition.apply_external_event
             else None
         )
+        gap_user_action = (
+            task["transition"].get("user_action")
+            if condition.apply_user_action
+            else None
+        )
+        state_after_user_action = execute_user_action(
+            task["domain"],
+            state,
+            gap_user_action,
+        )
         state_after_gap = transition(
             domain=task["domain"],
             current_state=state,
             agent_action=selected_pre or "invalid_action",
             elapsed_minutes=task["transition"]["elapsed_minutes"],
             external_event=external_event,
+            user_action=gap_user_action,
         )
 
         post_text = self.user.post_gap(task, state_after_gap)
@@ -268,33 +470,32 @@ class ClosedLoopRunner:
                 label for label, style in style_map.items() if style == expected_style
             )
 
-        observation = Observation(
+        belief_observation = Observation(
             text=post_text,
             audio_path=post_audio,
             modality=condition.modality,
-            stage="post_gap",
-            action_menu=post_menu,
-            style_menu=style_menu,
+            stage="post_gap_belief",
+            belief_schema=belief_schema,
             private={
                 "scenario_id": task["scenario_id"],
                 "condition": condition.name,
                 "seed": seed,
                 "bucket": mock_bucket,
-                "expected_action_label": expected_post_label,
-                "expected_style_label": expected_style_label,
+                "belief_targets": {
+                    variable: state_after_gap[variable]
+                    for variable in belief_schema
+                },
             },
         )
-        post_response = agent.respond(observation, history)
+        resumed_belief_response = agent.respond(belief_observation, history)
         calls.append(
             {
-                "stage": "post_gap",
-                "raw": post_response.raw,
-                "action_label": post_response.action,
-                "response_style_label": post_response.response_style,
+                "stage": "post_gap_belief",
+                "raw": resumed_belief_response.raw,
+                "state_belief": resumed_belief_response.state_belief,
+                "needs_revalidation": resumed_belief_response.needs_revalidation,
             }
         )
-        selected_post = post_map.get(post_response.action)
-        selected_style = style_map.get(post_response.response_style)
         history.append(
             {
                 "role": "user",
@@ -303,6 +504,57 @@ class ClosedLoopRunner:
                 "audio_path": str(post_audio) if post_audio else None,
                 "prosody": post_prosody,
             }
+        )
+        resumed_belief_checkpoint = _belief_checkpoint(
+            task=task,
+            state=state_after_gap,
+            response=resumed_belief_response,
+        )
+
+        # The final decision is a separate introspection checkpoint. There is no
+        # new user evidence: audio replay/history already contains the resumed
+        # utterance exactly once.
+        final_observation = Observation(
+            text="",
+            audio_path=None,
+            modality=condition.modality,
+            stage="post_gap",
+            action_menu=post_menu,
+            style_menu=style_menu,
+            belief_schema=belief_schema,
+            prior_state_belief=resumed_belief_response.state_belief,
+            private={
+                "scenario_id": task["scenario_id"],
+                "condition": condition.name,
+                "seed": seed,
+                "bucket": mock_bucket,
+                "expected_action_label": expected_post_label,
+                "expected_style_label": expected_style_label,
+                "belief_targets": {
+                    variable: state_after_gap[variable]
+                    for variable in belief_schema
+                },
+            },
+        )
+        post_response = agent.respond(final_observation, history)
+        calls.append(
+            {
+                "stage": "post_gap",
+                "raw": post_response.raw,
+                "action_label": post_response.action,
+                "response_style_label": post_response.response_style,
+                "state_belief": post_response.state_belief,
+                "needs_revalidation": post_response.needs_revalidation,
+            }
+        )
+        selected_post = post_map.get(post_response.action)
+        selected_style = style_map.get(post_response.response_style)
+        final_belief_checkpoint = _belief_checkpoint(
+            task=task,
+            state=state_after_gap,
+            response=post_response,
+            selected_action=selected_post,
+            expected_action=expected_post,
         )
         public_post_description = next(
             (
@@ -328,7 +580,34 @@ class ClosedLoopRunner:
         style_ok = (
             selected_style == expected_style if condition.score_style else None
         )
-        trajectory_ok = pre_ok and post_ok and (style_ok is not False)
+        belief_reporting_ok = all(
+            checkpoint["report_valid"]
+            for checkpoint in (
+                pre_belief_checkpoint,
+                resumed_belief_checkpoint,
+                final_belief_checkpoint,
+            )
+        )
+        belief_state_ok = all(
+            checkpoint["evaluation"]["all_correct"]
+            for checkpoint in (
+                pre_belief_checkpoint,
+                resumed_belief_checkpoint,
+                final_belief_checkpoint,
+            )
+        )
+        action_trajectory_ok = pre_ok and post_ok and (style_ok is not False)
+        trajectory_ok = (
+            action_trajectory_ok and belief_reporting_ok and belief_state_ok
+        )
+        belief_revision = _belief_revision(
+            task=task,
+            state_before=state_initial,
+            state_after=state_after_gap,
+            before_checkpoint=pre_belief_checkpoint,
+            after_checkpoint=resumed_belief_checkpoint,
+            final_checkpoint=final_belief_checkpoint,
+        )
         presented_turns = condition_turns(task, condition)
         clue_index = next(
             (
@@ -344,7 +623,7 @@ class ClosedLoopRunner:
             else None
         )
         return {
-            "schema_version": "0.2",
+            "schema_version": "0.3",
             "scenario_id": task["scenario_id"],
             "domain": task["domain"],
             "bucket": task["bucket"],
@@ -363,6 +642,8 @@ class ClosedLoopRunner:
             "state_before_gap": state_before_gap,
             "elapsed_minutes": task["transition"]["elapsed_minutes"],
             "external_event": external_event,
+            "gap_user_action": gap_user_action,
+            "state_after_user_action": state_after_user_action,
             "state_after_gap": state_after_gap,
             "post_gap_observation": post_text,
             "post_gap_prosody": post_prosody,
@@ -375,6 +656,18 @@ class ClosedLoopRunner:
             "response_style": selected_style,
             "expected_response_style": expected_style,
             "response_style_success": style_ok,
+            "response_style_menu_size": len(style_menu) or 1,
+            "belief_state_space_size": belief_state_space_size,
+            "belief_checkpoint_chance": 1 / belief_state_space_size,
+            "belief_checkpoints": {
+                "pre_gap": pre_belief_checkpoint,
+                "post_observation": resumed_belief_checkpoint,
+                "pre_final_action": final_belief_checkpoint,
+            },
+            "belief_revision": belief_revision,
+            "belief_reporting_success": belief_reporting_ok,
+            "state_belief_success": belief_state_ok,
+            "action_trajectory_success": action_trajectory_ok,
             "failure_tags": (
                 []
                 if trajectory_ok
@@ -390,6 +683,16 @@ class ClosedLoopRunner:
                             []
                             if style_ok is not False
                             else ["PROSODY_GROUNDING_FAILURE"]
+                        )
+                        + (
+                            []
+                            if belief_reporting_ok
+                            else ["BELIEF_REPORT_INVALID"]
+                        )
+                        + (
+                            []
+                            if belief_state_ok
+                            else ["STATE_BELIEF_ERROR"]
                         )
                     )
                 )

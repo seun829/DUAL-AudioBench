@@ -19,6 +19,7 @@ class Condition:
     clue_mode: str = "original"
     prosody_variant: str = "native"
     score_style: bool = False
+    apply_user_action: bool = False
 
 
 CONDITIONS = {
@@ -32,6 +33,9 @@ CONDITIONS = {
     "clue_removed": Condition("clue_removed", clue_mode="ablate"),
     "transcript_only": Condition("transcript_only", modality="transcript"),
     "neutral_audio": Condition("neutral_audio", prosody_variant="neutral"),
+    "hidden_user_action": Condition(
+        "hidden_user_action", apply_user_action=True
+    ),
     "prosody_high": Condition(
         "prosody_high", prosody_variant="high", score_style=True
     ),
