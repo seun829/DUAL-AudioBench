@@ -1,0 +1,306 @@
+{
+  "schema_version": "0.3",
+  "scenario_id": "delivery_5to8_v0",
+  "domain": "logistics",
+  "bucket": "5-8",
+  "clue_turn_distance": 8,
+  "distance_definition": "Number of agent/user turns after the clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "Bear in mind I relocated last month, and I doubt every record caught up.",
+  "clue_answer": "the user relocated last month",
+  "clue_ablation_text": "Nothing has changed about where I receive parcels.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, a parcel of mine says it could not be delivered.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I can check that. Do you have the tracking reference?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it begins with seven-seven-four.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Has this happened with earlier parcels?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Not that I can recall.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is there a secure porch or side entrance?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "There is a porch, yes.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would a neighbour accept the parcel for you?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, the one next door usually would.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would a collection point be acceptable instead?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, if it is nearby.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Was anybody at home during the attempt?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I was in all afternoon.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like notifications by message?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that would be useful.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Has anything about where you receive parcels changed lately?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "Bear in mind I relocated last month, and I doubt every record caught up.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the parcel time-sensitive at all?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Somewhat, I need it this week.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Did the courier leave a card of any kind?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, I did not find one.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the contact number ending in two-nine-five current?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that is the right number.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Book the parcel onto the next available delivery run.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will see what comes of it.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "shipment_status": "at_facility",
+    "delivery_attempts": 1,
+    "label_address": "previous",
+    "account_address": "current",
+    "address_corrected": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_checked_collection_point": false
+  },
+  "pre_gap": {
+    "agent_turn_index": 23,
+    "correct_action": "schedule_redelivery"
+  },
+  "transition": {
+    "elapsed_minutes": 40,
+    "external_event": {
+      "type": "delivery_run_window",
+      "minimum_minutes": 40
+    },
+    "user_action": {
+      "action": "check_collection_point",
+      "at_minute": 15
+    }
+  },
+  "belief_schema": {
+    "shipment_status": [
+      "at_facility",
+      "out_for_delivery",
+      "returned_to_sender",
+      "delivered"
+    ]
+  },
+  "revalidation_actions": [
+    "correct_destination_record"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "schedule_redelivery",
+      "description": "Book the parcel onto the next available delivery run.",
+      "failure_tags": []
+    },
+    {
+      "action": "open_loss_claim",
+      "description": "Open a loss claim before another attempt is made.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "dispatch_replacement_goods",
+      "description": "Send out replacement goods straight away.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "contact_courier_depot",
+      "description": "Ring the depot before arranging anything else.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and ask the user to track it themselves.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "correct_destination_record",
+      "description": "Update the stored destination details before booking another run.",
+      "failure_tags": []
+    },
+    {
+      "action": "schedule_redelivery",
+      "description": "Book the parcel onto another delivery run right now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "contact_courier_depot",
+      "description": "Ring the depot about the parcel.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the booking alone and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request because the delivery interval has passed.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "prosody_pair": {
+    "native_prosody": "urgent",
+    "high": {
+      "prosody": "urgent",
+      "expected_style": "acknowledge_impact"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's impact or urgency before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "What changed for the user recently?",
+      "gold_answer": "they relocated last month",
+      "targets": "clue",
+      "turn_distance": 8,
+      "bucket": "5-8"
+    },
+    {
+      "q_id": "q2",
+      "question": "Was anyone at home for the attempt?",
+      "gold_answer": "yes, all afternoon",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "Where did the parcel end up?",
+      "gold_answer": "it went back to the sender",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

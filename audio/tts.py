@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from dual_audio.core.conditions import CONDITIONS, condition_turns, prosody_for
 from dual_audio.core.environment import execute_action, post_gap_observation, transition
 from dual_audio.modalities.audio import TurnAudioRenderer

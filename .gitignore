@@ -7,3 +7,6 @@ data/replay_audio/
 
 # Local smoke artifact created during development.
 results/fake_closed_loop_smoke_retention.png
+
+# Local API credentials (OpenRouter/Gemini keys).
+.env

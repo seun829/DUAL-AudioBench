@@ -1,0 +1,4 @@
+condition,n,pass1,pre_gap,post_gap,state_belief,action_chance,two_action_chance,trajectory_chance,belief_revision_gain,stale_belief_persistence,mean_brier,ece
+clue_removed,168,0.1905,0.7619,0.3393,0.4107,0.2,0.04,0.000603,0.6667,0.0738,0.6877,0.3247
+full_audio,168,0.2381,0.7798,0.4583,0.375,0.2,0.04,0.000603,0.6273,0.0966,0.6539,0.2962
+transcript_only,168,0.4286,0.7321,0.7679,0.5476,0.2,0.04,0.000603,0.8713,0.0248,0.2515,0.0805

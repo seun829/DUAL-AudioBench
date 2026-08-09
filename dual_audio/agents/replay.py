@@ -112,14 +112,56 @@ def _transcript_prompt(observation: Observation, history: list[dict]) -> str:
     return "\n".join(lines) + "\n\n" + _instruction(observation)
 
 
+def _json_candidates(raw: str) -> list[str]:
+    """Yield decreasingly strict JSON slices of a model reply.
+
+    Hosted models often wrap the requested object in a Markdown fence or add a
+    sentence around it. An unparsed reply degrades silently into a uniform
+    belief plus a regex label guess, so recover the object where possible
+    instead of discarding the row.
+    """
+
+    text = raw.strip()
+    candidates = [text]
+    fenced = re.findall(r"```(?:json)?\s*(.*?)```", text, re.DOTALL | re.IGNORECASE)
+    candidates.extend(block.strip() for block in fenced)
+    start = text.find("{")
+    if start != -1:
+        depth = 0
+        in_string = escaped = False
+        for index in range(start, len(text)):
+            char = text[index]
+            if in_string:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    in_string = False
+                continue
+            if char == '"':
+                in_string = True
+            elif char == "{":
+                depth += 1
+            elif char == "}":
+                depth -= 1
+                if depth == 0:
+                    candidates.append(text[start : index + 1])
+                    break
+    return candidates
+
+
 def _parse_json(raw: str) -> dict:
     """Parse a top-level JSON object or return an empty object."""
 
-    try:
-        parsed = json.loads(raw)
-        return parsed if isinstance(parsed, dict) else {}
-    except (json.JSONDecodeError, TypeError):
-        return {}
+    for candidate in _json_candidates(raw):
+        try:
+            parsed = json.loads(candidate)
+        except (json.JSONDecodeError, TypeError):
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    return {}
 
 
 def _extract_label(

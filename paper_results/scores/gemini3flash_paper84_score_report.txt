@@ -1,0 +1,46 @@
+Models: openrouter | completed trajectories: 504
+
+Primary closed-loop metrics
+condition                  n   pass@1     pre    post  majority  seed var           95% CI  all trials
+full_audio               168    51.8%   94.6%   75.6%     35.7%    0.0086      42.9%-60.7%       35.7%
+transcript_only          168    62.5%   89.9%   78.0%     51.2%    0.0001      53.6%-71.4%       51.2%
+clue_removed             168    42.9%   94.0%   55.4%     28.6%    0.0003      33.9%-51.8%       28.6%
+
+Supplemental repeated-sampling metric
+condition                 pass@5  action chance   2-action chance   full chance
+full_audio                 67.9%          20.0%              4.0%        0.060%
+transcript_only            73.8%          20.0%              4.0%        0.060%
+clue_removed               57.1%          20.0%              4.0%        0.060%
+
+Explicit hidden-state belief tracking
+condition                 valid     pre  post obs  pre-final  revision    stale    Brier     ECE
+full_audio                98.2%   72.6%     98.2%      92.9%     88.2%     0.3%    0.172    5.7%
+transcript_only           99.8%   82.7%     99.4%     100.0%     89.1%     0.1%    0.107    4.0%
+clue_removed              98.4%   77.4%     91.7%      86.9%     87.9%     0.3%    0.254   10.9%
+
+Belief-action and risk consistency
+condition                 pre A-B  final A-B  risk flag  uncertain act  uncertain check
+full_audio                  69.0%      76.1%      81.7%           1.6%             2.0%
+transcript_only             74.4%      78.0%      75.4%           1.2%             0.0%
+clue_removed                78.6%      54.4%      82.1%           1.2%             1.0%
+
+Belief x action outcome matrix (pre-gap and final decisions)
+  FULL_SUCCESS                        698  69.2%
+  ACTION_SELECTION_FAILURE            163  16.2%
+  LUCKY_ACTION                        121  12.0%
+  STATE_SYNCHRONIZATION_FAILURE        26  2.6%
+
+Clue-ablation check: full minus clue-removed post-gap accuracy = +20.2% across 168 paired trials.
+
+Failure tags (multilabel counts; percentages need not sum to 100%)
+  STATE_BELIEF_ERROR              129  53.8% of failed trajectories
+  EARLY_CLUE_LOSS                  93  38.8% of failed trajectories
+  STATE_SYNC_FAILURE               27  11.2% of failed trajectories
+  TIME_INFERENCE_FAILURE           26  10.8% of failed trajectories
+  BELIEF_REPORT_INVALID            18  7.5% of failed trajectories
+  REPEATED_ACTION                  18  7.5% of failed trajectories
+  PREMATURE_CLOSE                   9  3.8% of failed trajectories
+  ACTION_SELECTION_FAILURE          5  2.1% of failed trajectories
+  PREMATURE_ESCALATION              1  0.4% of failed trajectories
+
+Retention curve -> results\gemini3flash_paper84_retention.png
