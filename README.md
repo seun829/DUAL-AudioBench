@@ -106,6 +106,22 @@ The compatibility filename `models/gemini_live.py` now uses Gemini's standard
 multimodal content call. Half-duplex interaction is provided by the benchmark
 runner, so a persistent realtime session is not required.
 
+### OpenRouter
+
+Any audio-capable model reachable through OpenRouter's OpenAI-compatible
+endpoint can be evaluated without a provider-specific SDK:
+
+```powershell
+$env:OPENROUTER_API_KEY = "..."          # or a key= entry in .env
+$env:OPENROUTER_MODEL = "google/gemini-2.5-flash"
+python run_eval.py --model openrouter --conditions full_audio --passes 5
+```
+
+Token usage and upstream cost are accumulated per run and written to
+`results/openrouter_usage.json`. Note that audio-native models such as
+`openai/gpt-audio-mini` reject text-only requests and therefore cannot run
+`transcript_only`; check both `ask` and `ask_text` before committing to a run.
+
 ### Qwen
 
 The local Qwen adapter requires PyTorch, Transformers, and
@@ -268,6 +284,21 @@ Current domain mechanics include:
 | Router support | Starts maintenance or records another selected action | A sufficiently long maintenance window can stall a corrupted device at 47% |
 | Pharmacy | Submits or changes the handling of a claim | A processor cycle approves or rejects from the active/billed-plan state |
 | Travel | Enables monitoring or changes itinerary handling | A departure-delay event updates connection feasibility |
+| Banking | Files a disputed charge for automated review | A review cycle returns unmatched when the filed card differs from the charged card |
+| Scheduling | Requests coverage approval for a booking | An authorization review declines a referral from an ineligible provider type |
+| Logistics | Books a parcel onto a delivery run | A delivery window returns the parcel when the label address is stale |
+| Energy | Submits a meter reading for validation | A validation cycle flags the reading when supply points are unregistered |
+| Account access | Starts a credential reset | A propagation window leaves the account locked when authentication is federated |
+| Repair | Opens a warranty claim for assessment | An assessment cycle rejects a purchase channel outside the covered terms |
+| Housing | Dispatches a contractor visit | A visit window records refused access when entry permissions are stale |
+| Mobile service | Sends a number transfer to the porting queue | A porting window rejects a mismatched ownership record |
+| Education | Submits an enrolment for registration | A registration run holds enrolment when prior study is unassessed |
+| Motor insurance | Lodges a damage report for assessment | An assessment run holds the claim when the keeper differs from the policyholder |
+| Permits | Submits a permit application for eligibility checking | An eligibility check refuses proof naming another occupant |
+
+All fourteen domains share one structural schema: a clue reveals a latent
+property, the naive pre-gap action proceeds anyway, and the external event
+resolves against the user. That is breadth of surface form, not of mechanism.
 
 Unit tests verify that identical inputs return equal states and that changing
 the pre-gap action changes the result where expected.
@@ -597,11 +628,13 @@ dual_audio/
   users/           deterministic state-conditioned user simulator
 audio/             gold-path individual-turn rendering CLI
 scenarios/         domain templates, leak guards, audited generator
-models/            Gemini, Qwen, and fake compatibility modules
+models/            Gemini, Qwen, OpenRouter, and fake compatibility modules
 data/scenarios/    generated schema-v0.3 benchmark tasks
 tests/             transitions, controls, runner, generator, metrics
+analyze_pilot.py   saves paired deltas and belief/action matrices as files
 run_eval.py        crash-resumable batch trajectory runner
 score.py           metrics, control comparisons, tags, retention plot
+paper_results/     cross-model results, scores, figures, and cost records
 ```
 
 ## Implementation summaries

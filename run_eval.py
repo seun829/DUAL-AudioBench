@@ -30,10 +30,14 @@ def get_agent(name: str):
 
     if name == "fake":
         return MockAgent()
-    if name not in {"gemini", "qwen"}:
+    modules = {
+        "gemini": "models.gemini_live",
+        "qwen": "models.qwen_omni",
+        "openrouter": "models.openrouter",
+    }
+    if name not in modules:
         raise ValueError(name)
-    module_name = "models.gemini_live" if name == "gemini" else "models.qwen_omni"
-    return ReplayModelAgent(importlib.import_module(module_name))
+    return ReplayModelAgent(importlib.import_module(modules[name]))
 
 
 def parse_conditions(value: str) -> list[str]:
@@ -75,7 +79,11 @@ def main() -> None:
     """Run the crash-resumable task x condition x seed evaluation batch."""
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", choices=["fake", "gemini", "qwen"], required=True)
+    parser.add_argument(
+        "--model",
+        choices=["fake", "gemini", "qwen", "openrouter"],
+        required=True,
+    )
     parser.add_argument("--scenarios", default="data/scenarios")
     parser.add_argument(
         "--conditions",
