@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import subprocess
 import tempfile
 import wave
@@ -25,23 +26,36 @@ class TurnAudioRenderer:
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-    def render(self, text: str, speaker: str, prosody: str = "neutral") -> Path:
+    def render(
+        self,
+        text: str,
+        speaker: str,
+        prosody: str = "neutral",
+        voice: str | None = None,
+    ) -> Path:
         """Render and cache a normalized 16 kHz, mono, signed-16-bit WAV."""
 
+        resolved_voice = voice or VOICE[speaker]
         key = hashlib.sha256(
-            f"{speaker}|{prosody}|{text}".encode("utf-8")
+            f"{speaker}|{resolved_voice}|{prosody}|{text}".encode("utf-8")
         ).hexdigest()[:24]
         target = self.cache_dir / f"{key}.wav"
         if target.exists():
             return target
         pitch, speed = PROSODY.get(prosody, PROSODY["neutral"])
+        espeak_bin = os.environ.get("ESPEAK_NG_BIN", "espeak-ng")
+        ffmpeg_bin = os.environ.get("FFMPEG_BIN", "ffmpeg")
+        espeak_args = [espeak_bin]
+        data_dir = os.environ.get("ESPEAK_NG_DATA_DIR")
+        if data_dir:
+            espeak_args.append(f"--path={data_dir}")
         with tempfile.TemporaryDirectory() as tmp:
             raw = Path(tmp) / "raw.wav"
             subprocess.run(
-                [
-                    "espeak-ng",
+                espeak_args
+                + [
                     "-v",
-                    VOICE[speaker],
+                    resolved_voice,
                     "-p",
                     pitch,
                     "-s",
@@ -55,7 +69,7 @@ class TurnAudioRenderer:
             )
             subprocess.run(
                 [
-                    "ffmpeg",
+                    ffmpeg_bin,
                     "-y",
                     "-i",
                     str(raw),

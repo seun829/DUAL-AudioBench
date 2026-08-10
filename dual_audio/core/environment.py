@@ -510,6 +510,11 @@ def correct_action(domain: str, state: dict[str, Any]) -> str:
 
     if domain == "tech_support":
         status = state["firmware_status"]
+        if (
+            state.get("benchmark_schema") == "0.5"
+            and status == "completed"
+        ):
+            return "close_case"
         if status in {"stuck", "completed", "interrupted"}:
             return "inspect_persistent_state"
         if status == "not_started":
@@ -530,6 +535,11 @@ def correct_action(domain: str, state: dict[str, Any]) -> str:
     if domain == "travel":
         if state["connection_status"] == "missed":
             return "protect_onward_segment"
+        if (
+            state.get("benchmark_schema") == "0.5"
+            and state["connection_status"] == "viable"
+        ):
+            return "close_case"
         return "enable_itinerary_monitoring"
     if domain == "banking":
         status = state["dispute_status"]

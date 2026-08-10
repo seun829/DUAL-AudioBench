@@ -1,0 +1,3 @@
+[openrouter/closed_loop] 0 trajectories logged; conditions=['hidden_user_action', 'prosody_high', 'prosody_low']
+fail flight_12to20_v0/hidden_user_action/seed=0
+fail flight_12to20_v0/prosody_high/seed=0

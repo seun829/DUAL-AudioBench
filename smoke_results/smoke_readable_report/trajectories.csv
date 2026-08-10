@@ -1,0 +1,2 @@
+source,model,scenario_id,domain,bucket,condition,seed,trajectory_success,action_trajectory_success,pre_gap_success,post_gap_success,belief_reporting_success,state_belief_success,response_style_success,failure_tags,model_calls,prompt_tokens,completion_tokens,total_tokens,cost,latency_s,error
+results\openrouter_gemini_2_5_flash_smoke.jsonl,google/gemini-2.5-flash,flight_12to20_v0,travel,12-20,transcript_only,0,False,True,True,True,False,False,,BELIEF_REPORT_INVALID;STATE_BELIEF_ERROR,,,,,,23.575,

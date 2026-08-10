@@ -17,6 +17,7 @@ class Observation:
     action_menu: tuple[dict[str, str], ...] = ()
     style_menu: tuple[dict[str, str], ...] = ()
     belief_schema: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    belief_definitions: dict[str, dict[str, str]] | None = None
     prior_state_belief: dict[str, dict[str, float]] = field(default_factory=dict)
     # Test adapters may use private metadata. Production prompts never serialize it.
     private: dict[str, Any] = field(default_factory=dict, repr=False, compare=False)

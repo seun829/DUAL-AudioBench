@@ -4,6 +4,10 @@ __pycache__/
 # Runtime-generated turn/replay audio.
 data/turn_audio/
 data/replay_audio/
+data/runtime_audio/
+
+# Locally extracted command-line dependencies.
+.tools/
 
 # Local smoke artifact created during development.
 results/fake_closed_loop_smoke_retention.png

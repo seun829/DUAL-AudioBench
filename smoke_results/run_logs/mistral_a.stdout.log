@@ -1,0 +1,2 @@
+[openrouter/closed_loop] 3 trajectories logged; conditions=['full_audio', 'gap_no_state_change', 'state_change_short']
+fail flight_12to20_v1/full_audio/seed=0

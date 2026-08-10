@@ -40,7 +40,15 @@ TAGS = {
 COMMON_STYLES = [
     style(
         "acknowledge_impact",
-        "Briefly acknowledge the user's impact or urgency before proceeding.",
+        "Briefly acknowledge the user's frustration or experienced impact before proceeding.",
+    ),
+    style(
+        "acknowledge_urgency",
+        "Acknowledge the time pressure and prioritize the immediate next step.",
+    ),
+    style(
+        "clarify_and_reassure",
+        "Briefly clarify the situation and reassure the user before proceeding.",
     ),
     style(
         "proceed_directly",
@@ -55,7 +63,7 @@ TEMPLATES = {
         "clue": "One thing I remember: this all started right after we had a power outage last week.",
         "clue_prompt": "Was there any event around the time the problem first began?",
         "clue_answer": "a power outage",
-        "clue_ablation_text": "No, I do not remember any event around when it began.",
+        "clue_ablation_text": "I am not sure; I do not have that detail available.",
         "setup": [
             ("user", "Hi, my router keeps dropping the connection every few minutes."),
             ("agent", "Sorry to hear that. How long has this been happening?"),
@@ -191,7 +199,7 @@ TEMPLATES = {
         "clue": "My coverage is switching over; the replacement plan started on the first of this month.",
         "clue_prompt": "Has anything about the account or coverage changed recently?",
         "clue_answer": "a replacement insurance plan began this month",
-        "clue_ablation_text": "No, nothing about the account comes to mind.",
+        "clue_ablation_text": "I am not sure; I do not have the account-history detail available.",
         "setup": [
             ("user", "Hi, I am calling to refill my blood pressure prescription."),
             ("agent", "Can I get your date of birth to open the profile?"),
@@ -325,7 +333,7 @@ TEMPLATES = {
         "clue": "Keep in mind I have another flight out of Denver, and there are only ninety minutes between them.",
         "clue_prompt": "Is this trip ending in Denver, or is there another segment afterward?",
         "clue_answer": "a 90-minute onward connection in Denver",
-        "clue_ablation_text": "Denver is the only part of the trip I need help with right now.",
+        "clue_ablation_text": "I am not sure; I do not have the rest of the itinerary available.",
         "setup": [
             ("user", "Hi, I am checking on my flight to Denver this afternoon."),
             ("agent", "I see the two-fifteen departure. Is that the flight you mean?"),
@@ -459,7 +467,7 @@ TEMPLATES = {
         "clue": "Worth mentioning: my card was reissued a few weeks ago after a skimming alert.",
         "clue_prompt": "Has anything about the card itself changed before this charge?",
         "clue_answer": "the card was reissued after a skimming alert",
-        "clue_ablation_text": "No, nothing about the card itself has changed.",
+        "clue_ablation_text": "I am not sure; I do not have the card-history detail available.",
         "setup": [
             ("user", "Hi, there is a charge on my account that I did not make."),
             ("agent", "I can help with that. Do you see the amount and date?"),
@@ -589,7 +597,7 @@ TEMPLATES = {
         "clue": "I should say the referral came from the walk-in centre, not my regular physician.",
         "clue_prompt": "Where did the referral originate?",
         "clue_answer": "a walk-in centre rather than the regular physician",
-        "clue_ablation_text": "The referral came through the usual way, nothing unusual.",
+        "clue_ablation_text": "I am not sure; I do not have the referral-source detail available.",
         "setup": [
             ("user", "Hi, I am trying to book the specialist appointment I was referred for."),
             ("agent", "I can look at that. Do you have the referral date?"),
@@ -719,7 +727,7 @@ TEMPLATES = {
         "clue": "Bear in mind I relocated last month, and I doubt every record caught up.",
         "clue_prompt": "Has anything about where you receive parcels changed lately?",
         "clue_answer": "the user relocated last month",
-        "clue_ablation_text": "Nothing has changed about where I receive parcels.",
+        "clue_ablation_text": "I am not sure; I cannot confirm whether every address record is current.",
         "setup": [
             ("user", "Hi, a parcel of mine says it could not be delivered."),
             ("agent", "I can check that. Do you have the tracking reference?"),
@@ -849,7 +857,7 @@ TEMPLATES = {
         "clue": "Something to note: the property has a second meter that arrived with the extension.",
         "clue_prompt": "Is there anything unusual about how the property is metered?",
         "clue_answer": "the property has a second meter",
-        "clue_ablation_text": "No, the property is metered in the ordinary way.",
+        "clue_ablation_text": "I am not sure; I do not have the full metering detail available.",
         "setup": [
             ("user", "Hi, my latest energy statement looks far too high."),
             ("agent", "I can look into that. Do you have the account reference?"),
@@ -979,7 +987,7 @@ TEMPLATES = {
         "clue": "Relevant detail: our company switched to single sign-on just before the holidays.",
         "clue_prompt": "Has the way your company handles logins changed at all?",
         "clue_answer": "the company switched to single sign-on",
-        "clue_ablation_text": "No, the way we log in has stayed the same.",
+        "clue_ablation_text": "I am not sure; I cannot confirm the sign-in configuration history.",
         "setup": [
             ("user", "Hi, I cannot get into my work account this morning."),
             ("agent", "I can help. Does it reject you at the first screen?"),
@@ -1109,7 +1117,7 @@ TEMPLATES = {
         "clue": "I ought to mention we bought it as a display unit, discounted from the shop floor.",
         "clue_prompt": "How was the appliance purchased originally?",
         "clue_answer": "as a discounted display unit",
-        "clue_ablation_text": "We bought it in the ordinary way, nothing special.",
+        "clue_ablation_text": "I am not sure; I do not have the original purchase detail available.",
         "setup": [
             ("user", "Hi, my washing machine has stopped draining properly."),
             ("agent", "I can look at that. Do you have the model number?"),
@@ -1239,7 +1247,7 @@ TEMPLATES = {
         "clue": "Worth knowing: the building changed managing agents at the start of the quarter.",
         "clue_prompt": "Has anything changed about who looks after the building?",
         "clue_answer": "the building changed managing agents",
-        "clue_ablation_text": "No, nothing has changed about who looks after the building.",
+        "clue_ablation_text": "I am not sure; I cannot confirm the building-management history.",
         "setup": [
             ("user", "Hi, the heating in my flat has not worked for three days."),
             ("agent", "I am sorry about that. Can you confirm the flat number?"),
@@ -1369,7 +1377,7 @@ TEMPLATES = {
         "clue": "I should flag that I upgraded the handset through a separate reseller in the spring.",
         "clue_prompt": "How was the current arrangement originally set up?",
         "clue_answer": "through a separate reseller",
-        "clue_ablation_text": "It was all set up the standard way, nothing unusual.",
+        "clue_ablation_text": "I am not sure; I do not have the handset-purchase detail available.",
         "setup": [
             ("user", "Hi, I am trying to move my number across to your network."),
             ("agent", "I can start that. Do you have the transfer code ready?"),
@@ -1499,7 +1507,7 @@ TEMPLATES = {
         "clue": "One detail: I transferred credits from a college overseas last autumn.",
         "clue_prompt": "Is any of your prior study from outside the usual system?",
         "clue_answer": "credits transferred from overseas",
-        "clue_ablation_text": "No, all of my prior study was done locally.",
+        "clue_ablation_text": "I am not sure; I do not have my prior-study records available.",
         "setup": [
             ("user", "Hi, I am trying to finish enrolling for the coming term."),
             ("agent", "I can help with that. Do you have your student reference?"),
@@ -1629,7 +1637,7 @@ TEMPLATES = {
         "clue": "I ought to say the vehicle is registered to my partner, not to me.",
         "clue_prompt": "Whose name is on the ownership paperwork?",
         "clue_answer": "the partner, not the caller",
-        "clue_ablation_text": "The paperwork is all in the usual name, nothing unusual.",
+        "clue_ablation_text": "I am not sure; I do not have the ownership paperwork available.",
         "setup": [
             ("user", "Hi, I need to report some damage to my car from this morning."),
             ("agent", "I am sorry to hear that. Was anybody injured?"),
@@ -1759,7 +1767,7 @@ TEMPLATES = {
         "clue": "Worth saying the tenancy paperwork is in the name of my flatmate, not mine.",
         "clue_prompt": "Whose name is on the household documents?",
         "clue_answer": "the flatmate, not the caller",
-        "clue_ablation_text": "The household documents are in the usual name, nothing unusual.",
+        "clue_ablation_text": "I am not sure; I do not have the household documents available.",
         "setup": [
             ("user", "Hi, I am applying for a resident parking permit."),
             ("agent", "I can take you through that. Do you have the property reference?"),
@@ -1885,3 +1893,17 @@ TEMPLATES = {
         ],
     },
 }
+
+
+# High-affect deliveries require category-specific behavior.  This is applied
+# once at template load so every generated scenario contains an explicit gold
+# mapping rather than collapsing urgency, frustration, and confusion into one
+# generic response.
+HIGH_STYLE_BY_PROSODY = {
+    "frustrated": "acknowledge_impact",
+    "urgent": "acknowledge_urgency",
+    "confused": "clarify_and_reassure",
+}
+for _template in TEMPLATES.values():
+    _high = _template["prosody_pair"]["high"]
+    _high["expected_style"] = HIGH_STYLE_BY_PROSODY[_high["prosody"]]

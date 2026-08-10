@@ -1,0 +1,372 @@
+{
+  "schema_version": "0.5",
+  "scenario_id": "bank_1to2_b0_s05",
+  "domain": "banking",
+  "bucket": "1-2",
+  "clue_turn_distance": 2,
+  "distance_definition": "Number of agent/user turns after the causal clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "My current card was reissued, but the disputed transaction carried the original card reference.",
+  "clue_answer": "the charge used the original identifier while the current card was reissued",
+  "clue_ablation_text": "I am not sure; I do not have the card-history detail available.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, there is a charge on my account that I did not make.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I can help with that. Do you see the amount and date?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it is forty-two dollars from last Tuesday.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "The automated review accepts a dispute only when the charge's card identifier matches the current card record; otherwise it returns unmatched.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "user",
+      "text": "Understood; I checked which card identifier the charge used.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you shared the number with any recurring service?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Only my usual streaming subscription.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you use the mobile application to check balances?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, almost every day.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like alerts for every future transaction?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, please turn those on.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would a paper copy of the outcome be helpful?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, electronic is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Did you travel outside your normal area recently?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, I have been home all month.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the mailing address on the profile still correct?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that address is right.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Were there other unfamiliar amounts on the same statement?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, just that single one.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the contact number ending in six-one-eight still yours?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that number is current.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Was the physical card in your possession that day?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it was in my wallet the whole time.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Was the disputed charge tied to the same card identifier that is currently on file?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "My current card was reissued, but the disputed transaction carried the original card reference.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "File the disputed amount into the automated review queue.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will wait while that goes through.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "dispute_status": "not_filed",
+    "dispute_attempts": 0,
+    "card_on_file": "reissued",
+    "charge_card": "original",
+    "records_reconciled": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_confirmed_reissue": false,
+    "causal_alignment": "misaligned",
+    "benchmark_schema": "0.5"
+  },
+  "pre_gap": {
+    "agent_turn_index": 25,
+    "correct_action": "file_dispute"
+  },
+  "transition": {
+    "elapsed_minutes": 25,
+    "external_event": {
+      "type": "dispute_review_cycle",
+      "minimum_minutes": 25
+    },
+    "user_action": {
+      "action": "call_card_services",
+      "at_minute": 9
+    }
+  },
+  "belief_schema": {
+    "dispute_status": [
+      "not_filed",
+      "under_review",
+      "returned_unmatched",
+      "approved"
+    ],
+    "causal_alignment": [
+      "misaligned",
+      "aligned"
+    ]
+  },
+  "belief_definitions": {
+    "dispute_status": {
+      "not_filed": "the disputed charge has not been submitted for review",
+      "under_review": "the dispute is in the automated review process",
+      "returned_unmatched": "review returned because the submitted details did not match the stored record",
+      "approved": "the dispute was accepted"
+    },
+    "causal_alignment": {
+      "misaligned": "the charge identifier differs from the current card record",
+      "aligned": "the charge identifier matches the current card record"
+    }
+  },
+  "revalidation_actions": [
+    "reconcile_card_records"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "file_dispute",
+      "description": "File the disputed amount into the automated review queue.",
+      "failure_tags": []
+    },
+    {
+      "action": "order_replacement_card",
+      "description": "Send out another physical card before reviewing the charge.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "freeze_account",
+      "description": "Freeze the whole account before the charge is examined.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "request_merchant_receipt",
+      "description": "Ask the merchant for paperwork before opening anything.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and tell the user to watch the balance.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "reconcile_card_records",
+      "description": "Match the stored account identifiers against the charge before trying again.",
+      "failure_tags": []
+    },
+    {
+      "action": "file_dispute",
+      "description": "Put the same amount through the automated queue again now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "request_merchant_receipt",
+      "description": "Ask the merchant for paperwork about the amount.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the existing entry alone and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request because the review interval has passed.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "causal_design": {
+    "pair_id": "bank:1-2:s05",
+    "paired_scenario_id": "bank_1to2_b1_s05",
+    "branch": "misaligned",
+    "outcome_variable": "dispute_status",
+    "hidden_outcomes": [
+      "returned_unmatched",
+      "approved"
+    ],
+    "expected_post_action": "reconcile_card_records",
+    "intervention": "early_clue_only"
+  },
+  "causal_post_gap_observation": {
+    "state_variable": "dispute_status",
+    "hidden_values": [
+      "returned_unmatched",
+      "approved"
+    ],
+    "text": "Twenty-five minutes have passed and the dispute review finished, but its result code is hidden. Based on the card detail I gave earlier, what should happen next?"
+  },
+  "menu_pairing_id": "bank:1-2:s05",
+  "prosody_pair": {
+    "native_prosody": "frustrated",
+    "high": {
+      "prosody": "frustrated",
+      "expected_style": "acknowledge_impact"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "bank:1-2:s05:misaligned",
+    "transcript_variant": 0,
+    "voice_variant": 0
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f3",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "Was the disputed charge tied to the same card identifier that is currently on file?",
+      "gold_answer": "the charge used the original identifier while the current card was reissued",
+      "targets": "clue",
+      "turn_distance": 2,
+      "bucket": "1-2"
+    },
+    {
+      "q_id": "q2",
+      "question": "What was the disputed amount?",
+      "gold_answer": "forty-two dollars",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What did the review return?",
+      "gold_answer": "it came back unmatched",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

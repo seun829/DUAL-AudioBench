@@ -82,13 +82,17 @@ Python 3.10 or newer is recommended. The fake agent validates orchestration
 without model weights, API keys, TTS, or audio tools:
 
 ```bash
-python scenarios/generate.py --variants 2
+python scenarios/generate_v05.py
 python run_eval.py --model fake --conditions all --passes 5
-python score.py closed_loop results/fake_closed_loop.jsonl
+python score.py closed_loop results/fake_v05_closed_loop.jsonl
 python -m unittest discover -s tests -v
 ```
 
-The default output is `results/<model>_closed_loop.jsonl`. Runs are
+Generation and evaluation default to the main benchmark in
+`data/scenarios_v05/`. The schema-v0.3 files in `data/scenarios/` and
+schema-v0.4 files in `data/scenarios_v04/` remain frozen; do not pool
+trajectories across schema versions. The default output is
+`results/<model>_v05_closed_loop.jsonl`. Runs are
 checkpointed after every trajectory and resume by `(scenario, condition,
 seed)`.
 
@@ -117,8 +121,8 @@ $env:OPENROUTER_MODEL = "google/gemini-2.5-flash"
 python run_eval.py --model openrouter --conditions full_audio --passes 5
 ```
 
-Token usage and upstream cost are accumulated per run and written to
-`results/openrouter_usage.json`. Note that audio-native models such as
+Token usage, upstream cost, and request latency are recorded on every
+trajectory and also accumulated in `results/openrouter_usage.json`. Note that audio-native models such as
 `openai/gpt-audio-mini` reject text-only requests and therefore cannot run
 `transcript_only`; check both `ask` and `ask_text` before committing to a run.
 
@@ -153,7 +157,8 @@ class Agent(Protocol):
 ```
 
 `Observation` contains the current text/audio turn, stage, public menu,
-allowed belief-state values, and instruction. `AgentResponse` contains a
+allowed belief-state values, their short operational definitions, and the
+instruction. `AgentResponse` contains a
 natural-language message, public action labels, probabilistic `state_belief`,
 and `needs_revalidation`. See
 [`dual_audio/core/types.py`](dual_audio/core/types.py).
@@ -366,9 +371,10 @@ Each stage has five natural-language choices. Before presentation:
 4. the same permutation is reused for paired conditions;
 5. generation rejects a correct option if it alone repeats a clue content word.
 
-The scorer also performs a paired clue-ablation analysis. If full and
-clue-removed performance differ by less than five percentage points, it prints
-a warning that the task may not be measuring clue use.
+The scorer also performs a paired clue-ablation analysis with a
+domain-clustered confidence interval and exact domain sign-flip test. The
+control is considered established only when the interval excludes zero on a
+capable model; a bare magnitude threshold is not treated as validation.
 
 ## Distance definition and validation
 
@@ -403,8 +409,16 @@ For example, a frustrated delivery expects a brief acknowledgement of impact,
 while a calm delivery expects a direct neutral transition to the operational
 step. The technical action remains state-dependent and unchanged.
 
-This implementation provides the experimental pair, not evidence that the TTS
-contrast is perceptually valid. Human audibility validation remains required.
+Schema v0.4 crosses three carrier-transcript variants with two eSpeak user
+voices and assigns category-specific gold approaches for frustration,
+urgency, and confusion. This provides the experimental pair, not evidence
+that the TTS contrast is perceptually valid. Blinded human audibility
+validation remains required.
+
+Schema v0.5 preserves that paired prosody design and adds 42 balanced causal
+clue pairs. In each pair, one early fact changes the terminal hidden state and
+the correct post-gap action while later public wording and menus remain fixed.
+See [`docs/V05_CAUSAL_DESIGN.md`](docs/V05_CAUSAL_DESIGN.md).
 
 ## Trajectory schema
 
@@ -438,7 +452,7 @@ This makes failures auditable without reconstructing state from a final answer.
 Run:
 
 ```bash
-python score.py closed_loop results/fake_closed_loop.jsonl
+python score.py closed_loop results/fake_v05_closed_loop.jsonl
 ```
 
 Primary metrics:
@@ -448,7 +462,8 @@ Primary metrics:
 - post-gap action accuracy;
 - scenario-level majority accuracy;
 - variance across run seeds;
-- scenario-clustered bootstrap 95% confidence intervals;
+- equal-weight domain-clustered bootstrap 95% confidence intervals and exact
+  domain sign-flip tests;
 - fraction of scenarios that succeed on every repeated trial.
 
 Belief-state metrics:
@@ -475,9 +490,11 @@ The scorer also reports the belief/action matrix:
 
 Supplemental metrics and diagnostics:
 
-- pass@5;
-- paired full-versus-clue-removed accuracy delta;
-- paired prosodic contrast success;
+- pass@k, labeled with the number of observed run seeds;
+- paired full-versus-clue-removed effect with uncertainty;
+- paired high/low response-style accuracy and directional contrast;
+- technical-action and top-belief invariance across prosody pairs;
+- belief Jensen-Shannon divergence across prosody pairs;
 - multilabel failure-tag distribution;
 - retention curve by clue-distance bucket.
 
@@ -485,15 +502,21 @@ Chance is calculated from logged menu sizes:
 
 - one five-choice action: `1/5 = 20%`;
 - two independent five-choice actions: `1/25 = 4%`.
+- one four-choice response approach: `1/4 = 25%`;
+- a matched high/low response-approach pair: `1/16 = 6.25%`.
 
-Schema-v0.3 full success additionally requires correct top-state beliefs at
-three checkpoints. The scorer therefore reports a dynamic full
+Schema-v0.3, v0.4, and v0.5 full success additionally require correct top-state
+beliefs at three checkpoints. The scorer therefore reports a dynamic full
 action-plus-belief chance baseline based on each task's belief-state space.
 Prosodic conditions additionally include their response-style choice.
 
-The retention plot shows the post-gap action, two-action, and full
-action-plus-belief floors. It does not use the previous incorrect `1/6`
-constant.
+The retention plot includes clustered uncertainty bands. Separate figures show
+the immediate audio/text belief gap and prosody selectivity. Generate a
+readable Markdown report, indented JSON, and CSV files with:
+
+```bash
+python report_results.py results/openrouter_v05_closed_loop.jsonl --out-dir results/report_v05
+```
 
 ## Failure tags and annotation
 
@@ -505,8 +528,8 @@ The task templates contain proposed tags, but publishable labels require
 independent annotation:
 
 ```bash
-python -m dual_audio.evaluation.annotations export data/scenarios ann_a.csv A
-python -m dual_audio.evaluation.annotations export data/scenarios ann_b.csv B
+python -m dual_audio.evaluation.annotations export data/scenarios_v05 ann_a.csv A
+python -m dual_audio.evaluation.annotations export data/scenarios_v05 ann_b.csv B
 python -m dual_audio.evaluation.annotations report ann_a.csv ann_b.csv
 ```
 
@@ -599,22 +622,20 @@ adapter, implement `Agent.respond` directly.
 
 ## Validation status
 
-During the closed-loop implementation:
+- The frozen v0.3 pilot contains 1,344 completed real-model trajectories over
+  84 tasks, three models, and zero terminal API errors.
+- The frozen v0.4 study contains 2,352 completed real-model trajectories over
+  84 separately identified tasks, two models, and seven conditions.
+- Schema v0.5 contains 84 tasks arranged as 42 balanced causal clue pairs. The
+  end-to-end fake run completed all 756 task-condition pairs with zero runtime
+  errors and generated every metric table and figure.
+- Fifty-five focused tests cover transitions, schemas, prompts, parsing,
+  domain-clustered inference, causal clue ablation, and matched prosody pairs.
+- A structural expert audit found all 14 mechanisms human-solvable in
+  principle; this is not a substitute for an empirical human baseline.
 
-- 18 schema-v0.3 tasks were regenerated;
-- all pre-gap and post-gap menus were verified to contain five choices;
-- generated tasks were verified not to contain hard-coded `state_update`
-  objects;
-- 16 focused unit tests passed;
-- an 810-trajectory schema-v0.3 fake-agent run completed across all nine
-  conditions and five seeds;
-- the fake run demonstrated dynamic chance floors, clue-ablation reporting,
-  prosodic-pair scoring, hidden user actions, explicit belief revision,
-  calibration, action-belief coupling, and multilabel failure reporting.
-
-The fake agent is an orchestration test only. Human task solvability,
-independent trap annotation, audible-prosody validation, and real-model
-evaluation remain empirical work.
+The fake agent remains an orchestration fixture. Independent trap annotation,
+audible-prosody validation, and human accuracy are still empirical work.
 
 ## Repository layout
 
@@ -630,6 +651,8 @@ audio/             gold-path individual-turn rendering CLI
 scenarios/         domain templates, leak guards, audited generator
 models/            Gemini, Qwen, OpenRouter, and fake compatibility modules
 data/scenarios/    generated schema-v0.3 benchmark tasks
+data/scenarios_v04/ frozen schema-v0.4 validation tasks
+data/scenarios_v05/ main schema-v0.5 causal-pair tasks
 tests/             transitions, controls, runner, generator, metrics
 analyze_pilot.py   saves paired deltas and belief/action matrices as files
 run_eval.py        crash-resumable batch trajectory runner
@@ -645,3 +668,12 @@ The original passive-to-agentic conversion is documented in
 The belief-tracking and hidden-user-action extension added afterward is
 documented in
 [`docs/IMPLEMENTATION_SUMMARY_V2.md`](docs/IMPLEMENTATION_SUMMARY_V2.md).
+
+The versioned prompt, prosody, statistics, reporting, and paid-run changes are
+documented in
+[`docs/IMPLEMENTATION_SUMMARY_V04.md`](docs/IMPLEMENTATION_SUMMARY_V04.md).
+
+The causal-clue redesign and experiment/versioning strategy are documented in
+[`docs/V05_CAUSAL_DESIGN.md`](docs/V05_CAUSAL_DESIGN.md),
+[`paper_results/v05/RUN_PLAN.md`](paper_results/v05/RUN_PLAN.md), and
+[`docs/PAPER_VERSIONING_STRATEGY.md`](docs/PAPER_VERSIONING_STRATEGY.md).

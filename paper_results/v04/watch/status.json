@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-08-10T03:32:59.8455634Z",
+  "live_shards": 0,
+  "runs": [
+    "gemini25_headline",
+    "gemini3_headline",
+    "gemini25_controls",
+    "gemini3_controls"
+  ],
+  "processes": [],
+  "finalized_at": "2026-08-10T03:32:59.8455634Z",
+  "report_directory": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\reports\\headline_and_controls"
+}

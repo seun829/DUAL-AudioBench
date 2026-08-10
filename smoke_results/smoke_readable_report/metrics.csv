@@ -1,0 +1,2 @@
+model,condition,n,trajectory_pass1,action_trajectory_success,pre_gap_success,post_gap_success,belief_validity,belief_pre_accuracy,belief_post_observation_accuracy,belief_pre_final_accuracy,revision_gain,stale_belief_persistence,brier,ece,prompt_tokens,completion_tokens,total_tokens,cost,model_calls
+google/gemini-2.5-flash,transcript_only,1,0.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,,,0,0,0,0.0,0

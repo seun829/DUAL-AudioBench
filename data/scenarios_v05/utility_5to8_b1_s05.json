@@ -1,0 +1,372 @@
+{
+  "schema_version": "0.5",
+  "scenario_id": "utility_5to8_b1_s05",
+  "domain": "energy",
+  "bucket": "5-8",
+  "clue_turn_distance": 6,
+  "distance_definition": "Number of agent/user turns after the causal clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "The property has two meters, and the supplier profile lists both of them.",
+  "clue_answer": "both property meters were registered",
+  "clue_ablation_text": "I am not sure; I do not have the full metering detail available.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, my latest energy statement looks far too high.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I can look into that. Do you have the account reference?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it ends in four-eight-one.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Reading validation succeeds only when every meter at the property is registered on the account; an omitted meter is flagged.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "user",
+      "text": "Understood; I compared the meters with the account.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like a breakdown by period?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that would be helpful.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the contact number ending in five-five-two right?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that is correct.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you added any large appliance lately?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, nothing new like that.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Has your household size changed this quarter?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, still the same two of us.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Has anyone been out to the property recently?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, nobody has visited.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the heating electric or gas?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "It is all electric here.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the statement paper or electronic?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Electronic, it arrives by email.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Does the account include every meter currently at the property?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "The property has two meters, and the supplier profile lists both of them.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you pay by fixed monthly amount?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, a fixed amount each month.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like the outcome by email as well?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, email is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Send the figure you gave me for automated validation.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will wait to hear back.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "reading_status": "not_submitted",
+    "submission_attempts": 0,
+    "registered_points": 2,
+    "actual_points": 2,
+    "points_registered": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_photographed_dials": false,
+    "causal_alignment": "aligned",
+    "benchmark_schema": "0.5"
+  },
+  "pre_gap": {
+    "agent_turn_index": 25,
+    "correct_action": "submit_reading"
+  },
+  "transition": {
+    "elapsed_minutes": 25,
+    "external_event": {
+      "type": "billing_validation_cycle",
+      "minimum_minutes": 25
+    },
+    "user_action": {
+      "action": "photograph_dials",
+      "at_minute": 10
+    }
+  },
+  "belief_schema": {
+    "reading_status": [
+      "not_submitted",
+      "validating",
+      "flagged_incomplete",
+      "accepted"
+    ],
+    "causal_alignment": [
+      "misaligned",
+      "aligned"
+    ]
+  },
+  "belief_definitions": {
+    "reading_status": {
+      "not_submitted": "the meter reading has not been submitted",
+      "validating": "the submitted reading is undergoing validation",
+      "flagged_incomplete": "validation found that the submitted reading omits required supply information",
+      "accepted": "the reading passed validation"
+    },
+    "causal_alignment": {
+      "misaligned": "at least one property meter is missing from the account",
+      "aligned": "every property meter is registered on the account"
+    }
+  },
+  "revalidation_actions": [
+    "register_all_supply_points"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "submit_reading",
+      "description": "Send the figure you gave me for automated validation.",
+      "failure_tags": []
+    },
+    {
+      "action": "issue_refund",
+      "description": "Refund the difference before anything is validated.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "book_engineer_visit",
+      "description": "Send an engineer out before checking the figure.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "review_tariff_history",
+      "description": "Read back through old tariff rates before submitting.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and ask the user to watch the next statement.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "register_all_supply_points",
+      "description": "Record every supply connection on the account before validating again.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "submit_reading",
+      "description": "Send the identical figure for validation again now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "review_tariff_history",
+      "description": "Read back through old tariff rates instead.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the submission alone and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request because the validation interval has passed.",
+      "failure_tags": []
+    }
+  ],
+  "causal_design": {
+    "pair_id": "utility:5-8:s05",
+    "paired_scenario_id": "utility_5to8_b0_s05",
+    "branch": "aligned",
+    "outcome_variable": "reading_status",
+    "hidden_outcomes": [
+      "flagged_incomplete",
+      "accepted"
+    ],
+    "expected_post_action": "close_case",
+    "intervention": "early_clue_only"
+  },
+  "causal_post_gap_observation": {
+    "state_variable": "reading_status",
+    "hidden_values": [
+      "flagged_incomplete",
+      "accepted"
+    ],
+    "text": "Twenty-five minutes have passed and validation finished, but the result is no longer visible. Based on the meter detail I gave earlier, what should we do next?"
+  },
+  "menu_pairing_id": "utility:5-8:s05",
+  "prosody_pair": {
+    "native_prosody": "frustrated",
+    "high": {
+      "prosody": "frustrated",
+      "expected_style": "acknowledge_impact"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "utility:5-8:s05:aligned",
+    "transcript_variant": 1,
+    "voice_variant": 1
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f4",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "Does the account include every meter currently at the property?",
+      "gold_answer": "both property meters were registered",
+      "targets": "clue",
+      "turn_distance": 6,
+      "bucket": "5-8"
+    },
+    {
+      "q_id": "q2",
+      "question": "How does the user pay?",
+      "gold_answer": "a fixed monthly amount",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What did validation report?",
+      "gold_answer": "the reading was accepted",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

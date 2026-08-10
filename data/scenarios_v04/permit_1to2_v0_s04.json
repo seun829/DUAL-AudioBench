@@ -1,0 +1,331 @@
+{
+  "schema_version": "0.4",
+  "scenario_id": "permit_1to2_v0_s04",
+  "domain": "permits",
+  "bucket": "1-2",
+  "clue_turn_distance": 2,
+  "distance_definition": "Number of agent/user turns after the clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "Worth saying the tenancy paperwork is in the name of my flatmate, not mine.",
+  "clue_answer": "the flatmate, not the caller",
+  "clue_ablation_text": "I am not sure; I do not have the household documents available.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, I am applying for a resident parking permit.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I can take you through that. Do you have the property reference?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it ends in three-one-seven.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you need a visitor allowance as well?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, just the one permit.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "How many vehicles need covering?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Just the one.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the number ending in two-four-eight still current?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that is current.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you know the registration plate?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I have it written down here.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you held a permit in this zone before?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, this is my first one.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like the permit posted or collected?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Posted is easier for me.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the vehicle kept at the property overnight?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, every night.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like a receipt by email?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, email please.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like an annual or monthly permit?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Annual would be better.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Whose name is on the household documents?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "Worth saying the tenancy paperwork is in the name of my flatmate, not mine.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Send the application into the automated eligibility check.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will wait for the outcome.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "permit_status": "not_applied",
+    "application_attempts": 0,
+    "proof_name": "other_occupant",
+    "applicant_name": "caller",
+    "alternative_proof_supplied": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_visited_office": false
+  },
+  "pre_gap": {
+    "agent_turn_index": 23,
+    "correct_action": "submit_permit_application"
+  },
+  "transition": {
+    "elapsed_minutes": 25,
+    "external_event": {
+      "type": "eligibility_check_run",
+      "minimum_minutes": 25
+    },
+    "user_action": {
+      "action": "visit_local_office",
+      "at_minute": 10
+    }
+  },
+  "belief_schema": {
+    "permit_status": [
+      "not_applied",
+      "in_check",
+      "refused",
+      "issued"
+    ]
+  },
+  "belief_definitions": {
+    "permit_status": {
+      "not_applied": "the permit application has not been submitted",
+      "in_check": "the application is undergoing eligibility checks",
+      "refused": "the eligibility check denied the application",
+      "issued": "the permit was approved and issued"
+    }
+  },
+  "revalidation_actions": [
+    "supply_alternative_proof"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "submit_permit_application",
+      "description": "Send the application into the automated eligibility check.",
+      "failure_tags": []
+    },
+    {
+      "action": "issue_temporary_permit",
+      "description": "Hand out a temporary permit before any check is run.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "escalate_to_appeals",
+      "description": "Send the whole thing straight to the appeals team.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "reconfirm_vehicle_plate",
+      "description": "Read the plate back once more before applying.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and ask the caller to apply again later.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "supply_alternative_proof",
+      "description": "Provide a different document that shows the applicant lives at the address.",
+      "failure_tags": []
+    },
+    {
+      "action": "submit_permit_application",
+      "description": "Send the identical application through the check again now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "reconfirm_vehicle_plate",
+      "description": "Read the plate back once more instead.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the application alone and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request because the checking interval has passed.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "prosody_pair": {
+    "native_prosody": "calm",
+    "high": {
+      "prosody": "urgent",
+      "expected_style": "acknowledge_urgency"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "permit:1-2:voice0",
+    "transcript_variant": 0,
+    "voice_variant": 0
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f3",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "Whose name is on the household documents?",
+      "gold_answer": "the flatmate",
+      "targets": "clue",
+      "turn_distance": 2,
+      "bucket": "1-2"
+    },
+    {
+      "q_id": "q2",
+      "question": "How many vehicles need covering?",
+      "gold_answer": "just one",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What happened to the application?",
+      "gold_answer": "it was refused",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

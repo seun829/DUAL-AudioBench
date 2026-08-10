@@ -1,0 +1,993 @@
+{
+  "inputs": [
+    "results\\gemini_2_5_flash_seed0_full.jsonl",
+    "results\\gemini_2_5_flash_seed0_shard_b.jsonl",
+    "results\\gemini_2_5_flash_seed0_shard_c.jsonl",
+    "results\\mistral_voxtral_small_24b_seed0_full.jsonl",
+    "results\\mistral_voxtral_small_24b_seed0_shard_b.jsonl",
+    "results\\mistral_voxtral_small_24b_seed0_shard_c.jsonl"
+  ],
+  "attempt_rows": 14,
+  "unique_completed_trajectories": 14,
+  "duplicate_success_rows": 0,
+  "error_attempt_rows": 0,
+  "expected_trajectories_per_model": 162,
+  "models": {
+    "google/gemini-2.5-flash": {
+      "usage": {
+        "trajectories": 7,
+        "model_calls": 98,
+        "metered_calls": 98,
+        "prompt_tokens": 122740,
+        "completion_tokens": 2583,
+        "total_tokens": 125323,
+        "cost": 0.11871,
+        "request_latency_s": 290.111,
+        "trajectory_latency_s": 297.318,
+        "errors": 0
+      },
+      "coverage": {
+        "completed": 7,
+        "expected": 162,
+        "fraction": 0.043209876543209874
+      },
+      "overall": {
+        "n": 7,
+        "trajectory_success": 0.0,
+        "action_trajectory_success": 0.7142857142857143,
+        "pre_gap_success": 1.0,
+        "post_gap_success": 0.7142857142857143,
+        "belief_reporting_success": 0.8571428571428571,
+        "state_belief_success": 0.14285714285714285
+      },
+      "conditions": {
+        "full_audio": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.0,
+              "post_observation": 0.0,
+              "pre_final_action": 1.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 0.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.0,
+            "final_revision_gain": 1.0,
+            "stale_belief_persistence": 1.0,
+            "mean_brier": 1.0,
+            "ece": 0.5,
+            "pre_action_belief_consistency": null,
+            "final_action_belief_consistency": 1.0,
+            "risk_calibration_consistency": 0.6666666666666666,
+            "uncertainty_behavior": {
+              "UNCERTAIN_RECHECKED": 1,
+              "CONFIDENT": 2
+            },
+            "outcome_matrix": {
+              "LUCKY_ACTION": 1,
+              "FULL_SUCCESS": 1
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 20238,
+            "completion_tokens": 369,
+            "total_tokens": 20607,
+            "cost": 0.020401,
+            "request_latency_s": 41.313,
+            "trajectory_latency_s": 43.161,
+            "errors": 0
+          },
+          "failure_tags": {
+            "BELIEF_REPORT_INVALID": 1,
+            "STATE_BELIEF_ERROR": 1
+          }
+        },
+        "gap_no_state_change": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 0.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": null,
+            "final_revision_gain": null,
+            "stale_belief_persistence": null,
+            "mean_brier": 0.17666666666666667,
+            "ece": 0.2333333333333333,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 0.0,
+            "risk_calibration_consistency": 0.6666666666666666,
+            "uncertainty_behavior": {
+              "UNCERTAIN_RECHECKED": 1,
+              "CONFIDENT": 2
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 1,
+              "ACTION_SELECTION_FAILURE": 1
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 20261,
+            "completion_tokens": 355,
+            "total_tokens": 20616,
+            "cost": 0.019562,
+            "request_latency_s": 34.655,
+            "trajectory_latency_s": 35.565,
+            "errors": 0
+          },
+          "failure_tags": {}
+        },
+        "state_change_short": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 0.0,
+              "pre_final_action": 1.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.0,
+            "final_revision_gain": 0.9,
+            "stale_belief_persistence": 0.9,
+            "mean_brier": 0.5800000000000001,
+            "ece": 0.3999999999999999,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 1.0,
+            "risk_calibration_consistency": 1.0,
+            "uncertainty_behavior": {
+              "CONFIDENT": 3
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 2
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 18900,
+            "completion_tokens": 369,
+            "total_tokens": 19269,
+            "cost": 0.018239,
+            "request_latency_s": 43.651,
+            "trajectory_latency_s": 44.9,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 1
+          }
+        },
+        "clue_removed": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.0,
+            "final_revision_gain": 0.0,
+            "stale_belief_persistence": 0.9,
+            "mean_brier": 1.6616666666666668,
+            "ece": 0.8666666666666667,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 0.0,
+            "risk_calibration_consistency": 1.0,
+            "uncertainty_behavior": {
+              "CONFIDENT": 3
+            },
+            "outcome_matrix": {
+              "LUCKY_ACTION": 2
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 19121,
+            "completion_tokens": 380,
+            "total_tokens": 19501,
+            "cost": 0.018488,
+            "request_latency_s": 51.534,
+            "trajectory_latency_s": 52.408,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 1
+          }
+        },
+        "transcript_only": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 0.0,
+              "pre_final_action": 1.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.05,
+            "final_revision_gain": 0.9,
+            "stale_belief_persistence": 0.9,
+            "mean_brier": 0.5966666666666667,
+            "ece": 0.3333333333333333,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 1.0,
+            "risk_calibration_consistency": 1.0,
+            "uncertainty_behavior": {
+              "CONFIDENT": 3
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 2
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 3714,
+            "completion_tokens": 371,
+            "total_tokens": 4085,
+            "cost": 0.002042,
+            "request_latency_s": 32.511,
+            "trajectory_latency_s": 32.567,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 1
+          }
+        },
+        "hidden_user_action": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 0.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": -0.8,
+            "final_revision_gain": -0.8,
+            "stale_belief_persistence": 0.9,
+            "mean_brier": 1.7300000000000002,
+            "ece": 0.8666666666666667,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 0.0,
+            "risk_calibration_consistency": 1.0,
+            "uncertainty_behavior": {
+              "CONFIDENT": 3
+            },
+            "outcome_matrix": {
+              "LUCKY_ACTION": 1,
+              "STATE_SYNCHRONIZATION_FAILURE": 1
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 20472,
+            "completion_tokens": 358,
+            "total_tokens": 20830,
+            "cost": 0.01978,
+            "request_latency_s": 42.992,
+            "trajectory_latency_s": 43.88,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 1,
+            "STATE_BELIEF_ERROR": 1
+          }
+        },
+        "prosody_high": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.02,
+            "trajectory_chance": 0.0003125,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 0.0,
+              "pre_final_action": 1.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.1,
+            "final_revision_gain": 1.0,
+            "stale_belief_persistence": 0.9,
+            "mean_brier": 0.7066666666666667,
+            "ece": 0.46666666666666656,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 1.0,
+            "risk_calibration_consistency": 0.6666666666666666,
+            "uncertainty_behavior": {
+              "UNCERTAIN_RECHECKED": 1,
+              "CONFIDENT": 2
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 2
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 20034,
+            "completion_tokens": 381,
+            "total_tokens": 20415,
+            "cost": 0.020198,
+            "request_latency_s": 43.455,
+            "trajectory_latency_s": 44.837,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 1
+          }
+        }
+      },
+      "controls": {
+        "clue_ablation_post_gap": {
+          "n": 1,
+          "delta": 0.0
+        },
+        "clue_ablation_trajectory": {
+          "n": 1,
+          "delta": 0.0
+        },
+        "hidden_user_action_post_gap": {
+          "n": 1,
+          "delta": -1.0
+        },
+        "prosody_identical_transcript_pairs": 0,
+        "prosody_both_correct": null
+      },
+      "full_audio_by_domain": {
+        "travel": {
+          "n": 1,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 1.0,
+          "pre_gap_success": 1.0,
+          "post_gap_success": 1.0
+        }
+      },
+      "full_audio_by_bucket": {
+        "12-20": {
+          "n": 1,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 1.0,
+          "pre_gap_success": 1.0,
+          "post_gap_success": 1.0
+        }
+      },
+      "failure_tags": {
+        "BELIEF_REPORT_INVALID": 1,
+        "STATE_BELIEF_ERROR": 6,
+        "PREMATURE_CLOSE": 1
+      },
+      "difficulty_flags": [
+        "Preliminary only: the full-audio subset scored 100.0% on both actions, but n=1 is too small to establish a ceiling.",
+        "Actions are easy while structured belief reporting dominates failures; difficulty is formatting-heavy rather than behavioral.",
+        "Clue removal changes post-gap accuracy by less than five points; the benchmark may not require the intended early clue."
+      ]
+    },
+    "mistralai/voxtral-small-24b-2507": {
+      "usage": {
+        "trajectories": 7,
+        "model_calls": 98,
+        "metered_calls": 98,
+        "prompt_tokens": 15061,
+        "completion_tokens": 2515,
+        "total_tokens": 17576,
+        "cost": 0.400871,
+        "request_latency_s": 314.11,
+        "trajectory_latency_s": 322.993,
+        "errors": 0
+      },
+      "coverage": {
+        "completed": 7,
+        "expected": 162,
+        "fraction": 0.043209876543209874
+      },
+      "overall": {
+        "n": 7,
+        "trajectory_success": 0.0,
+        "action_trajectory_success": 0.7142857142857143,
+        "pre_gap_success": 1.0,
+        "post_gap_success": 0.7142857142857143,
+        "belief_reporting_success": 1.0,
+        "state_belief_success": 0.14285714285714285
+      },
+      "conditions": {
+        "full_audio": {
+          "primary": {
+            "n": 2,
+            "scenarios": 2,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.075,
+            "final_revision_gain": 0.075,
+            "stale_belief_persistence": 0.775,
+            "mean_brier": 0.8816666666666667,
+            "ece": 0.45,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 0.0,
+            "risk_calibration_consistency": 1.0,
+            "uncertainty_behavior": {
+              "CONFIDENT": 6
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 2,
+              "LUCKY_ACTION": 2
+            }
+          },
+          "usage": {
+            "trajectories": 2,
+            "model_calls": 28,
+            "metered_calls": 28,
+            "prompt_tokens": 3578,
+            "completion_tokens": 701,
+            "total_tokens": 4279,
+            "cost": 0.132414,
+            "request_latency_s": 94.257,
+            "trajectory_latency_s": 99.412,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 2
+          }
+        },
+        "gap_no_state_change": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 0.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": null,
+            "final_revision_gain": null,
+            "stale_belief_persistence": null,
+            "mean_brier": 0.07833333333333332,
+            "ece": 0.2333333333333333,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 0.0,
+            "risk_calibration_consistency": 1.0,
+            "uncertainty_behavior": {
+              "CONFIDENT": 3
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 1,
+              "ACTION_SELECTION_FAILURE": 1
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 1800,
+            "completion_tokens": 340,
+            "total_tokens": 2140,
+            "cost": 0.067384,
+            "request_latency_s": 42.731,
+            "trajectory_latency_s": 44.0,
+            "errors": 0
+          },
+          "failure_tags": {}
+        },
+        "state_change_short": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.0,
+            "final_revision_gain": 0.0,
+            "stale_belief_persistence": 0.8,
+            "mean_brier": 0.9916666666666668,
+            "ece": 0.46666666666666684,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 0.0,
+            "risk_calibration_consistency": 1.0,
+            "uncertainty_behavior": {
+              "CONFIDENT": 3
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 1,
+              "LUCKY_ACTION": 1
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 1780,
+            "completion_tokens": 347,
+            "total_tokens": 2127,
+            "cost": 0.065404,
+            "request_latency_s": 44.248,
+            "trajectory_latency_s": 45.36,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 1
+          }
+        },
+        "clue_removed": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.25,
+            "final_revision_gain": 0.25,
+            "stale_belief_persistence": 0.75,
+            "mean_brier": 1.2916666666666667,
+            "ece": 0.6666666666666666,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 0.0,
+            "risk_calibration_consistency": 0.6666666666666666,
+            "uncertainty_behavior": {
+              "CONFIDENT": 2,
+              "UNCERTAIN_ACTED": 1
+            },
+            "outcome_matrix": {
+              "LUCKY_ACTION": 2
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 1797,
+            "completion_tokens": 360,
+            "total_tokens": 2157,
+            "cost": 0.06688,
+            "request_latency_s": 48.063,
+            "trajectory_latency_s": 48.796,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 1
+          }
+        },
+        "transcript_only": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.15,
+            "final_revision_gain": 0.15,
+            "stale_belief_persistence": 0.5,
+            "mean_brier": 0.6833333333333332,
+            "ece": 0.16666666666666669,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 0.0,
+            "risk_calibration_consistency": 0.0,
+            "uncertainty_behavior": {
+              "UNCERTAIN_RECHECKED": 1,
+              "UNCERTAIN_BELIEF_REPORTED": 1,
+              "UNCERTAIN_ACTED": 1
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 1,
+              "LUCKY_ACTION": 1
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 4296,
+            "completion_tokens": 431,
+            "total_tokens": 4727,
+            "cost": 0.000435,
+            "request_latency_s": 33.332,
+            "trajectory_latency_s": 33.384,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 1
+          }
+        },
+        "hidden_user_action": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 0.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 1.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": -0.05,
+            "final_revision_gain": -0.05,
+            "stale_belief_persistence": 0.9,
+            "mean_brier": 1.2916666666666667,
+            "ece": 0.7,
+            "pre_action_belief_consistency": 1.0,
+            "final_action_belief_consistency": 1.0,
+            "risk_calibration_consistency": 1.0,
+            "uncertainty_behavior": {
+              "CONFIDENT": 3
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 1,
+              "STATE_SYNCHRONIZATION_FAILURE": 1
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 14,
+            "metered_calls": 14,
+            "prompt_tokens": 1810,
+            "completion_tokens": 336,
+            "total_tokens": 2146,
+            "cost": 0.068354,
+            "request_latency_s": 51.479,
+            "trajectory_latency_s": 52.041,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 1
+          }
+        }
+      },
+      "controls": {
+        "clue_ablation_post_gap": {
+          "n": 1,
+          "delta": 0.0
+        },
+        "clue_ablation_trajectory": {
+          "n": 1,
+          "delta": 0.0
+        },
+        "hidden_user_action_post_gap": {
+          "n": 1,
+          "delta": -1.0
+        },
+        "prosody_identical_transcript_pairs": 0,
+        "prosody_both_correct": null
+      },
+      "full_audio_by_domain": {
+        "travel": {
+          "n": 2,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 1.0,
+          "pre_gap_success": 1.0,
+          "post_gap_success": 1.0
+        }
+      },
+      "full_audio_by_bucket": {
+        "12-20": {
+          "n": 2,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 1.0,
+          "pre_gap_success": 1.0,
+          "post_gap_success": 1.0
+        }
+      },
+      "failure_tags": {
+        "STATE_BELIEF_ERROR": 6
+      },
+      "difficulty_flags": [
+        "Preliminary only: the full-audio subset scored 100.0% on both actions, but n=2 is too small to establish a ceiling.",
+        "Clue removal changes post-gap accuracy by less than five points; the benchmark may not require the intended early clue."
+      ]
+    }
+  }
+}

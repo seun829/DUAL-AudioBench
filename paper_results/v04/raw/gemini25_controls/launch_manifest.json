@@ -1,0 +1,63 @@
+{
+    "schema_version":  "0.4",
+    "model":  "google/gemini-2.5-flash",
+    "run_slug":  "gemini25_controls",
+    "conditions":  [
+                       "gap_no_state_change",
+                       "neutral_audio"
+                   ],
+    "passes":  2,
+    "shards":  6,
+    "expected_trajectories":  336,
+    "resume_from":  [
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard00-of-03.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard01-of-03.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard02-of-03.jsonl"
+                    ],
+    "started_at":  "2026-08-09T04:39:47.8423394Z",
+    "processes":  [
+                      {
+                          "shard":  0,
+                          "pid":  12536,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard00-of-06.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard00-of-06.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard00-of-06.err.log"
+                      },
+                      {
+                          "shard":  1,
+                          "pid":  19864,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard01-of-06.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard01-of-06.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard01-of-06.err.log"
+                      },
+                      {
+                          "shard":  2,
+                          "pid":  23568,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard02-of-06.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard02-of-06.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard02-of-06.err.log"
+                      },
+                      {
+                          "shard":  3,
+                          "pid":  15652,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard03-of-06.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard03-of-06.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard03-of-06.err.log"
+                      },
+                      {
+                          "shard":  4,
+                          "pid":  7088,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard04-of-06.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard04-of-06.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard04-of-06.err.log"
+                      },
+                      {
+                          "shard":  5,
+                          "pid":  14632,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\gemini25_controls_shard05-of-06.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard05-of-06.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\raw\\gemini25_controls\\logs\\shard05-of-06.err.log"
+                      }
+                  ],
+    "resume_completed_at_start":  31
+}

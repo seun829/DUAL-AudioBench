@@ -36,7 +36,11 @@ def export_sheet(manifest_path: str, output: str, listener: str) -> None:
         "clip_id",
         "audio_path",
         "perceived_delivery_high_or_low",
+        "perceived_category",
+        "appropriate_response_style",
         "confidence_1_to_5",
+        "intelligibility_1_to_5",
+        "naturalness_1_to_5",
     ]
     with Path(output).open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -48,14 +52,22 @@ def export_sheet(manifest_path: str, output: str, listener: str) -> None:
                     "clip_id": f"clip_{index:04d}",
                     "audio_path": clip["audio_path"],
                     "perceived_delivery_high_or_low": "",
+                    "perceived_category": "",
+                    "appropriate_response_style": "",
                     "confidence_1_to_5": "",
+                    "intelligibility_1_to_5": "",
+                    "naturalness_1_to_5": "",
                 }
             )
     key_path = Path(output).with_suffix(".key.json")
     key_path.write_text(
         json.dumps(
             {
-                f"clip_{index:04d}": clip["condition"].removeprefix("prosody_")
+                f"clip_{index:04d}": {
+                    "delivery": clip["condition"].removeprefix("prosody_"),
+                    "category": clip["prosody"],
+                    "expected_response_style": clip["expected_response_style"],
+                }
                 for index, clip in enumerate(clips)
             },
             indent=2,
@@ -73,11 +85,21 @@ def report(paths: list[str]) -> None:
         raise SystemExit("At least two human listeners are required.")
     judgments = {}
     accuracies = []
+    category_accuracies = []
+    style_accuracies = []
     for path in paths:
         key = json.loads(Path(path).with_suffix(".key.json").read_text(encoding="utf-8"))
         with Path(path).open(encoding="utf-8") as handle:
             rows = list(csv.DictReader(handle))
-        if any(not row["perceived_delivery_high_or_low"].strip() for row in rows):
+        required = (
+            "perceived_delivery_high_or_low",
+            "perceived_category",
+            "appropriate_response_style",
+            "confidence_1_to_5",
+            "intelligibility_1_to_5",
+            "naturalness_1_to_5",
+        )
+        if any(not row[field].strip() for row in rows for field in required):
             raise SystemExit(f"{path} contains unrated clips.")
         listener = rows[0]["listener"]
         judgments[listener] = {
@@ -89,7 +111,29 @@ def report(paths: list[str]) -> None:
                 listener,
                 sum(
                     row["perceived_delivery_high_or_low"].strip().lower()
-                    == key[row["clip_id"]]
+                    == key[row["clip_id"]]["delivery"]
+                    for row in rows
+                )
+                / len(rows),
+            )
+        )
+        category_accuracies.append(
+            (
+                listener,
+                sum(
+                    row["perceived_category"].strip().lower()
+                    == key[row["clip_id"]]["category"]
+                    for row in rows
+                )
+                / len(rows),
+            )
+        )
+        style_accuracies.append(
+            (
+                listener,
+                sum(
+                    row["appropriate_response_style"].strip()
+                    == key[row["clip_id"]]["expected_response_style"]
                     for row in rows
                 )
                 / len(rows),
@@ -97,6 +141,20 @@ def report(paths: list[str]) -> None:
         )
     for listener, accuracy in accuracies:
         print(f"{listener}: intended-prosody identification={accuracy:.1%}")
+    for listener, accuracy in category_accuracies:
+        print(f"{listener}: category identification={accuracy:.1%}")
+    for listener, accuracy in style_accuracies:
+        print(f"{listener}: expected-style agreement={accuracy:.1%}")
+    for path in paths:
+        with Path(path).open(encoding="utf-8") as handle:
+            rows = list(csv.DictReader(handle))
+        for field in ("intelligibility_1_to_5", "naturalness_1_to_5"):
+            values = [float(row[field]) for row in rows if row[field].strip()]
+            if values:
+                print(
+                    f"{rows[0]['listener']}: mean {field.removesuffix('_1_to_5')}="
+                    f"{sum(values) / len(values):.2f}/5"
+                )
     names = list(judgments)
     for i, left in enumerate(names):
         for right in names[i + 1 :]:

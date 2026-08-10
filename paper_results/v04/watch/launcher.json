@@ -1,0 +1,7 @@
+{
+    "pid":  7900,
+    "started_at":  "2026-08-09T04:49:19.4563349Z",
+    "script":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\scripts\\watch_and_finalize_v04.ps1",
+    "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\watch\\watch.out.log",
+    "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v04\\watch\\watch.err.log"
+}

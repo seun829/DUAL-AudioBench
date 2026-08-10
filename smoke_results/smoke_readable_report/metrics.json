@@ -1,0 +1,117 @@
+{
+  "inputs": [
+    "results\\openrouter_gemini_2_5_flash_smoke.jsonl"
+  ],
+  "total_rows": 1,
+  "successful_rows": 1,
+  "error_rows": 0,
+  "models": {
+    "google/gemini-2.5-flash": {
+      "usage": {
+        "trajectories": 1,
+        "model_calls": 0,
+        "metered_calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "cost": 0.0,
+        "request_latency_s": 0.0,
+        "trajectory_latency_s": 23.575,
+        "errors": 0
+      },
+      "conditions": {
+        "transcript_only": {
+          "primary": {
+            "n": 1,
+            "scenarios": 1,
+            "pass1": 0.0,
+            "pre": 1.0,
+            "post": 1.0,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_at_5": 0.0,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 0.000625,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 1.0,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "checkpoint_validity": {
+              "pre_gap": 0.0,
+              "post_observation": 0.0,
+              "pre_final_action": 0.0
+            },
+            "revision_gain": 0.0,
+            "final_revision_gain": 0.0,
+            "stale_belief_persistence": 0.0,
+            "mean_brier": null,
+            "ece": null,
+            "pre_action_belief_consistency": null,
+            "final_action_belief_consistency": null,
+            "risk_calibration_consistency": 0.0,
+            "uncertainty_behavior": {
+              "UNCERTAIN_RECHECKED": 1,
+              "UNCERTAIN_BELIEF_REPORTED": 1,
+              "UNCERTAIN_ACTED": 1
+            },
+            "outcome_matrix": {
+              "LUCKY_ACTION": 2
+            }
+          },
+          "usage": {
+            "trajectories": 1,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 23.575,
+            "errors": 0
+          },
+          "failure_tags": {
+            "BELIEF_REPORT_INVALID": 1,
+            "STATE_BELIEF_ERROR": 1
+          }
+        }
+      },
+      "controls": {
+        "clue_ablation_post_gap": {
+          "n": 0,
+          "delta": null
+        },
+        "clue_ablation_trajectory": {
+          "n": 0,
+          "delta": null
+        },
+        "hidden_user_action_post_gap": {
+          "n": 0,
+          "delta": null
+        },
+        "prosody_identical_transcript_pairs": 0,
+        "prosody_both_correct": null
+      },
+      "full_audio_by_domain": {},
+      "full_audio_by_bucket": {},
+      "failure_tags": {
+        "BELIEF_REPORT_INVALID": 1,
+        "STATE_BELIEF_ERROR": 1
+      },
+      "difficulty_flags": [
+        "No obvious ceiling or ineffective-clue warning fired in this one-seed run."
+      ]
+    }
+  }
+}

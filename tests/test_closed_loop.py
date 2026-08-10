@@ -244,6 +244,10 @@ class RunnerTests(unittest.TestCase):
         )
         self.assertTrue(high["response_style_success"])
         self.assertTrue(low["response_style_success"])
+        self.assertEqual(
+            [item["label"] for item in high["response_style_menu"]],
+            list("WXYZ"),
+        )
 
     def test_hidden_user_action_changes_shared_world_and_answer(self):
         task = build("flight", "5-8", 0)

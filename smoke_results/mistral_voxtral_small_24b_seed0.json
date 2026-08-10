@@ -1,0 +1,15 @@
+[
+  {
+    "schema_version": "0.3",
+    "scenario_id": "flight_12to20_v0",
+    "domain": "travel",
+    "bucket": "12-20",
+    "condition": "full_audio",
+    "seed": 0,
+    "timestamp": "2026-07-31T01:51:02.806252+00:00",
+    "trajectory_success": false,
+    "error": "RuntimeError('OpenRouter HTTP 400: Provider returned error')",
+    "model": "mistralai/voxtral-small-24b-2507",
+    "latency_s": 1.927
+  }
+]

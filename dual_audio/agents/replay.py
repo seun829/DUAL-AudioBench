@@ -6,6 +6,7 @@ from pathlib import Path
 from types import ModuleType
 
 from dual_audio.core.beliefs import normalize_state_belief
+from dual_audio.core.belief_definitions import definitions_for
 from dual_audio.core.types import AgentResponse, Observation
 from dual_audio.modalities.audio import combine_wavs
 
@@ -41,11 +42,8 @@ def _decision_prompt(observation: Observation) -> str:
             f"{item['label']}. {item['description']}" for item in observation.style_menu
         )
         style = f"\n\nResponse approach:\n{style_options}"
-        example["response_style"] = "X"
-    belief_values = "\n".join(
-        f"- {variable}: {', '.join(values)}"
-        for variable, values in observation.belief_schema.items()
-    )
+        example["response_style"] = observation.style_menu[0]["label"]
+    belief_values = _belief_value_text(observation)
     prior_belief = ""
     if observation.prior_state_belief:
         prior_belief = (
@@ -59,7 +57,7 @@ def _decision_prompt(observation: Observation) -> str:
         "value and whether more verification is needed. Probabilities for each "
         "variable must be non-negative and sum to 1. Use only the listed state "
         "values and public option labels.\n\n"
-        f"State variables:\n{belief_values}{prior_belief}\n\n"
+        f"State values and operational definitions:\n{belief_values}{prior_belief}\n\n"
         f"Actions:\n{options}{style}\n\n"
         f"Return JSON only in this shape: {json.dumps(example)}"
     )
@@ -77,17 +75,31 @@ def _belief_prompt(observation: Observation) -> str:
         },
         "needs_revalidation": False,
     }
-    values = "\n".join(
-        f"- {variable}: {', '.join(allowed)}"
-        for variable, allowed in observation.belief_schema.items()
-    )
+    values = _belief_value_text(observation)
     return (
         "Update your hidden-state belief after the latest user evidence. "
         "Do not choose an action yet. Give a probability distribution for every "
         "variable; each distribution must sum to 1. Indicate whether you need "
-        f"more verification.\n\nState variables:\n{values}\n\n"
+        f"more verification.\n\nState values and operational definitions:\n{values}\n\n"
         f"Return JSON only in this shape: {json.dumps(example)}"
     )
+
+
+def _belief_value_text(observation: Observation) -> str:
+    """Format every allowed ontology value with its public meaning."""
+
+    definitions = definitions_for(
+        observation.belief_schema,
+        observation.belief_definitions,
+    )
+    lines: list[str] = []
+    for variable, values in observation.belief_schema.items():
+        lines.append(f"- {variable}:")
+        for value in values:
+            meaning = definitions[variable][value]
+            suffix = f": {meaning}" if meaning else ""
+            lines.append(f"  - {value}{suffix}")
+    return "\n".join(lines)
 
 
 def _instruction(observation: Observation) -> str:
@@ -250,3 +262,9 @@ class ReplayModelAgent:
             needs_revalidation=_extract_bool(parsed, "needs_revalidation"),
             raw=raw,
         )
+
+    def pop_usage(self) -> dict:
+        """Consume adapter telemetry accumulated since the previous trajectory."""
+
+        pop = getattr(self.module, "pop_usage", None)
+        return pop() if callable(pop) else {}

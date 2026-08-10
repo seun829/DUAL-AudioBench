@@ -1,0 +1,236 @@
+\documentclass{article}
+
+% Download the official NeurIPS 2026 style file into this directory before
+% submission. The fallback keeps the source usable for local drafting.
+\IfFileExists{neurips_2026.sty}{
+  \usepackage{neurips_2026}
+}{
+  \usepackage[margin=1in]{geometry}
+  \typeout{WARNING: neurips_2026.sty not found; using draft page geometry.}
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{natbib}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\newcommand{\benchmark}{\textsc{DUAL-AudioBench}}
+\newcommand{\numscenarios}{18}
+\newcommand{\numconditions}{9}
+\newcommand{\cmark}{\ensuremath{\checkmark}}
+\newcommand{\xmark}{\ensuremath{\times}}
+
+\title{\benchmark: Closed-Loop Evaluation of Belief-State Synchronization in Audio-Conditioned Conversational Agents}
+
+% Keep the submission anonymous for double-blind workshop review.
+\author{Anonymous Authors}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Voice-agent benchmarks commonly measure recognition, response quality, final-task completion, or real-time turn taking. These outcomes do not reveal whether an agent maintains a correct model of a world that changes as a consequence of its own actions, elapsed time, external events, and user interventions. We introduce \benchmark, a turn-based, audio-conditioned benchmark for closed-loop conversational state tracking. In each trajectory, the evaluated model participates in an alternating dialogue, selects a symbolic action that changes a hidden executable state, leaves for a simulated time gap during which the world may change, and must recover from a state-conditioned spoken observation. The benchmark elicits probabilistic beliefs at three checkpoints and jointly scores actions, calibration, evidence-driven belief revision, stale-state persistence, and action--belief consistency. Matched interventions vary clue distance, remove the causal clue, suppress external state change, replace audio with a transcript, permit a hidden user action, and manipulate post-gap prosody. Unlike full-duplex benchmarks, \benchmark does not evaluate streaming latency, overlap, or speech generation; it deliberately fixes turn boundaries to isolate whether audio-conditioned agents resynchronize their beliefs and decisions with a changing environment.
+\end{abstract}
+
+\section{Introduction}
+
+Conversational agents increasingly operate as decision-making systems rather than passive question-answering interfaces. A support agent may start a maintenance procedure, a pharmacy agent may submit a claim, or a travel agent may monitor a connection. The consequence of an action is often not immediately observable: time passes, an external service updates, or the user independently changes the shared world. When the conversation resumes, a capable agent must infer what changed before acting again. A plausible final response is not sufficient evidence of this capability. The agent may select the right action for the wrong reason, preserve a stale internal state despite new evidence, or state uncertainty while taking an irreversible action.
+
+Existing audio-language benchmarks provide broad coverage of speech, acoustic scenes, paralinguistics, and spoken instruction following \citep{yang2024airbench,wang2024audiobench,chen2024voicebench,li2026wavbench}. Long-audio benchmarks test retrieval and reasoning over minute- or hour-scale recordings \citep{ahia2025blab,he2025audiomarathon}, while multi-turn spoken benchmarks test memory, consistency, and conversational quality \citep{si2023spokenwoz,gosa2025audiomultichallenge,du2025mtalk}. A complementary line evaluates full-duplex behaviors such as interruption, backchanneling, and latency \citep{lin2025fullduplex,zhang2025mtrduplex,ray2026tauvoice}. These efforts expose important limitations, but they generally do not elicit a calibrated trajectory of the model's hidden-world belief before and after an action-dependent state transition.
+
+Text-based agent benchmarks come closer to this requirement. ToolSandbox evaluates stateful tool execution using intermediate milestones \citep{lu2024toolsandbox}; $\tau$-bench evaluates tool--agent--user interaction against database end states \citep{yao2024taubench}; and $\tau^2$-bench allows both the agent and user to act in a shared environment \citep{barres2025tau2}. $\tau$-Voice subsequently adds full-duplex speech and realistic acoustic conditions to grounded customer-service tasks \citep{ray2026tauvoice}. These benchmarks establish the importance of executable environments and reliable repeated trials. Our focus is narrower and diagnostic: we isolate delayed state synchronization and ask not only whether an action succeeds, but also whether the agent assigns probability mass to the state that makes the action appropriate.
+
+We introduce \benchmark, a closed-loop evaluation framework in which model actions causally affect later hidden state. The current release contains \numscenarios{} executable scenarios across technical support, pharmacy, and travel. A key clue is placed 1--2, 5--8, or 12--20 turns before the first decision. After the model selects a pre-gap action, a deterministic simulator executes that action, advances task-specific time, optionally executes a hidden user action, and applies an external event. The resulting state generates the resumed user utterance. Thus, an incorrect early action can change both the evidence the agent later receives and the correct final action.
+
+The benchmark elicits an explicit probability distribution over task-declared hidden-state values at three points: immediately before the gap, immediately after the resumed observation, and immediately before the final action. This supports distinctions that endpoint scoring collapses: a correct belief with a wrong action is an action-selection failure; a wrong belief with a correct action is a lucky action; and a wrong belief with a wrong action is a state-synchronization failure. Proper scoring rules and calibration diagnostics further measure whether confidence changes in the correct direction after evidence arrives.
+
+Our contributions are:
+\begin{itemize}
+  \item \textbf{A causal, closed-loop audio-replay protocol.} Evaluated model responses become part of later audio history, symbolic choices alter hidden state, and the final answer key is recomputed from the realized trajectory rather than copied from static metadata.
+  \item \textbf{Trajectory-level belief diagnostics.} Three probabilistic checkpoints expose belief accuracy, calibration, revision toward the new state, persistence on the stale state, and consistency between beliefs, uncertainty flags, and actions.
+  \item \textbf{Matched causal controls.} Nine conditions intervene on modality, clue availability and distance, external state change, hidden user control, and prosody while preserving non-target factors such as turn count and action-menu order.
+  \item \textbf{Auditable evaluation.} Deterministic transition functions, public natural-language action descriptions, randomized labels, dynamic chance baselines, scenario-clustered uncertainty estimates, and inspectable trajectory logs make failures reproducible and attributable.
+\end{itemize}
+
+\paragraph{Scope.}
+\benchmark is \emph{not} a full-duplex or speech-to-speech benchmark. It does not score streaming latency, overlap, barge-in, backchannels, or generated voice quality. It is also not an hour-scale long-audio benchmark. We use ``long-horizon'' to describe causal and conversational distance across multiple turns and a simulated temporal gap. This controlled boundary is intentional: fixing turn boundaries lets the evaluation isolate state inference and belief revision without conflating them with floor-management failures.
+
+\section{Related Work}
+
+\subsection{Audio-language understanding and long-form audio}
+
+AIR-Bench and AudioBench broaden audio-language evaluation beyond recognition to generative comprehension, speech, environmental sound, music, and paralinguistic information \citep{yang2024airbench,wang2024audiobench}. VoiceBench evaluates voice assistants under speaker, environment, and content variation \citep{chen2024voicebench}, while WavBench targets reasoning, spoken colloquialism, and acoustic interaction \citep{li2026wavbench}. These benchmarks primarily measure responses to supplied audio rather than consequences of agent actions in an executable world.
+
+BLAB uses recordings averaging roughly 51 minutes to test localization, duration, emotion, and counting \citep{ahia2025blab}; AudioMarathon evaluates 90--300 second inputs across speech, sound, and music together with inference efficiency \citep{he2025audiomarathon}. These datasets study model capacity over physically long waveforms. \benchmark instead varies the number of intervening conversational turns and inserts a simulated time gap during which the underlying state can evolve. It therefore measures delayed state synchronization, not long-waveform storage capacity.
+
+\subsection{Multi-turn spoken dialogue}
+
+SpokenWOZ supplies speech, transcripts, dialogue states, and dialogue acts for task-oriented dialogue, including cross-turn and reasoning slots \citep{si2023spokenwoz}. MultiChallenge identifies difficult multi-turn phenomena in text, including inference memory, instruction retention, and self-coherence \citep{sirdeshmukh2025multichallenge}; Audio MultiChallenge transfers these concerns to natural spoken interaction and adds voice editing and audio-cue tasks \citep{gosa2025audiomultichallenge}. MTalk-Bench evaluates semantic, paralinguistic, and ambient-sound capabilities using arena-style and rubric-based judgments \citep{du2025mtalk}. These benchmarks motivate multi-turn audio evaluation, but their primary scores are response- or rubric-based. In contrast, \benchmark executes the tested agent's selected action and derives subsequent observations and gold actions from the resulting symbolic state.
+
+\subsection{Full-duplex and real-time evaluation}
+
+Full-Duplex-Bench measures pause handling, backchanneling, turn taking, and interruption management \citep{lin2025fullduplex}; MTR-DuplexBench extends full-duplex evaluation to multi-round dialogue quality, instruction following, and safety \citep{zhang2025mtrduplex}. Full-Duplex-Bench-v3 additionally introduces real human disfluencies and multi-step tool use \citep{lin2026fullduplexv3}. $\tau$-Voice combines full-duplex interaction, grounded task completion, and realistic audio environments \citep{ray2026tauvoice}. These are the appropriate references for claims about natural timing and simultaneous listening and speaking. \benchmark is complementary: it gives up full-duplex realism to gain controlled temporal interventions and direct measurement of hidden-state beliefs.
+
+\subsection{Stateful and dual-control agent evaluation}
+
+ToolSandbox introduced on-policy, stateful tool-use evaluation with intermediate and final milestones \citep{lu2024toolsandbox}. $\tau$-bench evaluates policy-following agents through dynamic user conversations and database-state verification, and uses repeated trials to quantify reliability \citep{yao2024taubench}. $\tau^2$-bench extends this setting so that both the agent and user can change a shared, partially observed environment \citep{barres2025tau2}. \benchmark adopts the principle that success must be grounded in executable state, and includes an optional hidden user tool action. Its distinguishing object of measurement is the agent's probabilistic state estimate across a delayed transition. This supports diagnostics that neither final database equality nor an LLM judge can recover from the final utterance alone.
+
+\begin{table*}[t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \caption{Positioning of representative benchmarks. ``Shared change'' means that a user action or exogenous event may alter the policy-relevant world independently of the evaluated agent. A checkmark under beliefs requires an explicit probabilistic model report, not only annotated dialogue-state labels.}
+  \label{tab:positioning}
+  \begin{tabular}{lcccccc}
+    \toprule
+    Benchmark & Spoken input & Multi-turn & Executable world & Shared change & Prob. beliefs & Full duplex \\
+    \midrule
+    AudioBench / VoiceBench \citep{wang2024audiobench,chen2024voicebench}
+      & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark \\
+    BLAB / AudioMarathon \citep{ahia2025blab,he2025audiomarathon}
+      & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark \\
+    SpokenWOZ \citep{si2023spokenwoz}
+      & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark \\
+    Audio MultiChallenge \citep{gosa2025audiomultichallenge}
+      & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark \\
+    Full-Duplex-Bench / MTR-DuplexBench \citep{lin2025fullduplex,zhang2025mtrduplex}
+      & \cmark & \cmark & \xmark & \xmark & \xmark & \cmark \\
+    ToolSandbox / $\tau^2$-bench \citep{lu2024toolsandbox,barres2025tau2}
+      & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark \\
+    $\tau$-Voice \citep{ray2026tauvoice}
+      & \cmark & \cmark & \cmark & \cmark & \xmark & \cmark \\
+    \textbf{\benchmark}
+      & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\section{Methods}
+
+\subsection{Problem formulation}
+
+We model a benchmark trajectory as a controlled partially observed process. Let $s_0$ denote the initial hidden environment state, $h_0$ the pre-gap dialogue history, $a_0$ the agent's first symbolic action, $u$ an optional user action during the gap, $e$ an external event, and $\Delta t$ the elapsed task time. The realized state is
+\begin{align}
+  s_1 &= E(s_0, a_0), \\
+  s_2 &= T(s_1, a_0, u, e, \Delta t), \\
+  o_2 &= O(s_2),
+\end{align}
+where $E$ is the tool executor, $T$ is a deterministic transition function, and $O$ produces a state-conditioned resumed user observation. The final correct action is computed as $a_1^*=G(s_2)$ by a deterministic state policy. Because $s_2$ depends on $a_0$, the model's first decision can change both its later observation and its final answer key.
+
+At checkpoint $k\in\{0,1,2\}$, the model reports a categorical distribution $b_{k,j}$ for every declared hidden-state variable $j$. Checkpoint 0 accompanies the pre-gap action; checkpoint 1 is collected immediately after $o_2$ but before exposing the final action menu; and checkpoint 2 accompanies the final action. The separation of checkpoints 1 and 2 measures whether additional reflection changes the belief without new user evidence.
+
+\subsection{Executable scenarios}
+
+The current release contains \numscenarios{} scenarios constructed as the Cartesian product of three domains, three clue-distance buckets, and two deterministic variants. Technical-support tasks track a software-maintenance process across a 30-minute gap; pharmacy tasks track an insurance claim across a 20-minute processor cycle; and travel tasks track a flight connection across a 45-minute delay event. Each task declares an initial state, pre- and post-gap tool menus, an external event, an optional timestamped user tool action, a finite belief ontology, and a deterministic observation policy.
+
+Each scenario contains one policy-relevant clue, such as an earlier outage, a replacement insurance plan, or a 90-minute onward connection. We define clue distance as the number of agent and user turns after the clue and before fast-forward, including the evaluated pre-gap action and its user acknowledgement. Alternation makes two turns the minimum realizable distance. We use 1--2, 5--8, and 12--20 buckets; generated instances assert their realized distance and preserve it in the trajectory log.
+
+Every decision presents five natural-language options. Canonical action identifiers remain private. Options are deterministically shuffled using scenario, stage, and run seed, and relabeled A--E after shuffling. The condition name is excluded from this seed so paired interventions receive identical menus and order. A lexical guard rejects tasks in which the correct option uniquely repeats a content word from the clue. Incorrect options may carry multiple proposed diagnostic tags, including early-clue loss, stale-state synchronization, failure to use elapsed time, repeated action, and premature closing or escalation. These tags are treated as hypotheses to be independently annotated rather than unquestioned ground truth.
+
+\subsection{Closed-loop interaction protocol}
+
+One trajectory proceeds as follows:
+\begin{enumerate}
+  \item Initialize $s_0$ and present the scripted pre-gap user turns in alternating order. For non-decision turns, the evaluated model generates the agent response; a scenario-supplied intent keeps the following user turn coherent but is never replayed as an agent recording.
+  \item At the final pre-gap user turn, request $a_0$, $b_0$, and a Boolean \texttt{needs\_revalidation} flag. Execute the selected symbolic action against $s_0$.
+  \item Append a deterministic user acknowledgement. If enabled by the condition, execute a timestamped user action while the agent is absent. Advance $\Delta t$ and apply the external event to obtain $s_2$.
+  \item Generate and present $o_2$ from the realized state. Request $b_1$ and the revalidation flag without exposing an action menu.
+  \item Present the randomized final menu and request $b_2$, the final action $a_1$, and, for prosodic conditions, a response approach. Execute $a_1$ and store the full trajectory.
+\end{enumerate}
+
+In the current reflection protocol, the model's checkpoint-1 distribution is shown back to it at checkpoint 2 with an instruction to reconsider it. Consequently, checkpoint-2 action accuracy is a \emph{belief-exposed} measurement. It should not be interpreted as an action-only estimate; an otherwise matched no-belief-exposure ablation is required to quantify any scaffolding introduced by the probe.
+
+\subsection{Audio-replay conditioning}
+
+For audio conditions, each user turn and each evaluated-model response is rendered as a separate 16-kHz mono WAV using eSpeak-NG and normalized with FFmpeg. User and agent turns use different voices. On every model call, the adapter concatenates all visible prior turn audio and the current user audio, then sends the resulting replay together with the stage-specific instruction. Thus, later calls hear synthesized versions of the evaluated model's own earlier responses rather than prerecorded ``gold'' agent turns. The model returns natural-language text on filler turns and structured text containing public action labels and beliefs at decision checkpoints; agent speech generation is not evaluated.
+
+The \texttt{transcript\_only} condition serializes the same visible history with speaker labels and uses the model's text interface. The comparison between this condition and \texttt{full\_audio} therefore measures \emph{audio-replay conditioning versus serialized transcript conditioning}. It should not be described as a pure test of acoustic understanding because the context representation and inference interface change together.
+
+Synthetic speech provides deterministic, inexpensive stimuli but is not evidence of robustness to natural voices, accents, channel noise, or disfluency. Core state-tracking claims therefore rely on matched controls and must be replicated on human or higher-fidelity speech before being generalized to deployed voice systems.
+
+\subsection{Controlled interventions}
+
+Table~\ref{tab:conditions} summarizes the \numconditions{} conditions. Each intervention changes one declared factor while preserving scenario identity, run seed, action wording, and menu order. Clue ablation replaces the clue response without changing turn count. The short-distance condition moves the same clue prompt--response pair immediately before the decision while preserving the remaining conversation. Prosodic pairs use an identical resumed transcript and hidden state but different pitch and rate settings.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Controlled evaluation conditions.}
+  \label{tab:conditions}
+  \begin{tabularx}{\linewidth}{lX}
+    \toprule
+    Condition & Intervention \\
+    \midrule
+    \texttt{full\_audio} & Main audio-replay trajectory with the external event enabled. \\
+    \texttt{transcript\_only} & Replace replay audio with a speaker-labeled transcript. \\
+    \texttt{clue\_removed} & Replace the causal clue with a matched uninformative response. \\
+    \texttt{state\_change\_short} & Move the clue pair directly before the first decision. \\
+    \texttt{gap\_no\_state\_change} & Preserve elapsed time but suppress the external event. \\
+    \texttt{neutral\_audio} & Render the resumed observation with neutral prosody. \\
+    \texttt{hidden\_user\_action} & Let the user modify shared state during the gap. \\
+    \texttt{prosody\_high} & High-affect resumed delivery; score an impact-aware response approach. \\
+    \texttt{prosody\_low} & Low-affect matched delivery; score a direct response approach. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+The clue-removal comparison is a construct-validity test, not merely another difficulty slice. If removing the clue does not reliably reduce the targeted performance measure, the task does not establish that the model used the intended evidence. We therefore report the paired effect with scenario-clustered uncertainty rather than interpreting a fixed magnitude threshold as validation.
+
+\subsection{Belief elicitation and scoring}
+
+For each variable $j$ with finite ontology $\mathcal{S}_j$, a report is valid when it contains no unknown labels, all probabilities are finite and nonnegative, and the total mass is positive. Valid distributions are normalized. A checkpoint report is valid only when every declared variable is present and \texttt{needs\_revalidation} is a literal Boolean. Operational descriptions of every allowed value are shown to the model; canonical actions, gold actions, and hidden state are not.
+
+Let $s_{k,j}^{*}$ be the true value and $\hat{s}_{k,j}=\arg\max_{v\in\mathcal{S}_j} b_{k,j}(v)$. We report top-state accuracy and the following distributional metrics:
+\begin{align}
+  \operatorname{Brier}(b_{k,j})
+    &= \sum_{v\in\mathcal{S}_j}
+       \left(b_{k,j}(v)-\mathbb{1}[v=s_{k,j}^{*}]\right)^2, \\
+  \operatorname{NLL}(b_{k,j})
+    &= -\log \max\left(b_{k,j}(s_{k,j}^{*}),10^{-12}\right), \\
+  H_{\mathrm{norm}}(b_{k,j})
+    &= -\frac{\sum_v b_{k,j}(v)\log b_{k,j}(v)}{\log |\mathcal{S}_j|}.
+\end{align}
+The multiclass Brier score is a proper scoring rule \citep{brier1950verification}. We compute top-state expected calibration error using ten fixed-width confidence bins, following standard neural calibration practice \citep{guo2017calibration}.
+
+For variables whose value changes from $s_j^{-}$ before the gap to $s_j^{+}$ afterward, we define evidence-driven revision and stale-state persistence as
+\begin{align}
+  R_j &= b_{1,j}(s_j^{+}) - b_{0,j}(s_j^{+}), \\
+  P_j^{\mathrm{stale}} &= b_{1,j}(s_j^{-}), \\
+  R_j^{\mathrm{reflect}} &= b_{2,j}(s_j^{+}) - b_{1,j}(s_j^{+}).
+\end{align}
+The first quantity measures movement toward the realized state after hearing new evidence; the second measures residual mass on the superseded state; and the third isolates belief change during reflection without a new user observation.
+
+To measure action--belief coupling, we substitute the top predicted values for the scored belief variables into a copy of the evaluator state, hold non-scored task variables fixed, and apply the deterministic policy $G$. The chosen action is belief-consistent when it matches this implied action. Crossing belief correctness with action correctness produces four categories: full success, action-selection failure, lucky action, and state-synchronization failure.
+
+Finally, mean top-state confidence below a task-level threshold of 0.60 is treated as low confidence. We test whether the model's \texttt{needs\_revalidation} flag agrees with this threshold and whether a low-confidence model chooses a declared revalidation action rather than proceeding. These are behavioral consistency measures, not claims that 0.60 is an optimal deployment threshold.
+
+\subsection{Action, trajectory, and statistical metrics}
+
+We report pre-gap action accuracy, post-gap action accuracy, and joint two-action success separately from belief scores. Strict trajectory success requires both actions, all required structured reports, correct top-state beliefs at all three checkpoints, and the expected response approach when prosody is scored:
+\begin{equation}
+  Y_{\mathrm{strict}}
+  = \mathbb{1}[a_0=a_0^*]\mathbb{1}[a_1=a_1^*]
+    \prod_{k=0}^{2}\mathbb{1}[\text{valid}_k]\mathbb{1}[\hat{s}_k=s_k^*]
+    \mathbb{1}[\text{style correct}].
+\end{equation}
+Because this conjunction can hide useful partial behavior, strict success is never reported without its action and belief components.
+
+Empirical pass@1 is the mean success rate over independent run seeds. We additionally report scenario-level majority success, variance across seeds, the fraction of scenarios passed on every repeated trial, and pass@5 as a supplemental ``at least one success'' statistic. Confidence intervals are obtained by resampling complete scenarios rather than individual trajectories, preserving dependence among repeated seeds and conditions. Paired intervention effects are computed within scenario and seed. With two five-choice action menus, the uniform two-action chance rate is $1/25$; the strict chance reference additionally incorporates each task's belief-state cardinality at all three checkpoints and the response-style menu when applicable.
+
+\subsection{Human validation and reproducibility protocol}
+
+Model results should be accompanied by two human checks. First, independent annotators solve randomized scenarios to establish task solvability and inspect whether the correct action follows from the presented evidence. Second, blinded listeners label high/low prosodic pairs to verify intended-prosody identification and inter-listener agreement. Prosodic response-style results are treated as exploratory until this check passes. Proposed multilabel failure tags are likewise reviewed by at least two annotators, with exact-set and Jaccard agreement reported.
+
+All environment functions deep-copy their inputs, and identical transition inputs produce identical states. Scenario generation, menu order, and run seeds are stable; the condition identifier is excluded from paired menu randomization. Each trajectory stores initial and intermediate states, executed agent and user actions, external events, observations, menus, beliefs, raw model outputs, per-call latency and usage, component scores, and failure tags. JSONL is flushed after every trajectory for restartability, with indented JSON and tabular reports generated for inspection.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

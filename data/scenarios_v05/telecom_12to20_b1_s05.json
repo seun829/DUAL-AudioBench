@@ -1,0 +1,372 @@
+{
+  "schema_version": "0.5",
+  "scenario_id": "telecom_12to20_b1_s05",
+  "domain": "mobile_service",
+  "bucket": "12-20",
+  "clue_turn_distance": 18,
+  "distance_definition": "Number of agent/user turns after the causal clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "The handset came through a reseller, but the transfer was already updated to my direct subscriber record.",
+  "clue_answer": "the transfer used the required direct ownership record",
+  "clue_ablation_text": "I am not sure; I do not have the handset-purchase detail available.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, I am trying to move my number across to your network.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I can start that. Do you have the transfer code ready?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I received it by text yesterday.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "The number transfer completes only when its ownership record matches the required direct account holder; an intermediary record is rejected.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "user",
+      "text": "Understood; I checked the ownership record.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like a paper bill as well?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, online only is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Does the ownership record on the transfer match the required account holder?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "The handset came through a reseller, but the transfer was already updated to my direct subscriber record.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the number currently active and in use?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I am using it right now.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the billing address on file still correct?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that has not changed.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like data roaming switched on?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that would be useful.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like a confirmation message when it completes?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, please send one.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you need international calling enabled?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, I do not need that.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you want to keep the same monthly bundle?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, the same one is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you settled the balance with the old network?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that was cleared last week.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the alternative contact ending in four-zero-three current?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that one still works.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Send the transfer into the automated porting queue.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will wait and see what happens.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "port_status": "not_started",
+    "port_attempts": 0,
+    "ownership_record": "direct",
+    "required_record": "direct",
+    "ownership_aligned": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_called_old_network": false,
+    "causal_alignment": "aligned",
+    "benchmark_schema": "0.5"
+  },
+  "pre_gap": {
+    "agent_turn_index": 25,
+    "correct_action": "submit_port_request"
+  },
+  "transition": {
+    "elapsed_minutes": 30,
+    "external_event": {
+      "type": "porting_window",
+      "minimum_minutes": 30
+    },
+    "user_action": {
+      "action": "call_old_network",
+      "at_minute": 13
+    }
+  },
+  "belief_schema": {
+    "port_status": [
+      "not_started",
+      "in_progress",
+      "rejected",
+      "completed"
+    ],
+    "causal_alignment": [
+      "misaligned",
+      "aligned"
+    ]
+  },
+  "belief_definitions": {
+    "port_status": {
+      "not_started": "the number transfer has not been submitted",
+      "in_progress": "the transfer is in the porting queue",
+      "rejected": "the transfer was refused by the porting process",
+      "completed": "the number transfer finished successfully"
+    },
+    "causal_alignment": {
+      "misaligned": "the transfer carries an intermediary ownership record instead of the required direct record",
+      "aligned": "the ownership record matches the required direct account holder"
+    }
+  },
+  "revalidation_actions": [
+    "align_ownership_record"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "submit_port_request",
+      "description": "Send the transfer into the automated porting queue.",
+      "failure_tags": []
+    },
+    {
+      "action": "issue_new_number",
+      "description": "Give the user a brand new number instead of moving the old one.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "ship_replacement_sim",
+      "description": "Post out another SIM before the transfer is attempted.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "verify_transfer_code",
+      "description": "Read the transfer code back once more before sending anything.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and ask the user to start again later.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "align_ownership_record",
+      "description": "Bring the stored account ownership details into line before trying again.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "submit_port_request",
+      "description": "Push the identical transfer into the queue again now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "verify_transfer_code",
+      "description": "Read the transfer code back once more.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the transfer alone and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request because the transfer interval has passed.",
+      "failure_tags": []
+    }
+  ],
+  "causal_design": {
+    "pair_id": "telecom:12-20:s05",
+    "paired_scenario_id": "telecom_12to20_b0_s05",
+    "branch": "aligned",
+    "outcome_variable": "port_status",
+    "hidden_outcomes": [
+      "rejected",
+      "completed"
+    ],
+    "expected_post_action": "close_case",
+    "intervention": "early_clue_only"
+  },
+  "causal_post_gap_observation": {
+    "state_variable": "port_status",
+    "hidden_values": [
+      "rejected",
+      "completed"
+    ],
+    "text": "Thirty minutes have passed and the porting window ended, but the transfer result is not displayed. Based on the ownership detail I gave earlier, what should happen next?"
+  },
+  "menu_pairing_id": "telecom:12-20:s05",
+  "prosody_pair": {
+    "native_prosody": "frustrated",
+    "high": {
+      "prosody": "frustrated",
+      "expected_style": "acknowledge_impact"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "telecom:12-20:s05:aligned",
+    "transcript_variant": 2,
+    "voice_variant": 0
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f3",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "Does the ownership record on the transfer match the required account holder?",
+      "gold_answer": "the transfer used the required direct ownership record",
+      "targets": "clue",
+      "turn_distance": 18,
+      "bucket": "12-20"
+    },
+    {
+      "q_id": "q2",
+      "question": "Was the old balance settled?",
+      "gold_answer": "yes, last week",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What happened to the transfer?",
+      "gold_answer": "it was completed",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

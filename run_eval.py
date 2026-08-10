@@ -25,7 +25,9 @@ from dual_audio.interaction import ClosedLoopRunner
 from dual_audio.modalities.audio import TurnAudioRenderer
 
 
-def get_agent(name: str):
+SUPPORTED_SCHEMAS = {"0.3", "0.4", "0.5"}
+
+def get_agent(name: str, replay_cache: str | Path = "data/replay_audio"):
     """Construct the normalized agent selected by the CLI."""
 
     if name == "fake":
@@ -37,7 +39,9 @@ def get_agent(name: str):
     }
     if name not in modules:
         raise ValueError(name)
-    return ReplayModelAgent(importlib.import_module(modules[name]))
+    return ReplayModelAgent(
+        importlib.import_module(modules[name]), cache_dir=replay_cache
+    )
 
 
 def parse_conditions(value: str) -> list[str]:
@@ -52,7 +56,10 @@ def parse_conditions(value: str) -> list[str]:
     return names
 
 
-def load_done(path: Path) -> set[tuple[str, str, int]]:
+def load_done(
+    path: Path,
+    expected_schema: str,
+) -> set[tuple[str, str, int]]:
     """Return successful trajectory keys already checkpointed in ``path``.
 
     Error rows are deliberately excluded so a later invocation retries them.
@@ -65,10 +72,10 @@ def load_done(path: Path) -> set[tuple[str, str, int]]:
         if not line.strip():
             continue
         row = json.loads(line)
-        if row.get("schema_version") != "0.3":
+        if row.get("schema_version") != expected_schema:
             raise ValueError(
-                f"{path} contains pre-v0.3 trajectories; choose a new output "
-                "path before running the belief-tracking benchmark."
+                f"{path} contains schema {row.get('schema_version')} trajectories; "
+                f"choose a new output path for schema {expected_schema}."
             )
         if not row.get("error"):
             done.add((row["scenario_id"], row["condition"], row["seed"]))
@@ -84,7 +91,7 @@ def main() -> None:
         choices=["fake", "gemini", "qwen", "openrouter"],
         required=True,
     )
-    parser.add_argument("--scenarios", default="data/scenarios")
+    parser.add_argument("--scenarios", default="data/scenarios_v05")
     parser.add_argument(
         "--conditions",
         default="full_audio",
@@ -94,6 +101,24 @@ def main() -> None:
     parser.add_argument("--out", default=None)
     parser.add_argument("--retries", type=int, default=2)
     parser.add_argument("--rate-limit-seconds", type=float, default=1.0)
+    parser.add_argument(
+        "--audio-cache",
+        default=None,
+        help="per-process turn WAV cache (recommended for parallel paid shards)",
+    )
+    parser.add_argument(
+        "--replay-cache",
+        default=None,
+        help="per-process concatenated replay WAV cache",
+    )
+    parser.add_argument("--num-shards", type=int, default=1)
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument(
+        "--resume-from",
+        nargs="*",
+        default=(),
+        help="additional same-schema JSONL files whose successful keys are skipped",
+    )
     parser.add_argument(
         "--render-fake-audio",
         action="store_true",
@@ -106,19 +131,46 @@ def main() -> None:
         json.loads(path.read_text(encoding="utf-8"))
         for path in sorted(Path(args.scenarios).glob("*.json"))
     ]
+    if not tasks:
+        raise SystemExit(f"No scenario JSON files found in {args.scenarios}.")
+    schemas = {str(task.get("schema_version")) for task in tasks}
+    if len(schemas) != 1 or not schemas <= SUPPORTED_SCHEMAS:
+        raise SystemExit(
+            f"Expected one supported schema in {args.scenarios}; found {sorted(schemas)}"
+        )
+    schema_version = schemas.pop()
     for task in tasks:
-        if task.get("schema_version") != "0.3":
-            raise SystemExit(
-                f"{task.get('scenario_id')} is not schema 0.3; regenerate tasks "
-                "with `python scenarios/generate.py`."
-            )
+        if str(task.get("schema_version")) != schema_version:
+            raise SystemExit(f"Mixed schema versions in {args.scenarios}.")
+    if args.num_shards < 1 or not 0 <= args.shard_index < args.num_shards:
+        raise SystemExit("Require num-shards >= 1 and 0 <= shard-index < num-shards.")
+    tasks = [
+        task
+        for index, task in enumerate(tasks)
+        if index % args.num_shards == args.shard_index
+    ]
 
-    output = Path(args.out or f"results/{args.model}_closed_loop.jsonl")
+    schema_slug = schema_version.replace(".", "")
+    shard_suffix = (
+        f"_shard{args.shard_index:02d}-of-{args.num_shards:02d}"
+        if args.num_shards > 1
+        else ""
+    )
+    output = Path(
+        args.out
+        or f"results/{args.model}_v{schema_slug}{shard_suffix}_closed_loop.jsonl"
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
-    done = load_done(output)
-    agent = get_agent(args.model)
+    done = load_done(output, schema_version)
+    for resume_path in args.resume_from:
+        done.update(load_done(Path(resume_path), schema_version))
+    cache_slug = output.stem
+    audio_cache = args.audio_cache or f"data/runtime_audio/{cache_slug}/turns"
+    replay_cache = args.replay_cache or f"data/runtime_audio/{cache_slug}/replays"
+    agent = get_agent(args.model, replay_cache=replay_cache)
+    resolved_model = getattr(getattr(agent, "module", None), "MODEL", args.model)
     needs_audio = args.model != "fake" or args.render_fake_audio
-    renderer = TurnAudioRenderer() if needs_audio else None
+    renderer = TurnAudioRenderer(audio_cache) if needs_audio else None
     runner = ClosedLoopRunner(audio_renderer=renderer)
     print(
         f"[{args.model}/closed_loop] {len(done)} trajectories logged; "
@@ -152,7 +204,7 @@ def main() -> None:
                     failed = trajectory is None
                     if trajectory is None:
                         trajectory = {
-                            "schema_version": "0.3",
+                            "schema_version": schema_version,
                             "scenario_id": task["scenario_id"],
                             "domain": task["domain"],
                             "bucket": task["bucket"],
@@ -162,9 +214,15 @@ def main() -> None:
                             "trajectory_success": False,
                             "error": error,
                         }
-                    trajectory["model"] = args.model
+                    api_usage = (
+                        agent.pop_usage() if hasattr(agent, "pop_usage") else {}
+                    )
+                    trajectory["model"] = str(
+                        api_usage.get("resolved_model") or resolved_model
+                    )
                     trajectory["latency_s"] = round(time.time() - started, 3)
                     trajectory["error"] = error if failed else None
+                    trajectory["api_usage"] = api_usage
                     log.write(json.dumps(trajectory, ensure_ascii=False) + "\n")
                     log.flush()
                     status = (

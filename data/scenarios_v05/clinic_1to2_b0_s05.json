@@ -1,0 +1,372 @@
+{
+  "schema_version": "0.5",
+  "scenario_id": "clinic_1to2_b0_s05",
+  "domain": "scheduling",
+  "bucket": "1-2",
+  "clue_turn_distance": 2,
+  "distance_definition": "Number of agent/user turns after the causal clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "The referral came from the walk-in centre, not my regular primary-care physician.",
+  "clue_answer": "the referral came from a walk-in centre",
+  "clue_ablation_text": "I am not sure; I do not have the referral-source detail available.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, I am trying to book the specialist appointment I was referred for.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I can look at that. Do you have the referral date?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it was issued on the ninth.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Authorization is granted only when the referral comes from the required primary-care source; another source is declined.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "user",
+      "text": "Understood; I checked who issued the referral.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "agent",
+      "text": "Are you currently taking any regular medication?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Just a vitamin supplement.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you have a preferred practitioner at the practice?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, whoever is available is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you travel to the second site if it were sooner?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I could manage that.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the phone number ending in three-four-zero correct?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that one is right.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do mornings or afternoons suit you better?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Mornings are easier for me.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you need step-free access at the building?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, stairs are fine for me.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like a reminder message beforehand?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, a message would help.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the address on the file still where you live?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, nothing has moved.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you seen this specialist before?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, this would be the first visit.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Did the referral come from the source required for authorization?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "The referral came from the walk-in centre, not my regular primary-care physician.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Send the booking through for coverage approval.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will hold on while that happens.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "authorization_status": "not_requested",
+    "authorization_attempts": 0,
+    "referral_source": "walk_in",
+    "required_source": "primary_care",
+    "referral_corrected": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_confirmed_coverage": false,
+    "causal_alignment": "misaligned",
+    "benchmark_schema": "0.5"
+  },
+  "pre_gap": {
+    "agent_turn_index": 25,
+    "correct_action": "request_authorization"
+  },
+  "transition": {
+    "elapsed_minutes": 30,
+    "external_event": {
+      "type": "authorization_review",
+      "minimum_minutes": 30
+    },
+    "user_action": {
+      "action": "call_insurer",
+      "at_minute": 12
+    }
+  },
+  "belief_schema": {
+    "authorization_status": [
+      "not_requested",
+      "pending",
+      "declined",
+      "granted"
+    ],
+    "causal_alignment": [
+      "misaligned",
+      "aligned"
+    ]
+  },
+  "belief_definitions": {
+    "authorization_status": {
+      "not_requested": "coverage authorization has not been requested",
+      "pending": "the authorization request is awaiting a decision",
+      "declined": "the authorization request was refused",
+      "granted": "the authorization request was approved"
+    },
+    "causal_alignment": {
+      "misaligned": "the referral came from a source that does not qualify",
+      "aligned": "the referral came from the required qualifying source"
+    }
+  },
+  "revalidation_actions": [
+    "obtain_qualifying_referral"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "request_authorization",
+      "description": "Send the booking through for coverage approval.",
+      "failure_tags": []
+    },
+    {
+      "action": "book_without_authorization",
+      "description": "Reserve the slot and settle the coverage question later.",
+      "failure_tags": [
+        "ACTION_SELECTION_FAILURE"
+      ]
+    },
+    {
+      "action": "offer_private_payment",
+      "description": "Move straight to a self-funded booking instead.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "contact_specialist_office",
+      "description": "Ring the specialist office before requesting anything.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and ask the user to try again later.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "obtain_qualifying_referral",
+      "description": "Obtain the qualifying document from the provider type the policy requires.",
+      "failure_tags": []
+    },
+    {
+      "action": "request_authorization",
+      "description": "Put the identical booking through for approval again now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "contact_specialist_office",
+      "description": "Ring the specialist office about the booking.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the request in place and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request because the review interval has passed.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "causal_design": {
+    "pair_id": "clinic:1-2:s05",
+    "paired_scenario_id": "clinic_1to2_b1_s05",
+    "branch": "misaligned",
+    "outcome_variable": "authorization_status",
+    "hidden_outcomes": [
+      "declined",
+      "granted"
+    ],
+    "expected_post_action": "obtain_qualifying_referral",
+    "intervention": "early_clue_only"
+  },
+  "causal_post_gap_observation": {
+    "state_variable": "authorization_status",
+    "hidden_values": [
+      "declined",
+      "granted"
+    ],
+    "text": "Thirty minutes have passed and the authorization review finished, but the decision is not displayed. Based on the referral detail I gave earlier, what should we do next?"
+  },
+  "menu_pairing_id": "clinic:1-2:s05",
+  "prosody_pair": {
+    "native_prosody": "confused",
+    "high": {
+      "prosody": "confused",
+      "expected_style": "clarify_and_reassure"
+    },
+    "low": {
+      "prosody": "confident",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "clinic:1-2:s05:misaligned",
+    "transcript_variant": 0,
+    "voice_variant": 0
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f3",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "Did the referral come from the source required for authorization?",
+      "gold_answer": "the referral came from a walk-in centre",
+      "targets": "clue",
+      "turn_distance": 2,
+      "bucket": "1-2"
+    },
+    {
+      "q_id": "q2",
+      "question": "What time of day does the user prefer?",
+      "gold_answer": "mornings",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What did the coverage review decide?",
+      "gold_answer": "it was declined",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

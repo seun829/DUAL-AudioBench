@@ -1,0 +1,13 @@
+{
+  "model": "google/gemini-3-flash-preview",
+  "calls": 727,
+  "audio_calls": 727,
+  "text_calls": 0,
+  "prompt_tokens": 998793,
+  "completion_tokens": 20583,
+  "total_tokens": 1019376,
+  "audio_bytes_sent": 1198514588,
+  "audio_seconds_sent": 37452.575,
+  "cost_usd": 1.029485,
+  "errors": 2
+}

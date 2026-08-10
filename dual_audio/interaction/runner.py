@@ -41,7 +41,8 @@ def _menu(
     """
 
     actions = copy.deepcopy(task[f"{stage}_actions"])
-    _stable_rng(task["scenario_id"], stage, seed).shuffle(actions)
+    pairing_id = task.get("menu_pairing_id", task["scenario_id"])
+    _stable_rng(pairing_id, stage, seed).shuffle(actions)
     labels = [chr(ord("A") + i) for i in range(len(actions))]
     public = tuple(
         {"label": label, "description": action["description"]}
@@ -56,8 +57,12 @@ def _style_menu(
     task: dict, seed: int
 ) -> tuple[tuple[dict[str, str], ...], dict[str, str]]:
     styles = copy.deepcopy(task["response_styles"])
-    _stable_rng(task["scenario_id"], "style", seed).shuffle(styles)
-    labels = [chr(ord("X") + i) for i in range(len(styles))]
+    pairing_id = task.get("menu_pairing_id", task["scenario_id"])
+    _stable_rng(pairing_id, "style", seed).shuffle(styles)
+    label_pool = "WXYZ"
+    if len(styles) > len(label_pool):
+        raise ValueError("At most four response styles are supported.")
+    labels = list(label_pool[: len(styles)])
     public = tuple(
         {"label": label, "description": style["description"]}
         for label, style in zip(labels, styles)
@@ -254,12 +259,13 @@ class ClosedLoopRunner:
         speaker: str,
         prosody: str,
         modality: str,
+        voice: str | None = None,
     ) -> Path | None:
         """Render a turn unless this is a transcript condition or dry run."""
 
         if modality == "transcript" or self.audio_renderer is None:
             return None
-        return self.audio_renderer.render(text, speaker, prosody)
+        return self.audio_renderer.render(text, speaker, prosody, voice=voice)
 
     def _append_agent_turn(
         self,
@@ -267,11 +273,12 @@ class ClosedLoopRunner:
         response: AgentResponse,
         fallback_text: str,
         modality: str,
+        voice: str | None = None,
     ) -> None:
         """Append evaluated-agent text and optional synthesized replay audio."""
 
         text = response.message.strip() if response.message else fallback_text
-        audio = self._audio(text, "agent", "neutral", modality)
+        audio = self._audio(text, "agent", "neutral", modality, voice)
         history.append(
             {
                 "role": "agent",
@@ -304,6 +311,10 @@ class ClosedLoopRunner:
             variable: tuple(values)
             for variable, values in task["belief_schema"].items()
         }
+        belief_definitions = task.get("belief_definitions")
+        audio_profile = task.get("audio_profile", {})
+        user_voice = audio_profile.get("user_voice")
+        agent_voice = audio_profile.get("agent_voice")
         belief_state_space_size = 1
         for values in belief_schema.values():
             belief_state_space_size *= len(values)
@@ -337,7 +348,8 @@ class ClosedLoopRunner:
                 guidance = next_turn["text"]
 
             user_audio = self._audio(
-                user_turn["text"], "user", "neutral", condition.modality
+                user_turn["text"], "user", "neutral", condition.modality,
+                user_voice,
             )
             history.append(
                 {
@@ -356,6 +368,9 @@ class ClosedLoopRunner:
                 instruction=guidance,
                 action_menu=pre_menu if is_checkpoint else (),
                 belief_schema=belief_schema if is_checkpoint else {},
+                belief_definitions=(
+                    belief_definitions if is_checkpoint else None
+                ),
                 private={
                     "scenario_id": task["scenario_id"],
                     "condition": condition.name,
@@ -391,7 +406,7 @@ class ClosedLoopRunner:
                 else guidance
             )
             self._append_agent_turn(
-                history, response, fallback, condition.modality
+                history, response, fallback, condition.modality, agent_voice
             )
             if is_checkpoint:
                 pre_response = response
@@ -413,7 +428,8 @@ class ClosedLoopRunner:
 
         acknowledgement = self.user.acknowledgement(task, condition)
         acknowledgement_audio = self._audio(
-            acknowledgement["text"], "user", "neutral", condition.modality
+            acknowledgement["text"], "user", "neutral", condition.modality,
+            user_voice,
         )
         history.append(
             {
@@ -450,10 +466,10 @@ class ClosedLoopRunner:
             user_action=gap_user_action,
         )
 
-        post_text = self.user.post_gap(task, state_after_gap)
+        post_text = self.user.post_gap(task, state_after_gap, condition)
         post_prosody, expected_style = prosody_for(task, condition)
         post_audio = self._audio(
-            post_text, "user", post_prosody, condition.modality
+            post_text, "user", post_prosody, condition.modality, user_voice
         )
         post_menu, post_map = _menu(task, "post_gap", seed)
         expected_post = correct_action(task["domain"], state_after_gap)
@@ -476,6 +492,7 @@ class ClosedLoopRunner:
             modality=condition.modality,
             stage="post_gap_belief",
             belief_schema=belief_schema,
+            belief_definitions=belief_definitions,
             private={
                 "scenario_id": task["scenario_id"],
                 "condition": condition.name,
@@ -522,6 +539,7 @@ class ClosedLoopRunner:
             action_menu=post_menu,
             style_menu=style_menu,
             belief_schema=belief_schema,
+            belief_definitions=belief_definitions,
             prior_state_belief=resumed_belief_response.state_belief,
             private={
                 "scenario_id": task["scenario_id"],
@@ -566,7 +584,8 @@ class ClosedLoopRunner:
         )
         post_fallback = f"I will {public_post_description}"
         self._append_agent_turn(
-            history, post_response, post_fallback, condition.modality
+            history, post_response, post_fallback, condition.modality,
+            agent_voice,
         )
         if selected_post is not None:
             state_final = execute_action(
@@ -623,10 +642,12 @@ class ClosedLoopRunner:
             else None
         )
         return {
-            "schema_version": "0.3",
+            "schema_version": task.get("schema_version", "0.3"),
             "scenario_id": task["scenario_id"],
             "domain": task["domain"],
             "bucket": task["bucket"],
+            "causal_pair_id": task.get("causal_design", {}).get("pair_id"),
+            "causal_branch": task.get("causal_design", {}).get("branch"),
             "clue_turn_distance": task["clue_turn_distance"],
             "effective_clue_turn_distance": effective_distance,
             "condition": condition.name,
@@ -647,6 +668,10 @@ class ClosedLoopRunner:
             "state_after_gap": state_after_gap,
             "post_gap_observation": post_text,
             "post_gap_prosody": post_prosody,
+            "prosody_stimulus_id": task.get("prosody_stimulus", {}).get(
+                "stimulus_id"
+            ),
+            "user_voice": user_voice,
             "post_gap_action": selected_post,
             "expected_post_gap_action": expected_post,
             "post_gap_action_label": post_response.action,
@@ -656,6 +681,7 @@ class ClosedLoopRunner:
             "response_style": selected_style,
             "expected_response_style": expected_style,
             "response_style_success": style_ok,
+            "response_style_menu": list(style_menu),
             "response_style_menu_size": len(style_menu) or 1,
             "belief_state_space_size": belief_state_space_size,
             "belief_checkpoint_chance": 1 / belief_state_space_size,

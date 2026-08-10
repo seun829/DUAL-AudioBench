@@ -1,0 +1,1316 @@
+{
+  "inputs": [
+    "smoke_results\\v05_fake_all.jsonl"
+  ],
+  "attempt_rows": 756,
+  "unique_completed_trajectories": 756,
+  "duplicate_success_rows": 0,
+  "error_attempt_rows": 0,
+  "observed_scenarios": 84,
+  "observed_seeds": 1,
+  "models": {
+    "fake": {
+      "usage": {
+        "trajectories": 756,
+        "model_calls": 0,
+        "metered_calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "cost": 0.0,
+        "request_latency_s": 0.0,
+        "trajectory_latency_s": 1.504,
+        "errors": 0
+      },
+      "coverage": {
+        "completed": 756,
+        "expected": 756,
+        "fraction": 1.0
+      },
+      "overall": {
+        "n": 756,
+        "failed_trajectories": 658,
+        "trajectory_success": 0.12962962962962962,
+        "action_trajectory_success": 0.5502645502645502,
+        "pre_gap_success": 0.7275132275132276,
+        "post_gap_success": 0.7037037037037037,
+        "belief_reporting_success": 1.0,
+        "state_belief_success": 0.16005291005291006
+      },
+      "conditions": {
+        "full_audio": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.11904761904761904,
+            "pre": 0.7380952380952381,
+            "post": 0.7261904761904762,
+            "majority": 0.11904761904761904,
+            "seed_variance": 0.0,
+            "ci": [
+              0.05952380952380952,
+              0.19047619047619047
+            ],
+            "all_trials": 0.11904761904761904,
+            "pass_k": 1,
+            "pass_at_k": 0.11904761904761904,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 7.540178571428571e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.5952380952380952,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.47619047619047616,
+              "post_observation": 0.42857142857142855,
+              "pre_final_action": 0.44047619047619047
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.4737916666666667,
+            "final_revision_gain": 0.5012916666666667,
+            "stale_belief_persistence": 0.16497222222222221,
+            "mean_brier": 0.5054934854497355,
+            "ece": 0.41442460317460317,
+            "pre_action_belief_consistency": 0.6071428571428571,
+            "final_action_belief_consistency": 0.5952380952380952,
+            "risk_calibration_consistency": 0.9722222222222222,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 67,
+              "STATE_SYNCHRONIZATION_FAILURE": 35,
+              "ACTION_SELECTION_FAILURE": 10,
+              "LUCKY_ACTION": 56
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.164,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 11,
+            "STATE_BELIEF_ERROR": 72,
+            "EARLY_CLUE_LOSS": 11,
+            "PREMATURE_ESCALATION": 11,
+            "ACTION_SELECTION_FAILURE": 1,
+            "TIME_INFERENCE_FAILURE": 4,
+            "STATE_SYNC_FAILURE": 2
+          }
+        },
+        "gap_no_state_change": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.11904761904761904,
+            "pre": 0.7380952380952381,
+            "post": 0.7261904761904762,
+            "majority": 0.11904761904761904,
+            "seed_variance": 0.0,
+            "ci": [
+              0.05952380952380952,
+              0.19047619047619047
+            ],
+            "all_trials": 0.11904761904761904,
+            "pass_k": 1,
+            "pass_at_k": 0.11904761904761904,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 7.540178571428571e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.5952380952380952,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.47619047619047616,
+              "post_observation": 0.42857142857142855,
+              "pre_final_action": 0.44047619047619047
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.4571408045977012,
+            "final_revision_gain": 0.47420977011494253,
+            "stale_belief_persistence": 0.16767241379310344,
+            "mean_brier": 0.5054934854497355,
+            "ece": 0.41442460317460317,
+            "pre_action_belief_consistency": 0.6071428571428571,
+            "final_action_belief_consistency": 0.5714285714285714,
+            "risk_calibration_consistency": 0.9722222222222222,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 67,
+              "STATE_SYNCHRONIZATION_FAILURE": 35,
+              "ACTION_SELECTION_FAILURE": 10,
+              "LUCKY_ACTION": 56
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.152,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 10,
+            "STATE_BELIEF_ERROR": 72,
+            "EARLY_CLUE_LOSS": 11,
+            "PREMATURE_ESCALATION": 11,
+            "ACTION_SELECTION_FAILURE": 1,
+            "STATE_SYNC_FAILURE": 4,
+            "TIME_INFERENCE_FAILURE": 1
+          }
+        },
+        "state_change_short": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.35714285714285715,
+            "pre": 0.9523809523809523,
+            "post": 0.9047619047619048,
+            "majority": 0.35714285714285715,
+            "seed_variance": 0.0,
+            "ci": [
+              0.2738095238095238,
+              0.4404761904761904
+            ],
+            "all_trials": 0.35714285714285715,
+            "pass_k": 1,
+            "pass_at_k": 0.35714285714285715,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 7.540178571428571e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.8690476190476191,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.7976190476190477,
+              "post_observation": 0.6785714285714286,
+              "pre_final_action": 0.7619047619047619
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.5877597402597403,
+            "final_revision_gain": 0.6091883116883117,
+            "stale_belief_persistence": 0.12937229437229436,
+            "mean_brier": 0.21792463624338626,
+            "ece": 0.29007936507936505,
+            "pre_action_belief_consistency": 0.8928571428571429,
+            "final_action_belief_consistency": 0.8333333333333334,
+            "risk_calibration_consistency": 0.996031746031746,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 122,
+              "LUCKY_ACTION": 34,
+              "ACTION_SELECTION_FAILURE": 9,
+              "STATE_SYNCHRONIZATION_FAILURE": 3
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.169,
+            "errors": 0
+          },
+          "failure_tags": {
+            "STATE_BELIEF_ERROR": 49,
+            "PREMATURE_ESCALATION": 2,
+            "EARLY_CLUE_LOSS": 1,
+            "ACTION_SELECTION_FAILURE": 1,
+            "TIME_INFERENCE_FAILURE": 3,
+            "STATE_SYNC_FAILURE": 2,
+            "PREMATURE_CLOSE": 3
+          }
+        },
+        "clue_removed": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.0,
+            "pre": 0.42857142857142855,
+            "post": 0.34523809523809523,
+            "majority": 0.0,
+            "seed_variance": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "all_trials": 0.0,
+            "pass_k": 1,
+            "pass_at_k": 0.0,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 7.540178571428571e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.13095238095238096,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.2261904761904762,
+              "post_observation": 0.17857142857142858,
+              "pre_final_action": 0.17857142857142858
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.2782175925925926,
+            "final_revision_gain": 0.2782175925925926,
+            "stale_belief_persistence": 0.2212037037037037,
+            "mean_brier": 0.811401951058201,
+            "ece": 0.5464285714285714,
+            "pre_action_belief_consistency": 0.30952380952380953,
+            "final_action_belief_consistency": 0.2857142857142857,
+            "risk_calibration_consistency": 0.9603174603174603,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "STATE_SYNCHRONIZATION_FAILURE": 86,
+              "LUCKY_ACTION": 48,
+              "ACTION_SELECTION_FAILURE": 17,
+              "FULL_SUCCESS": 17
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.181,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 18,
+            "STATE_BELIEF_ERROR": 82,
+            "STATE_SYNC_FAILURE": 8,
+            "PREMATURE_ESCALATION": 22,
+            "TIME_INFERENCE_FAILURE": 14,
+            "EARLY_CLUE_LOSS": 23,
+            "ACTION_SELECTION_FAILURE": 4,
+            "REPEATED_ACTION": 3
+          }
+        },
+        "transcript_only": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.11904761904761904,
+            "pre": 0.7380952380952381,
+            "post": 0.7261904761904762,
+            "majority": 0.11904761904761904,
+            "seed_variance": 0.0,
+            "ci": [
+              0.05952380952380952,
+              0.19047619047619047
+            ],
+            "all_trials": 0.11904761904761904,
+            "pass_k": 1,
+            "pass_at_k": 0.11904761904761904,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 7.540178571428571e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.5952380952380952,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.47619047619047616,
+              "post_observation": 0.42857142857142855,
+              "pre_final_action": 0.44047619047619047
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.4737916666666667,
+            "final_revision_gain": 0.5012916666666667,
+            "stale_belief_persistence": 0.16497222222222221,
+            "mean_brier": 0.5054934854497355,
+            "ece": 0.41442460317460317,
+            "pre_action_belief_consistency": 0.6071428571428571,
+            "final_action_belief_consistency": 0.5952380952380952,
+            "risk_calibration_consistency": 0.9722222222222222,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 67,
+              "STATE_SYNCHRONIZATION_FAILURE": 35,
+              "ACTION_SELECTION_FAILURE": 10,
+              "LUCKY_ACTION": 56
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.174,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 11,
+            "STATE_BELIEF_ERROR": 72,
+            "EARLY_CLUE_LOSS": 11,
+            "PREMATURE_ESCALATION": 11,
+            "ACTION_SELECTION_FAILURE": 1,
+            "TIME_INFERENCE_FAILURE": 4,
+            "STATE_SYNC_FAILURE": 2
+          }
+        },
+        "neutral_audio": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.11904761904761904,
+            "pre": 0.7380952380952381,
+            "post": 0.7261904761904762,
+            "majority": 0.11904761904761904,
+            "seed_variance": 0.0,
+            "ci": [
+              0.05952380952380952,
+              0.19047619047619047
+            ],
+            "all_trials": 0.11904761904761904,
+            "pass_k": 1,
+            "pass_at_k": 0.11904761904761904,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 7.540178571428571e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.5952380952380952,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.47619047619047616,
+              "post_observation": 0.42857142857142855,
+              "pre_final_action": 0.44047619047619047
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.4737916666666667,
+            "final_revision_gain": 0.5012916666666667,
+            "stale_belief_persistence": 0.16497222222222221,
+            "mean_brier": 0.5054934854497355,
+            "ece": 0.41442460317460317,
+            "pre_action_belief_consistency": 0.6071428571428571,
+            "final_action_belief_consistency": 0.5952380952380952,
+            "risk_calibration_consistency": 0.9722222222222222,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 67,
+              "STATE_SYNCHRONIZATION_FAILURE": 35,
+              "ACTION_SELECTION_FAILURE": 10,
+              "LUCKY_ACTION": 56
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.166,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 11,
+            "STATE_BELIEF_ERROR": 72,
+            "EARLY_CLUE_LOSS": 11,
+            "PREMATURE_ESCALATION": 11,
+            "ACTION_SELECTION_FAILURE": 1,
+            "TIME_INFERENCE_FAILURE": 4,
+            "STATE_SYNC_FAILURE": 2
+          }
+        },
+        "hidden_user_action": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.11904761904761904,
+            "pre": 0.7380952380952381,
+            "post": 0.7261904761904762,
+            "majority": 0.11904761904761904,
+            "seed_variance": 0.0,
+            "ci": [
+              0.05952380952380952,
+              0.19047619047619047
+            ],
+            "all_trials": 0.11904761904761904,
+            "pass_k": 1,
+            "pass_at_k": 0.11904761904761904,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.04,
+            "trajectory_chance": 7.540178571428571e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.5952380952380952,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.47619047619047616,
+              "post_observation": 0.42857142857142855,
+              "pre_final_action": 0.44047619047619047
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.48371693121693127,
+            "final_revision_gain": 0.5099074074074074,
+            "stale_belief_persistence": 0.17023809523809524,
+            "mean_brier": 0.5054934854497355,
+            "ece": 0.41442460317460317,
+            "pre_action_belief_consistency": 0.6071428571428571,
+            "final_action_belief_consistency": 0.5952380952380952,
+            "risk_calibration_consistency": 0.9722222222222222,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 67,
+              "STATE_SYNCHRONIZATION_FAILURE": 35,
+              "ACTION_SELECTION_FAILURE": 10,
+              "LUCKY_ACTION": 56
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.151,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 11,
+            "STATE_BELIEF_ERROR": 72,
+            "EARLY_CLUE_LOSS": 11,
+            "PREMATURE_ESCALATION": 11,
+            "ACTION_SELECTION_FAILURE": 1,
+            "TIME_INFERENCE_FAILURE": 4,
+            "STATE_SYNC_FAILURE": 2
+          }
+        },
+        "prosody_high": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.10714285714285714,
+            "pre": 0.7380952380952381,
+            "post": 0.7261904761904762,
+            "majority": 0.10714285714285714,
+            "seed_variance": 0.0,
+            "ci": [
+              0.047619047619047616,
+              0.17857142857142858
+            ],
+            "all_trials": 0.10714285714285714,
+            "pass_k": 1,
+            "pass_at_k": 0.10714285714285714,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.01,
+            "trajectory_chance": 1.8850446428571428e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.4880952380952381,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.47619047619047616,
+              "post_observation": 0.42857142857142855,
+              "pre_final_action": 0.44047619047619047
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.4737916666666667,
+            "final_revision_gain": 0.5012916666666667,
+            "stale_belief_persistence": 0.16497222222222221,
+            "mean_brier": 0.5054934854497355,
+            "ece": 0.41442460317460317,
+            "pre_action_belief_consistency": 0.6071428571428571,
+            "final_action_belief_consistency": 0.5952380952380952,
+            "risk_calibration_consistency": 0.9722222222222222,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 67,
+              "STATE_SYNCHRONIZATION_FAILURE": 35,
+              "ACTION_SELECTION_FAILURE": 10,
+              "LUCKY_ACTION": 56
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.183,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 11,
+            "STATE_BELIEF_ERROR": 72,
+            "EARLY_CLUE_LOSS": 11,
+            "PREMATURE_ESCALATION": 11,
+            "ACTION_SELECTION_FAILURE": 1,
+            "PROSODY_GROUNDING_FAILURE": 15,
+            "TIME_INFERENCE_FAILURE": 4,
+            "STATE_SYNC_FAILURE": 2
+          }
+        },
+        "prosody_low": {
+          "primary": {
+            "n": 84,
+            "scenarios": 84,
+            "pass1": 0.10714285714285714,
+            "pre": 0.7380952380952381,
+            "post": 0.7261904761904762,
+            "majority": 0.10714285714285714,
+            "seed_variance": 0.0,
+            "ci": [
+              0.047619047619047616,
+              0.17857142857142858
+            ],
+            "all_trials": 0.10714285714285714,
+            "pass_k": 1,
+            "pass_at_k": 0.10714285714285714,
+            "pass_at_5": null,
+            "two_action_chance": 0.04,
+            "action_trajectory_chance": 0.01,
+            "trajectory_chance": 1.8850446428571428e-05,
+            "action_chance": 0.2
+          },
+          "action_trajectory_success": 0.4880952380952381,
+          "beliefs": {
+            "checkpoint_accuracy": {
+              "pre_gap": 0.47619047619047616,
+              "post_observation": 0.42857142857142855,
+              "pre_final_action": 0.44047619047619047
+            },
+            "checkpoint_validity": {
+              "pre_gap": 1.0,
+              "post_observation": 1.0,
+              "pre_final_action": 1.0
+            },
+            "revision_gain": 0.4737916666666667,
+            "final_revision_gain": 0.5012916666666667,
+            "stale_belief_persistence": 0.16497222222222221,
+            "mean_brier": 0.5054934854497355,
+            "ece": 0.41442460317460317,
+            "pre_action_belief_consistency": 0.6071428571428571,
+            "final_action_belief_consistency": 0.5952380952380952,
+            "risk_calibration_consistency": 0.9722222222222222,
+            "uncertainty_behavior": {
+              "CONFIDENT": 252
+            },
+            "outcome_matrix": {
+              "FULL_SUCCESS": 67,
+              "STATE_SYNCHRONIZATION_FAILURE": 35,
+              "ACTION_SELECTION_FAILURE": 10,
+              "LUCKY_ACTION": 56
+            }
+          },
+          "usage": {
+            "trajectories": 84,
+            "model_calls": 0,
+            "metered_calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "request_latency_s": 0.0,
+            "trajectory_latency_s": 0.164,
+            "errors": 0
+          },
+          "failure_tags": {
+            "PREMATURE_CLOSE": 11,
+            "STATE_BELIEF_ERROR": 72,
+            "EARLY_CLUE_LOSS": 11,
+            "PREMATURE_ESCALATION": 11,
+            "ACTION_SELECTION_FAILURE": 1,
+            "PROSODY_GROUNDING_FAILURE": 15,
+            "TIME_INFERENCE_FAILURE": 4,
+            "STATE_SYNC_FAILURE": 2
+          }
+        }
+      },
+      "controls": {
+        "clue_ablation_post_gap": {
+          "left": "full_audio",
+          "right": "clue_removed",
+          "field": "post_gap_success",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.38095238095238093,
+          "ci": [
+            0.2619047619047619,
+            0.5
+          ],
+          "p_value": 0.00048828125,
+          "domain_effects": {
+            "banking": 0.16666666666666666,
+            "scheduling": 0.6666666666666666,
+            "education": 0.3333333333333333,
+            "logistics": 0.5,
+            "travel": 0.5,
+            "motor_insurance": 0.6666666666666666,
+            "permits": 0.0,
+            "pharmacy": 0.5,
+            "tech_support": 0.6666666666666666,
+            "account_access": 0.5,
+            "mobile_service": 0.0,
+            "housing": 0.16666666666666666,
+            "energy": 0.3333333333333333,
+            "repair": 0.3333333333333333
+          }
+        },
+        "clue_ablation_trajectory": {
+          "left": "full_audio",
+          "right": "clue_removed",
+          "field": "trajectory_success",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.11904761904761904,
+          "ci": [
+            0.05952380952380952,
+            0.19047619047619047
+          ],
+          "p_value": 0.0078125,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.16666666666666666,
+            "education": 0.0,
+            "logistics": 0.16666666666666666,
+            "travel": 0.16666666666666666,
+            "motor_insurance": 0.5,
+            "permits": 0.0,
+            "pharmacy": 0.16666666666666666,
+            "tech_support": 0.0,
+            "account_access": 0.16666666666666666,
+            "mobile_service": 0.16666666666666666,
+            "housing": 0.0,
+            "energy": 0.16666666666666666,
+            "repair": 0.0
+          }
+        },
+        "hidden_user_action_post_gap": {
+          "left": "hidden_user_action",
+          "right": "full_audio",
+          "field": "post_gap_success",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "p_value": 1.0,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.0,
+            "education": 0.0,
+            "logistics": 0.0,
+            "travel": 0.0,
+            "motor_insurance": 0.0,
+            "permits": 0.0,
+            "pharmacy": 0.0,
+            "tech_support": 0.0,
+            "account_access": 0.0,
+            "mobile_service": 0.0,
+            "housing": 0.0,
+            "energy": 0.0,
+            "repair": 0.0
+          }
+        },
+        "modality_pre_gap_action": {
+          "left": "transcript_only",
+          "right": "full_audio",
+          "field": "pre_gap_success",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "p_value": 1.0,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.0,
+            "education": 0.0,
+            "logistics": 0.0,
+            "travel": 0.0,
+            "motor_insurance": 0.0,
+            "permits": 0.0,
+            "pharmacy": 0.0,
+            "tech_support": 0.0,
+            "account_access": 0.0,
+            "mobile_service": 0.0,
+            "housing": 0.0,
+            "energy": 0.0,
+            "repair": 0.0
+          }
+        },
+        "modality_post_gap_action": {
+          "left": "transcript_only",
+          "right": "full_audio",
+          "field": "post_gap_success",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "p_value": 1.0,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.0,
+            "education": 0.0,
+            "logistics": 0.0,
+            "travel": 0.0,
+            "motor_insurance": 0.0,
+            "permits": 0.0,
+            "pharmacy": 0.0,
+            "tech_support": 0.0,
+            "account_access": 0.0,
+            "mobile_service": 0.0,
+            "housing": 0.0,
+            "energy": 0.0,
+            "repair": 0.0
+          }
+        },
+        "modality_post_observation_belief": {
+          "left": "transcript_only",
+          "right": "full_audio",
+          "field": "_checkpoint_correct",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "p_value": 1.0,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.0,
+            "education": 0.0,
+            "logistics": 0.0,
+            "travel": 0.0,
+            "motor_insurance": 0.0,
+            "permits": 0.0,
+            "pharmacy": 0.0,
+            "tech_support": 0.0,
+            "account_access": 0.0,
+            "mobile_service": 0.0,
+            "housing": 0.0,
+            "energy": 0.0,
+            "repair": 0.0
+          }
+        },
+        "modality_trajectory": {
+          "left": "transcript_only",
+          "right": "full_audio",
+          "field": "trajectory_success",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "p_value": 1.0,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.0,
+            "education": 0.0,
+            "logistics": 0.0,
+            "travel": 0.0,
+            "motor_insurance": 0.0,
+            "permits": 0.0,
+            "pharmacy": 0.0,
+            "tech_support": 0.0,
+            "account_access": 0.0,
+            "mobile_service": 0.0,
+            "housing": 0.0,
+            "energy": 0.0,
+            "repair": 0.0
+          }
+        },
+        "state_change_post_gap": {
+          "left": "full_audio",
+          "right": "gap_no_state_change",
+          "field": "post_gap_success",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "p_value": 1.0,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.0,
+            "education": 0.0,
+            "logistics": 0.0,
+            "travel": 0.0,
+            "motor_insurance": 0.0,
+            "permits": 0.0,
+            "pharmacy": 0.0,
+            "tech_support": 0.0,
+            "account_access": 0.0,
+            "mobile_service": 0.0,
+            "housing": 0.0,
+            "energy": 0.0,
+            "repair": 0.0
+          }
+        },
+        "neutral_audio_post_gap": {
+          "left": "neutral_audio",
+          "right": "full_audio",
+          "field": "post_gap_success",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "p_value": 1.0,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.0,
+            "education": 0.0,
+            "logistics": 0.0,
+            "travel": 0.0,
+            "motor_insurance": 0.0,
+            "permits": 0.0,
+            "pharmacy": 0.0,
+            "tech_support": 0.0,
+            "account_access": 0.0,
+            "mobile_service": 0.0,
+            "housing": 0.0,
+            "energy": 0.0,
+            "repair": 0.0
+          }
+        },
+        "neutral_audio_post_observation_belief": {
+          "left": "neutral_audio",
+          "right": "full_audio",
+          "field": "_checkpoint_correct",
+          "paired_n": 84,
+          "clusters": 14,
+          "delta": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "p_value": 1.0,
+          "domain_effects": {
+            "banking": 0.0,
+            "scheduling": 0.0,
+            "education": 0.0,
+            "logistics": 0.0,
+            "travel": 0.0,
+            "motor_insurance": 0.0,
+            "permits": 0.0,
+            "pharmacy": 0.0,
+            "tech_support": 0.0,
+            "account_access": 0.0,
+            "mobile_service": 0.0,
+            "housing": 0.0,
+            "energy": 0.0,
+            "repair": 0.0
+          }
+        },
+        "prosody": {
+          "paired_n": 84,
+          "unique_stimuli": 84,
+          "both_style_random_chance": 0.0625,
+          "high_style_accuracy": 0.8214285714285714,
+          "low_style_accuracy": 0.8214285714285714,
+          "high_style": {
+            "mean": 0.8214285714285714,
+            "ci": [
+              0.7380952380952381,
+              0.8928571428571429
+            ],
+            "clusters": 14
+          },
+          "low_style": {
+            "mean": 0.8214285714285714,
+            "ci": [
+              0.7380952380952381,
+              0.8928571428571429
+            ],
+            "clusters": 14
+          },
+          "both_style_correct": {
+            "mean": 0.8214285714285714,
+            "ci": [
+              0.7380952380952381,
+              0.8928571428571429
+            ],
+            "clusters": 14
+          },
+          "style_contrast": {
+            "mean": 0.7380952380952381,
+            "ci": [
+              0.630952380952381,
+              0.8452380952380952
+            ],
+            "clusters": 14
+          },
+          "technical_action_invariance": {
+            "mean": 1.0,
+            "ci": [
+              1.0,
+              1.0
+            ],
+            "clusters": 14
+          },
+          "post_observation_top_belief_invariance": {
+            "mean": 1.0,
+            "ci": [
+              1.0,
+              1.0
+            ],
+            "clusters": 14
+          },
+          "post_observation_belief_jsd": {
+            "mean": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "clusters": 14
+          },
+          "pre_final_belief_jsd": {
+            "mean": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "clusters": 14
+          },
+          "categories": {
+            "confused": {
+              "pairs": 24,
+              "both_correct": {
+                "mean": 0.875,
+                "ci": [
+                  0.8333333333333334,
+                  0.9583333333333334
+                ],
+                "clusters": 4
+              }
+            },
+            "frustrated": {
+              "pairs": 30,
+              "both_correct": {
+                "mean": 0.9,
+                "ci": [
+                  0.8333333333333334,
+                  0.9666666666666666
+                ],
+                "clusters": 5
+              }
+            },
+            "urgent": {
+              "pairs": 30,
+              "both_correct": {
+                "mean": 0.7,
+                "ci": [
+                  0.5666666666666667,
+                  0.8666666666666666
+                ],
+                "clusters": 5
+              }
+            }
+          }
+        }
+      },
+      "full_audio_by_domain": {
+        "account_access": {
+          "n": 6,
+          "trajectory_success": 0.16666666666666666,
+          "action_trajectory_success": 0.6666666666666666,
+          "pre_gap_success": 0.6666666666666666,
+          "post_gap_success": 0.6666666666666666
+        },
+        "banking": {
+          "n": 6,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 0.3333333333333333,
+          "pre_gap_success": 0.5,
+          "post_gap_success": 0.5
+        },
+        "education": {
+          "n": 6,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 0.3333333333333333,
+          "pre_gap_success": 0.5,
+          "post_gap_success": 0.8333333333333334
+        },
+        "energy": {
+          "n": 6,
+          "trajectory_success": 0.16666666666666666,
+          "action_trajectory_success": 0.5,
+          "pre_gap_success": 1.0,
+          "post_gap_success": 0.5
+        },
+        "housing": {
+          "n": 6,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 0.5,
+          "pre_gap_success": 0.6666666666666666,
+          "post_gap_success": 0.6666666666666666
+        },
+        "logistics": {
+          "n": 6,
+          "trajectory_success": 0.16666666666666666,
+          "action_trajectory_success": 0.6666666666666666,
+          "pre_gap_success": 0.8333333333333334,
+          "post_gap_success": 0.6666666666666666
+        },
+        "mobile_service": {
+          "n": 6,
+          "trajectory_success": 0.16666666666666666,
+          "action_trajectory_success": 0.5,
+          "pre_gap_success": 0.5,
+          "post_gap_success": 0.6666666666666666
+        },
+        "motor_insurance": {
+          "n": 6,
+          "trajectory_success": 0.5,
+          "action_trajectory_success": 0.5,
+          "pre_gap_success": 0.6666666666666666,
+          "post_gap_success": 0.8333333333333334
+        },
+        "permits": {
+          "n": 6,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 0.5,
+          "pre_gap_success": 0.8333333333333334,
+          "post_gap_success": 0.5
+        },
+        "pharmacy": {
+          "n": 6,
+          "trajectory_success": 0.16666666666666666,
+          "action_trajectory_success": 0.8333333333333334,
+          "pre_gap_success": 0.8333333333333334,
+          "post_gap_success": 1.0
+        },
+        "repair": {
+          "n": 6,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 0.6666666666666666,
+          "pre_gap_success": 0.8333333333333334,
+          "post_gap_success": 0.8333333333333334
+        },
+        "scheduling": {
+          "n": 6,
+          "trajectory_success": 0.16666666666666666,
+          "action_trajectory_success": 0.6666666666666666,
+          "pre_gap_success": 0.6666666666666666,
+          "post_gap_success": 0.8333333333333334
+        },
+        "tech_support": {
+          "n": 6,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 1.0,
+          "pre_gap_success": 1.0,
+          "post_gap_success": 1.0
+        },
+        "travel": {
+          "n": 6,
+          "trajectory_success": 0.16666666666666666,
+          "action_trajectory_success": 0.6666666666666666,
+          "pre_gap_success": 0.8333333333333334,
+          "post_gap_success": 0.6666666666666666
+        }
+      },
+      "full_audio_by_bucket": {
+        "1-2": {
+          "n": 28,
+          "trajectory_success": 0.2857142857142857,
+          "action_trajectory_success": 0.8571428571428571,
+          "pre_gap_success": 0.9285714285714286,
+          "post_gap_success": 0.9285714285714286
+        },
+        "12-20": {
+          "n": 28,
+          "trajectory_success": 0.0,
+          "action_trajectory_success": 0.21428571428571427,
+          "pre_gap_success": 0.42857142857142855,
+          "post_gap_success": 0.4642857142857143
+        },
+        "5-8": {
+          "n": 28,
+          "trajectory_success": 0.07142857142857142,
+          "action_trajectory_success": 0.7142857142857143,
+          "pre_gap_success": 0.8571428571428571,
+          "post_gap_success": 0.7857142857142857
+        }
+      },
+      "causal_clue": {
+        "clue_removed_deterministic_post_accuracy_ceiling": 0.5,
+        "conditions": {
+          "full_audio": {
+            "trajectories": 84,
+            "complete_counterfactual_pairs": 42,
+            "post_gap_accuracy": 0.7261904761904762,
+            "strict_trajectory_accuracy": 0.11904761904761904,
+            "both_branches_post_gap_correct": 0.5714285714285714,
+            "both_branches_strict_correct": 0.023809523809523808,
+            "selected_action_changes_across_branches": 0.8809523809523809,
+            "by_branch": {
+              "aligned": {
+                "n": 42,
+                "post_gap_accuracy": 0.7619047619047619,
+                "strict_trajectory_accuracy": 0.07142857142857142
+              },
+              "misaligned": {
+                "n": 42,
+                "post_gap_accuracy": 0.6904761904761905,
+                "strict_trajectory_accuracy": 0.16666666666666666
+              }
+            }
+          },
+          "transcript_only": {
+            "trajectories": 84,
+            "complete_counterfactual_pairs": 42,
+            "post_gap_accuracy": 0.7261904761904762,
+            "strict_trajectory_accuracy": 0.11904761904761904,
+            "both_branches_post_gap_correct": 0.5714285714285714,
+            "both_branches_strict_correct": 0.023809523809523808,
+            "selected_action_changes_across_branches": 0.8809523809523809,
+            "by_branch": {
+              "aligned": {
+                "n": 42,
+                "post_gap_accuracy": 0.7619047619047619,
+                "strict_trajectory_accuracy": 0.07142857142857142
+              },
+              "misaligned": {
+                "n": 42,
+                "post_gap_accuracy": 0.6904761904761905,
+                "strict_trajectory_accuracy": 0.16666666666666666
+              }
+            }
+          },
+          "clue_removed": {
+            "trajectories": 84,
+            "complete_counterfactual_pairs": 42,
+            "post_gap_accuracy": 0.34523809523809523,
+            "strict_trajectory_accuracy": 0.0,
+            "both_branches_post_gap_correct": 0.14285714285714285,
+            "both_branches_strict_correct": 0.0,
+            "selected_action_changes_across_branches": 0.7619047619047619,
+            "by_branch": {
+              "aligned": {
+                "n": 42,
+                "post_gap_accuracy": 0.23809523809523808,
+                "strict_trajectory_accuracy": 0.0
+              },
+              "misaligned": {
+                "n": 42,
+                "post_gap_accuracy": 0.4523809523809524,
+                "strict_trajectory_accuracy": 0.0
+              }
+            }
+          }
+        }
+      },
+      "failure_tags": {
+        "PREMATURE_CLOSE": 97,
+        "STATE_BELIEF_ERROR": 635,
+        "EARLY_CLUE_LOSS": 101,
+        "PREMATURE_ESCALATION": 101,
+        "STATE_SYNC_FAILURE": 26,
+        "TIME_INFERENCE_FAILURE": 42,
+        "ACTION_SELECTION_FAILURE": 12,
+        "PROSODY_GROUNDING_FAILURE": 30,
+        "REPEATED_ACTION": 3
+      },
+      "difficulty_flags": [
+        "No obvious ceiling or ineffective-clue warning fired."
+      ]
+    }
+  }
+}

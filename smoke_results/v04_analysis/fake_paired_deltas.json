@@ -1,0 +1,279 @@
+{
+  "full_vs_clue_removed": {
+    "left": "full_audio",
+    "right": "clue_removed",
+    "paired_n": 84,
+    "fields": {
+      "trajectory_success": {
+        "n": 84,
+        "full_audio_rate": 0.3333,
+        "clue_removed_rate": 0.0357,
+        "delta": 0.2976,
+        "left_only": 25,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.2143,
+          0.381
+        ],
+        "exact_sign_flip_p": 0.000244
+      },
+      "pre_gap_success": {
+        "n": 84,
+        "full_audio_rate": 0.7381,
+        "clue_removed_rate": 0.381,
+        "delta": 0.3571,
+        "left_only": 33,
+        "right_only": 3,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.2619,
+          0.4524
+        ],
+        "exact_sign_flip_p": 0.000244
+      },
+      "post_gap_success": {
+        "n": 84,
+        "full_audio_rate": 0.6905,
+        "clue_removed_rate": 0.4286,
+        "delta": 0.2619,
+        "left_only": 24,
+        "right_only": 2,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.1429,
+          0.381
+        ],
+        "exact_sign_flip_p": 0.00293
+      },
+      "state_belief_success": {
+        "n": 84,
+        "full_audio_rate": 0.5,
+        "clue_removed_rate": 0.0952,
+        "delta": 0.4048,
+        "left_only": 34,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.2976,
+          0.5119
+        ],
+        "exact_sign_flip_p": 0.000244
+      }
+    },
+    "post_observation_belief_effect": {
+      "delta": 0.2857,
+      "domain_clusters": 14,
+      "domain_clustered_ci": [
+        0.2143,
+        0.3571
+      ],
+      "exact_sign_flip_p": 0.000122
+    },
+    "belief": {
+      "full_audio": {
+        "revision_gain": 0.4832,
+        "final_revision_gain": 0.5147,
+        "stale_belief_persistence": 0.1479,
+        "mean_brier": 0.405,
+        "ece": 0.3769,
+        "pre_action_belief_consistency": 0.619,
+        "final_action_belief_consistency": 0.5595,
+        "risk_calibration_consistency": 1.0
+      },
+      "clue_removed": {
+        "revision_gain": 0.2286,
+        "final_revision_gain": 0.2663,
+        "stale_belief_persistence": 0.1606,
+        "mean_brier": 0.7456,
+        "ece": 0.5083,
+        "pre_action_belief_consistency": 0.25,
+        "final_action_belief_consistency": 0.3333,
+        "risk_calibration_consistency": 1.0
+      }
+    }
+  },
+  "transcript_vs_full_audio": {
+    "left": "transcript_only",
+    "right": "full_audio",
+    "paired_n": 84,
+    "fields": {
+      "trajectory_success": {
+        "n": 84,
+        "transcript_only_rate": 0.3333,
+        "full_audio_rate": 0.3333,
+        "delta": 0.0,
+        "left_only": 0,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0
+      },
+      "pre_gap_success": {
+        "n": 84,
+        "transcript_only_rate": 0.7381,
+        "full_audio_rate": 0.7381,
+        "delta": 0.0,
+        "left_only": 0,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0
+      },
+      "post_gap_success": {
+        "n": 84,
+        "transcript_only_rate": 0.6905,
+        "full_audio_rate": 0.6905,
+        "delta": 0.0,
+        "left_only": 0,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0
+      },
+      "state_belief_success": {
+        "n": 84,
+        "transcript_only_rate": 0.5,
+        "full_audio_rate": 0.5,
+        "delta": 0.0,
+        "left_only": 0,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0
+      }
+    },
+    "post_observation_belief_effect": {
+      "delta": 0.0,
+      "domain_clusters": 14,
+      "domain_clustered_ci": [
+        0.0,
+        0.0
+      ],
+      "exact_sign_flip_p": 1.0
+    },
+    "belief": {
+      "transcript_only": {
+        "revision_gain": 0.4832,
+        "final_revision_gain": 0.5147,
+        "stale_belief_persistence": 0.1479,
+        "mean_brier": 0.405,
+        "ece": 0.3769,
+        "pre_action_belief_consistency": 0.619,
+        "final_action_belief_consistency": 0.5595,
+        "risk_calibration_consistency": 1.0
+      },
+      "full_audio": {
+        "revision_gain": 0.4832,
+        "final_revision_gain": 0.5147,
+        "stale_belief_persistence": 0.1479,
+        "mean_brier": 0.405,
+        "ece": 0.3769,
+        "pre_action_belief_consistency": 0.619,
+        "final_action_belief_consistency": 0.5595,
+        "risk_calibration_consistency": 1.0
+      }
+    }
+  },
+  "prosody_high_vs_low": {
+    "paired_n": 84,
+    "unique_stimuli": 84,
+    "high_style_accuracy": 0.7976190476190477,
+    "low_style_accuracy": 0.7976190476190477,
+    "both_style_correct": {
+      "mean": 0.7976190476190476,
+      "ci": [
+        0.7261904761904762,
+        0.8571428571428571
+      ],
+      "clusters": 14
+    },
+    "style_contrast": {
+      "mean": 0.7738095238095238,
+      "ci": [
+        0.6904761904761905,
+        0.8452380952380952
+      ],
+      "clusters": 14
+    },
+    "technical_action_invariance": {
+      "mean": 1.0,
+      "ci": [
+        1.0,
+        1.0
+      ],
+      "clusters": 14
+    },
+    "post_observation_top_belief_invariance": {
+      "mean": 1.0,
+      "ci": [
+        1.0,
+        1.0
+      ],
+      "clusters": 14
+    },
+    "post_observation_belief_jsd": {
+      "mean": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "clusters": 14
+    },
+    "pre_final_belief_jsd": {
+      "mean": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "clusters": 14
+    },
+    "categories": {
+      "confused": {
+        "pairs": 24,
+        "both_correct": {
+          "mean": 0.7916666666666667,
+          "ci": [
+            0.5833333333333334,
+            0.9583333333333334
+          ],
+          "clusters": 4
+        }
+      },
+      "frustrated": {
+        "pairs": 30,
+        "both_correct": {
+          "mean": 0.8333333333333334,
+          "ci": [
+            0.7333333333333333,
+            0.9333333333333333
+          ],
+          "clusters": 5
+        }
+      },
+      "urgent": {
+        "pairs": 30,
+        "both_correct": {
+          "mean": 0.7666666666666667,
+          "ci": [
+            0.7,
+            0.8333333333333334
+          ],
+          "clusters": 5
+        }
+      }
+    }
+  }
+}

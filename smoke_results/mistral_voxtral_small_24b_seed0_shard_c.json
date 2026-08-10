@@ -1,0 +1,1024 @@
+[
+  {
+    "schema_version": "0.3",
+    "scenario_id": "flight_12to20_v0",
+    "domain": "travel",
+    "bucket": "12-20",
+    "clue_turn_distance": 16,
+    "effective_clue_turn_distance": 16,
+    "condition": "hidden_user_action",
+    "seed": 0,
+    "timestamp": "2026-07-31T01:58:43.445237+00:00",
+    "initial_state": {
+      "flight_status": "on_time",
+      "departure_delay_minutes": 0,
+      "layover_minutes": 90,
+      "connection_status": "at_risk_if_delayed",
+      "monitoring_enabled": false,
+      "elapsed_minutes": 0,
+      "ticket_status": "open",
+      "action_history": [],
+      "user_action_history": [],
+      "user_rebooked_onward_segment": false
+    },
+    "pre_gap_action": "enable_itinerary_monitoring",
+    "expected_pre_gap_action": "enable_itinerary_monitoring",
+    "pre_gap_action_label": "E",
+    "pre_gap_menu": [
+      {
+        "label": "A",
+        "description": "Offer disruption compensation before a disruption occurs."
+      },
+      {
+        "label": "B",
+        "description": "Change the later segment immediately despite the current on-time status."
+      },
+      {
+        "label": "C",
+        "description": "Close the request without monitoring for changes."
+      },
+      {
+        "label": "D",
+        "description": "Replace the current departure even though it is still on time."
+      },
+      {
+        "label": "E",
+        "description": "Enable active monitoring for changes to the itinerary."
+      }
+    ],
+    "pre_gap_menu_size": 5,
+    "pre_gap_success": true,
+    "state_before_gap": {
+      "flight_status": "on_time",
+      "departure_delay_minutes": 0,
+      "layover_minutes": 90,
+      "connection_status": "at_risk_if_delayed",
+      "monitoring_enabled": true,
+      "elapsed_minutes": 0,
+      "ticket_status": "open",
+      "action_history": [
+        "enable_itinerary_monitoring"
+      ],
+      "user_action_history": [],
+      "user_rebooked_onward_segment": false
+    },
+    "elapsed_minutes": 45,
+    "external_event": {
+      "type": "departure_delay",
+      "delay_minutes": 120
+    },
+    "gap_user_action": {
+      "action": "self_protect_onward_segment",
+      "at_minute": 20
+    },
+    "state_after_user_action": {
+      "flight_status": "on_time",
+      "departure_delay_minutes": 0,
+      "layover_minutes": 90,
+      "connection_status": "protected",
+      "monitoring_enabled": true,
+      "elapsed_minutes": 0,
+      "ticket_status": "open",
+      "action_history": [
+        "enable_itinerary_monitoring"
+      ],
+      "user_action_history": [
+        "self_protect_onward_segment"
+      ],
+      "user_rebooked_onward_segment": true,
+      "last_gap_user_action": "self_protect_onward_segment",
+      "gap_user_action_minute": 20
+    },
+    "state_after_gap": {
+      "flight_status": "delayed",
+      "departure_delay_minutes": 120,
+      "layover_minutes": 90,
+      "connection_status": "protected",
+      "monitoring_enabled": true,
+      "elapsed_minutes": 45,
+      "ticket_status": "open",
+      "action_history": [
+        "enable_itinerary_monitoring"
+      ],
+      "user_action_history": [
+        "self_protect_onward_segment"
+      ],
+      "user_rebooked_onward_segment": true,
+      "last_gap_user_action": "self_protect_onward_segment",
+      "gap_user_action_minute": 20,
+      "last_pre_gap_action": "enable_itinerary_monitoring",
+      "last_external_event": "departure_delay"
+    },
+    "post_gap_observation": "While you were unavailable, I changed my later flight and received confirmation. I have now been told this departure is delayed 120 minutes.",
+    "post_gap_prosody": "calm",
+    "post_gap_action": "protect_onward_segment",
+    "expected_post_gap_action": "enable_itinerary_monitoring",
+    "post_gap_action_label": "A",
+    "post_gap_menu": [
+      {
+        "label": "A",
+        "description": "Protect the later segment now and offer a compatible alternative."
+      },
+      {
+        "label": "B",
+        "description": "Continue monitoring the existing itinerary without changing it."
+      },
+      {
+        "label": "C",
+        "description": "Confirm the delay and close the request."
+      },
+      {
+        "label": "D",
+        "description": "Offer disruption compensation without changing the itinerary."
+      },
+      {
+        "label": "E",
+        "description": "Work only on the delayed departure and leave later segments unchanged."
+      }
+    ],
+    "post_gap_menu_size": 5,
+    "post_gap_success": false,
+    "response_style": null,
+    "expected_response_style": null,
+    "response_style_success": null,
+    "response_style_menu_size": 1,
+    "belief_state_space_size": 4,
+    "belief_checkpoint_chance": 0.25,
+    "belief_checkpoints": {
+      "pre_gap": {
+        "state_belief": {
+          "connection_status": {
+            "at_risk_if_delayed": 0.8,
+            "missed": 0.1,
+            "protected": 0.05,
+            "viable": 0.05
+          }
+        },
+        "needs_revalidation": false,
+        "report_valid": true,
+        "evaluation": {
+          "variables": {
+            "connection_status": {
+              "target": "at_risk_if_delayed",
+              "valid": true,
+              "top_state": "at_risk_if_delayed",
+              "confidence": 0.8,
+              "correct": true,
+              "target_probability": 0.8,
+              "brier": 0.05499999999999998,
+              "nll": 0.2231435513142097,
+              "normalized_entropy": 0.5109640474436812
+            }
+          },
+          "valid": true,
+          "all_correct": true,
+          "mean_confidence": 0.8,
+          "mean_brier": 0.05499999999999998,
+          "mean_nll": 0.2231435513142097,
+          "mean_normalized_entropy": 0.5109640474436812
+        },
+        "low_confidence": false,
+        "confidence_threshold": 0.6,
+        "risk_calibration_consistent": true,
+        "selected_action": "enable_itinerary_monitoring",
+        "expected_action": "enable_itinerary_monitoring",
+        "implied_action_from_top_belief": "enable_itinerary_monitoring",
+        "action_belief_consistent": true,
+        "action_correct": true,
+        "revalidation_action": true,
+        "uncertainty_behavior": "CONFIDENT",
+        "belief_action_outcome": "FULL_SUCCESS"
+      },
+      "post_observation": {
+        "state_belief": {
+          "connection_status": {
+            "at_risk_if_delayed": 0.9,
+            "missed": 0.1,
+            "protected": 0.0,
+            "viable": 0.0
+          }
+        },
+        "needs_revalidation": false,
+        "report_valid": true,
+        "evaluation": {
+          "variables": {
+            "connection_status": {
+              "target": "protected",
+              "valid": true,
+              "top_state": "at_risk_if_delayed",
+              "confidence": 0.9,
+              "correct": false,
+              "target_probability": 0.0,
+              "brier": 1.82,
+              "nll": 27.631021115928547,
+              "normalized_entropy": 0.23449779679464058
+            }
+          },
+          "valid": true,
+          "all_correct": false,
+          "mean_confidence": 0.9,
+          "mean_brier": 1.82,
+          "mean_nll": 27.631021115928547,
+          "mean_normalized_entropy": 0.23449779679464058
+        },
+        "low_confidence": false,
+        "confidence_threshold": 0.6,
+        "risk_calibration_consistent": true,
+        "selected_action": null,
+        "expected_action": null,
+        "implied_action_from_top_belief": "enable_itinerary_monitoring",
+        "action_belief_consistent": null,
+        "action_correct": null,
+        "revalidation_action": null,
+        "uncertainty_behavior": "CONFIDENT",
+        "belief_action_outcome": null
+      },
+      "pre_final_action": {
+        "state_belief": {
+          "connection_status": {
+            "at_risk_if_delayed": 0.0,
+            "missed": 1.0,
+            "protected": 0.0,
+            "viable": 0.0
+          }
+        },
+        "needs_revalidation": false,
+        "report_valid": true,
+        "evaluation": {
+          "variables": {
+            "connection_status": {
+              "target": "protected",
+              "valid": true,
+              "top_state": "missed",
+              "confidence": 1.0,
+              "correct": false,
+              "target_probability": 0.0,
+              "brier": 2.0,
+              "nll": 27.631021115928547,
+              "normalized_entropy": -0.0
+            }
+          },
+          "valid": true,
+          "all_correct": false,
+          "mean_confidence": 1.0,
+          "mean_brier": 2.0,
+          "mean_nll": 27.631021115928547,
+          "mean_normalized_entropy": 0.0
+        },
+        "low_confidence": false,
+        "confidence_threshold": 0.6,
+        "risk_calibration_consistent": true,
+        "selected_action": "protect_onward_segment",
+        "expected_action": "enable_itinerary_monitoring",
+        "implied_action_from_top_belief": "protect_onward_segment",
+        "action_belief_consistent": true,
+        "action_correct": false,
+        "revalidation_action": false,
+        "uncertainty_behavior": "CONFIDENT",
+        "belief_action_outcome": "STATE_SYNCHRONIZATION_FAILURE"
+      }
+    },
+    "belief_revision": {
+      "variables": {
+        "connection_status": {
+          "old_state": "at_risk_if_delayed",
+          "new_state": "protected",
+          "state_changed": true,
+          "probability_new_state_before_gap": 0.05,
+          "probability_new_state_after_observation": 0.0,
+          "probability_new_state_before_final_action": 0.0,
+          "belief_revision_gain": -0.05,
+          "final_revision_gain": -0.05,
+          "reflection_gain": 0.0,
+          "stale_belief_persistence": 0.9
+        }
+      },
+      "mean_revision_gain": -0.05,
+      "mean_final_revision_gain": -0.05,
+      "mean_stale_belief_persistence": 0.9
+    },
+    "belief_reporting_success": true,
+    "state_belief_success": false,
+    "action_trajectory_success": false,
+    "failure_tags": [
+      "STATE_BELIEF_ERROR"
+    ],
+    "trajectory_success": false,
+    "api_usage": {
+      "prompt_tokens": 1810,
+      "completion_tokens": 336,
+      "total_tokens": 2146,
+      "cost": 0.06835357,
+      "request_latency_s": 51.479,
+      "model_calls": 14,
+      "metered_calls": 14,
+      "resolved_models": [
+        "mistralai/voxtral-small-24b-2507"
+      ],
+      "providers": [
+        "Mistral"
+      ]
+    },
+    "final_state": {
+      "flight_status": "delayed",
+      "departure_delay_minutes": 120,
+      "layover_minutes": 90,
+      "connection_status": "protected",
+      "monitoring_enabled": true,
+      "elapsed_minutes": 45,
+      "ticket_status": "open",
+      "action_history": [
+        "enable_itinerary_monitoring",
+        "protect_onward_segment"
+      ],
+      "user_action_history": [
+        "self_protect_onward_segment"
+      ],
+      "user_rebooked_onward_segment": true,
+      "last_gap_user_action": "self_protect_onward_segment",
+      "gap_user_action_minute": 20,
+      "last_pre_gap_action": "enable_itinerary_monitoring",
+      "last_external_event": "departure_delay"
+    },
+    "turns": [
+      {
+        "role": "user",
+        "text": "Hi, I am checking on my flight to Denver this afternoon.",
+        "kind": "setup",
+        "audio_path": "data\\turn_audio\\a2ad6e52d2b59ceeccc1abf0.wav"
+      },
+      {
+        "role": "agent",
+        "text": "I see the 2:15 PM departure to Denver. Is that the flight you're referring to?",
+        "audio_path": "data\\turn_audio\\c72772e40464e9b437ae64c4.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Yes. I want to make sure everything is on track.",
+        "kind": "setup",
+        "audio_path": "data\\turn_audio\\fea7ef60ada4f32aef95193a.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Great! I've checked your reservation. Your flight is scheduled to depart at 2:15 PM. Does anything else on the reservation look wrong?",
+        "audio_path": "data\\turn_audio\\402fc7bfd4457e22cffcf79f.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "No, everything else looks right.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\6823c996f651353df8469634.wav"
+      },
+      {
+        "role": "agent",
+        "text": "The security wait is about twenty minutes. Are you leaving soon?",
+        "audio_path": "data\\turn_audio\\3f5817f225fb99184e83063e.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Yes, I am heading to the airport shortly.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\82fe54f688141a0d15bb13d3.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Is this trip ending in Denver, or is there another segment afterward?",
+        "audio_path": "data\\turn_audio\\2474c9ad7739bf9ef8b2daa4.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Keep in mind I have another flight out of Denver, and there are only ninety minutes between them.",
+        "kind": "clue",
+        "audio_path": "data\\turn_audio\\13acf75b663283b17d6e3ff3.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Do you have dietary or accessibility needs?",
+        "audio_path": "data\\turn_audio\\7b8cba1538922a6ed71169c0.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "No, nothing like that.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\973135bb878bbfaa2c91d71e.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Are you checking any bags?",
+        "audio_path": "data\\turn_audio\\bb23141b4213466b1df58149.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Just one checked bag.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\e68b9b0f2ac963d549baf49c.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Is the contact phone number on the booking current?",
+        "audio_path": "data\\turn_audio\\03290e8e7db3c81fd24d0299.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Yes, it is current.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\129c2031731f86f514d37a9c.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Do you need directions to the departure terminal?",
+        "audio_path": "data\\turn_audio\\05ec8cc9aa6d7143ff5166a7.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "No, I know where to go.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\fab97d34a2e05c64f7522c68.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Would you like gate-change notifications by text?",
+        "audio_path": "data\\turn_audio\\b5234b70a0edae6d6c277e13.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Yes, that would help.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\75b8c869831f4b9363847aef.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Do you already have a seat assignment?",
+        "audio_path": "data\\turn_audio\\532029dec785767f32e5370c.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Yes, fourteen C, an aisle.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\5043cd2a73c1c8137a98369d.wav"
+      },
+      {
+        "role": "agent",
+        "text": "Is the rewards number ending in nine-nine-three yours?",
+        "audio_path": "data\\turn_audio\\e72e2281690514625b2eb76a.wav",
+        "action_label": null,
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Yes, that is mine.",
+        "kind": "filler",
+        "audio_path": "data\\turn_audio\\70f51d250b06144b211fa21d.wav"
+      },
+      {
+        "role": "agent",
+        "text": "I will Enable active monitoring for changes to the itinerary.",
+        "audio_path": "data\\turn_audio\\7e950981f4c3fde8843a7ed1.wav",
+        "action_label": "E",
+        "response_style_label": null
+      },
+      {
+        "role": "user",
+        "text": "Okay, I will watch for what happens.",
+        "kind": "pre_gap_acknowledgement",
+        "audio_path": "data\\turn_audio\\4f41d088e622ab02f4a7738a.wav"
+      },
+      {
+        "role": "user",
+        "text": "While you were unavailable, I changed my later flight and received confirmation. I have now been told this departure is delayed 120 minutes.",
+        "kind": "post_gap_observation",
+        "audio_path": "data\\turn_audio\\9b33c5d6cad1b96b7d023633.wav",
+        "prosody": "calm"
+      },
+      {
+        "role": "agent",
+        "text": "I will Protect the later segment now and offer a compatible alternative.",
+        "audio_path": "data\\turn_audio\\22e5fb2166969faaceffe1b9.wav",
+        "action_label": "A",
+        "response_style_label": null
+      }
+    ],
+    "model_calls": [
+      {
+        "stage": "dialogue",
+        "raw": "I see the 2:15 PM departure to Denver. Is that the flight you're referring to?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 51,
+          "completion_tokens": 23,
+          "total_tokens": 74,
+          "cost": 0.00030756,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 46,
+            "cache_write_tokens": 0,
+            "audio_tokens": 3,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00030756,
+            "upstream_inference_prompt_cost": 0.00030066,
+            "upstream_inference_completions_cost": 6.9e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 2.494,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Great! I've checked your reservation. Your flight is scheduled to depart at 2:15 PM. Does anything else on the reservation look wrong?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 32,
+          "total_tokens": 85,
+          "cost": 0.00121019,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 39,
+            "cache_write_tokens": 0,
+            "audio_tokens": 12,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00121019,
+            "upstream_inference_prompt_cost": 0.00120059,
+            "upstream_inference_completions_cost": 9.6e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.157,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "The security wait is about twenty minutes. Are you leaving soon?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 68,
+          "completion_tokens": 14,
+          "total_tokens": 82,
+          "cost": 0.00230483,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 43,
+            "cache_write_tokens": 0,
+            "audio_tokens": 23,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00230483,
+            "upstream_inference_prompt_cost": 0.00230063,
+            "upstream_inference_completions_cost": 4.2e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.16,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Is this trip ending in Denver, or is there another segment afterward?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 76,
+          "completion_tokens": 15,
+          "total_tokens": 91,
+          "cost": 0.0030091,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 30,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0030091,
+            "upstream_inference_prompt_cost": 0.0030046,
+            "upstream_inference_completions_cost": 4.5e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.686,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Do you have dietary or accessibility needs?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 79,
+          "completion_tokens": 9,
+          "total_tokens": 88,
+          "cost": 0.0039067,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 39,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0039067,
+            "upstream_inference_prompt_cost": 0.003904,
+            "upstream_inference_completions_cost": 2.7e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.952,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Are you checking any bags?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 82,
+          "completion_tokens": 7,
+          "total_tokens": 89,
+          "cost": 0.00440266,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 36,
+            "cache_write_tokens": 0,
+            "audio_tokens": 44,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00440266,
+            "upstream_inference_prompt_cost": 0.00440056,
+            "upstream_inference_completions_cost": 2.1e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.43,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Is the contact phone number on the booking current?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 90,
+          "completion_tokens": 11,
+          "total_tokens": 101,
+          "cost": 0.0048075,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 48,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0048075,
+            "upstream_inference_prompt_cost": 0.0048042,
+            "upstream_inference_completions_cost": 3.3e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 4.071,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Do you need directions to the departure terminal?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 93,
+          "completion_tokens": 10,
+          "total_tokens": 103,
+          "cost": 0.00520359,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 39,
+            "cache_write_tokens": 0,
+            "audio_tokens": 52,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00520359,
+            "upstream_inference_prompt_cost": 0.00520059,
+            "upstream_inference_completions_cost": 3e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.744,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Would you like gate-change notifications by text?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 98,
+          "completion_tokens": 10,
+          "total_tokens": 108,
+          "cost": 0.00570359,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 39,
+            "cache_write_tokens": 0,
+            "audio_tokens": 57,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00570359,
+            "upstream_inference_prompt_cost": 0.00570059,
+            "upstream_inference_completions_cost": 3e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.644,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Do you already have a seat assignment?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 102,
+          "completion_tokens": 9,
+          "total_tokens": 111,
+          "cost": 0.0062067,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 62,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0062067,
+            "upstream_inference_prompt_cost": 0.006204,
+            "upstream_inference_completions_cost": 2.7e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.788,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "dialogue",
+        "raw": "Is the rewards number ending in nine-nine-three yours?",
+        "action_label": null,
+        "state_belief": {},
+        "needs_revalidation": null,
+        "usage": {
+          "prompt_tokens": 110,
+          "completion_tokens": 12,
+          "total_tokens": 122,
+          "cost": 0.0067079,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 67,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0067079,
+            "upstream_inference_prompt_cost": 0.0067043,
+            "upstream_inference_completions_cost": 3.6e-06
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 4.144,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "pre_gap",
+        "raw": "{\"state_belief\": {\"connection_status\": {\"at_risk_if_delayed\": 0.8, \"missed\": 0.1, \"protected\": 0.05, \"viable\": 0.05}}, \"needs_revalidation\": false, \"choice\": \"E\"}",
+        "action_label": "E",
+        "state_belief": {
+          "connection_status": {
+            "at_risk_if_delayed": 0.8,
+            "missed": 0.1,
+            "protected": 0.05,
+            "viable": 0.05
+          }
+        },
+        "needs_revalidation": false,
+        "usage": {
+          "prompt_tokens": 298,
+          "completion_tokens": 66,
+          "total_tokens": 364,
+          "cost": 0.00712225,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 225,
+            "cache_write_tokens": 0,
+            "audio_tokens": 71,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00712225,
+            "upstream_inference_prompt_cost": 0.00710245,
+            "upstream_inference_completions_cost": 1.98e-05
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 4.34,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "post_gap_belief",
+        "raw": "{\"state_belief\": {\"connection_status\": {\"at_risk_if_delayed\": 0.9, \"missed\": 0.1, \"protected\": 0, \"viable\": 0}}, \"needs_revalidation\": false}",
+        "state_belief": {
+          "connection_status": {
+            "at_risk_if_delayed": 0.9,
+            "missed": 0.1,
+            "protected": 0.0,
+            "viable": 0.0
+          }
+        },
+        "needs_revalidation": false,
+        "usage": {
+          "prompt_tokens": 231,
+          "completion_tokens": 54,
+          "total_tokens": 285,
+          "cost": 0.0087216,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 100,
+            "cache_write_tokens": 0,
+            "audio_tokens": 87,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0087216,
+            "upstream_inference_prompt_cost": 0.0087054,
+            "upstream_inference_completions_cost": 1.62e-05
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.979,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      },
+      {
+        "stage": "post_gap",
+        "raw": "{\"state_belief\": {\"connection_status\": {\"at_risk_if_delayed\": 0.0, \"missed\": 1.0, \"protected\": 0.0, \"viable\": 0.0}}, \"needs_revalidation\": false, \"choice\": \"A\"}",
+        "action_label": "A",
+        "response_style_label": null,
+        "state_belief": {
+          "connection_status": {
+            "at_risk_if_delayed": 0.0,
+            "missed": 1.0,
+            "protected": 0.0,
+            "viable": 0.0
+          }
+        },
+        "needs_revalidation": false,
+        "usage": {
+          "prompt_tokens": 379,
+          "completion_tokens": 64,
+          "total_tokens": 443,
+          "cost": 0.0087394,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 100,
+            "cache_write_tokens": 0,
+            "audio_tokens": 87,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0087394,
+            "upstream_inference_prompt_cost": 0.0087202,
+            "upstream_inference_completions_cost": 1.92e-05
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          },
+          "request_latency_s": 3.89,
+          "requested_model": "mistralai/voxtral-small-24b-2507",
+          "resolved_model": "mistralai/voxtral-small-24b-2507",
+          "provider": "Mistral"
+        }
+      }
+    ],
+    "model": "mistralai/voxtral-small-24b-2507",
+    "latency_s": 52.041,
+    "error": null
+  }
+]

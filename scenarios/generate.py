@@ -1,4 +1,4 @@
-"""Generate schema-v0.3 closed-loop tasks with audited clue distances."""
+"""Generate schema-v0.4 closed-loop tasks with audited clue distances."""
 
 from __future__ import annotations
 
@@ -10,10 +10,13 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from dual_audio.core.belief_definitions import definitions_for
 from scenarios.templates import TAGS, TEMPLATES
 
 
 BUCKETS = {"1-2": (1, 2), "5-8": (5, 8), "12-20": (12, 20)}
+SCHEMA_VERSION = "0.4"
+USER_VOICES = ("en-us+f3", "en-us+f4")
 
 
 def leak_guard(turns: list[dict], clue_idx: int, clue_text: str) -> list[tuple]:
@@ -85,7 +88,7 @@ def _mark(turns, kind):
 
 
 def build(template_name: str, bucket: str, variant_seed: int) -> dict:
-    """Build and validate one deterministic schema-v0.3 scenario.
+    """Build and validate one deterministic schema-v0.4 scenario.
 
     Filler pairs are shuffled, a realizable even clue distance is selected,
     alternation and exact distance are asserted, and lexical leak guards run
@@ -160,9 +163,13 @@ def build(template_name: str, bucket: str, variant_seed: int) -> dict:
     if leaks:
         raise ValueError(f"{template_name}/{bucket}: clue leak at turns {leaks}")
 
-    scenario_id = f"{template_name}_{bucket.replace('-', 'to')}_v{variant_seed}"
+    scenario_id = (
+        f"{template_name}_{bucket.replace('-', 'to')}_v{variant_seed}_s04"
+    )
+    belief_schema = template["belief_schema"]
+    transcript_variant = tuple(BUCKETS).index(bucket)
     scenario = {
-        "schema_version": "0.3",
+        "schema_version": SCHEMA_VERSION,
         "scenario_id": scenario_id,
         "domain": template["domain"],
         "bucket": bucket,
@@ -181,12 +188,22 @@ def build(template_name: str, bucket: str, variant_seed: int) -> dict:
             "correct_action": template["pre_gap_correct"],
         },
         "transition": template["transition"],
-        "belief_schema": template["belief_schema"],
+        "belief_schema": belief_schema,
+        "belief_definitions": definitions_for(belief_schema),
         "revalidation_actions": template["revalidation_actions"],
         "belief_confidence_threshold": template["belief_confidence_threshold"],
         "pre_gap_actions": template["pre_gap_actions"],
         "post_gap_actions": template["post_gap_actions"],
         "prosody_pair": template["prosody_pair"],
+        "prosody_stimulus": {
+            "stimulus_id": f"{template_name}:{bucket}:voice{variant_seed % 2}",
+            "transcript_variant": transcript_variant,
+            "voice_variant": variant_seed % len(USER_VOICES),
+        },
+        "audio_profile": {
+            "user_voice": USER_VOICES[variant_seed % len(USER_VOICES)],
+            "agent_voice": "en-us+m3",
+        },
         "response_styles": template["response_styles"],
         "questions": [
             {
@@ -216,7 +233,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--variants", type=int, default=2)
-    parser.add_argument("--out", default="data/scenarios")
+    parser.add_argument("--out", default="data/scenarios_v04")
     args = parser.parse_args()
 
     output = Path(args.out)

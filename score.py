@@ -1,8 +1,9 @@
 """Score closed-loop trajectory JSONL.
 
 Primary metrics are repeated-trial pass@1, scenario-majority accuracy,
-between-seed variance, clustered bootstrap confidence intervals, and the
-fraction of scenarios that pass every trial. pass@5 is supplemental.
+between-seed variance, domain-clustered confidence intervals, and the fraction
+of scenarios that pass every trial. pass@k is labeled with the trials actually
+available rather than silently calling a two-trial run pass@5.
 """
 
 from __future__ import annotations
@@ -76,26 +77,132 @@ def expected_calibration_error(
 def clustered_bootstrap_ci(
     rows: list[dict],
     field: str = "trajectory_success",
-    samples: int = 2000,
+    samples: int = 20000,
     seed: int = 8128,
+    cluster_field: str = "domain",
 ) -> tuple[float, float]:
-    """Bootstrap a 95% CI while resampling whole scenarios.
+    """Bootstrap a 95% CI while resampling independent task families.
 
-    Repeated seeds from one scenario remain in the same cluster, avoiding the
-    overly narrow intervals produced by treating every attempt as independent.
+    All distance/variant/seed siblings from one domain remain together.  Rows
+    without a domain fall back to scenario clustering for backwards-compatible
+    synthetic tests.
     """
 
     grouped = defaultdict(list)
     for row in rows:
-        grouped[row["scenario_id"]].append(bool(row[field]))
-    scenario_rates = [_mean(values) for values in grouped.values()]
+        cluster = row.get(cluster_field) or row["scenario_id"]
+        grouped[cluster].append(float(row[field]))
+    cluster_rates = [_mean(values) for values in grouped.values()]
     rng = random.Random(seed)
     estimates = []
     for _ in range(samples):
-        draw = [rng.choice(scenario_rates) for _ in scenario_rates]
+        draw = [rng.choice(cluster_rates) for _ in cluster_rates]
         estimates.append(_mean(draw))
     estimates.sort()
     return estimates[int(samples * 0.025)], estimates[int(samples * 0.975)]
+
+
+def paired_cluster_effect(
+    rows: list[dict],
+    left: str,
+    right: str,
+    field: str,
+    samples: int = 20000,
+    seed: int = 8128,
+) -> dict:
+    """Return a matched condition effect with domain-level uncertainty.
+
+    Pairing occurs by scenario and seed. Differences are averaged inside each
+    domain before bootstrap resampling. With at most 20 domains, an exact
+    two-sided sign-flip test supplies the p-value.
+    """
+
+    indexed = {
+        (row["scenario_id"], row["seed"], row["condition"]): row
+        for row in rows
+        if not row.get("error")
+    }
+    by_domain = defaultdict(list)
+    for scenario_id, run_seed, condition in indexed:
+        if condition != left:
+            continue
+        other = indexed.get((scenario_id, run_seed, right))
+        if other is None:
+            continue
+        row = indexed[(scenario_id, run_seed, left)]
+        domain = row.get("domain") or scenario_id
+        by_domain[domain].append(float(row[field]) - float(other[field]))
+    domain_effects = [_mean(values) for values in by_domain.values()]
+    n_pairs = sum(len(values) for values in by_domain.values())
+    if not domain_effects:
+        return {
+            "left": left,
+            "right": right,
+            "field": field,
+            "paired_n": 0,
+            "clusters": 0,
+            "delta": math.nan,
+            "ci": (math.nan, math.nan),
+            "p_value": math.nan,
+        }
+    estimate = _mean(domain_effects)
+    rng = random.Random(seed)
+    boot = []
+    for _ in range(samples):
+        boot.append(
+            _mean(rng.choice(domain_effects) for _ in domain_effects)
+        )
+    boot.sort()
+    ci = (boot[int(samples * 0.025)], boot[int(samples * 0.975)])
+    if len(domain_effects) <= 20:
+        extreme = 0
+        permutations = 1 << len(domain_effects)
+        for mask in range(permutations):
+            trial = _mean(
+                effect if mask & (1 << index) else -effect
+                for index, effect in enumerate(domain_effects)
+            )
+            extreme += abs(trial) >= abs(estimate) - 1e-12
+        p_value = extreme / permutations
+    else:
+        trials = 20000
+        extreme = sum(
+            abs(_mean(effect * rng.choice((-1, 1)) for effect in domain_effects))
+            >= abs(estimate) - 1e-12
+            for _ in range(trials)
+        )
+        p_value = extreme / trials
+    return {
+        "left": left,
+        "right": right,
+        "field": field,
+        "paired_n": n_pairs,
+        "clusters": len(domain_effects),
+        "delta": estimate,
+        "ci": ci,
+        "p_value": p_value,
+        "domain_effects": dict(zip(by_domain, domain_effects)),
+    }
+
+
+def paired_checkpoint_effect(
+    rows: list[dict],
+    left: str,
+    right: str,
+    checkpoint: str,
+) -> dict:
+    """Compare checkpoint top-state accuracy between matched conditions."""
+
+    augmented = []
+    for row in rows:
+        copied = dict(row)
+        copied["_checkpoint_correct"] = bool(
+            row["belief_checkpoints"][checkpoint]["evaluation"]["all_correct"]
+        )
+        augmented.append(copied)
+    return paired_cluster_effect(
+        augmented, left, right, "_checkpoint_correct"
+    )
 
 
 def summarize(rows: list[dict]) -> dict:
@@ -109,7 +216,8 @@ def summarize(rows: list[dict]) -> dict:
     scenario_rates = {key: _mean(values) for key, values in by_scenario.items()}
     seed_rates = [_mean(values) for values in by_seed.values()]
     ci_low, ci_high = clustered_bootstrap_ci(rows)
-    first_five = {
+    pass_k = min(5, max(len(values) for values in by_scenario.values()))
+    first_k = {
         key: [
             success
             for _, success in sorted(
@@ -119,7 +227,7 @@ def summarize(rows: list[dict]) -> dict:
                 )
                 for row in rows
                 if row["scenario_id"] == key
-            )[:5]
+            )[:pass_k]
         ]
         for key in by_scenario
     }
@@ -133,7 +241,13 @@ def summarize(rows: list[dict]) -> dict:
         "seed_variance": statistics.variance(seed_rates) if len(seed_rates) > 1 else 0.0,
         "ci": (ci_low, ci_high),
         "all_trials": _mean(rate == 1.0 for rate in scenario_rates.values()),
-        "pass_at_5": _mean(any(values) for values in first_five.values()),
+        "pass_k": pass_k,
+        "pass_at_k": _mean(any(values) for values in first_k.values()),
+        "pass_at_5": (
+            _mean(any(values) for values in first_k.values())
+            if pass_k == 5
+            else None
+        ),
         "two_action_chance": _mean(
             1 / (row["pre_gap_menu_size"] * row["post_gap_menu_size"])
             for row in rows
@@ -172,7 +286,7 @@ def condition_table(rows: list[dict]) -> None:
     print("\nPrimary closed-loop metrics")
     print(
         f"{'condition':<23}{'n':>5}{'pass@1':>9}{'pre':>8}{'post':>8}"
-        f"{'majority':>10}{'seed var':>10}{'95% CI':>17}{'all trials':>12}"
+        f"{'majority':>10}{'seed var':>10}{'domain 95% CI':>19}{'all trials':>12}"
     )
     for condition, group in groups.items():
         stats = summarize(group)
@@ -181,17 +295,18 @@ def condition_table(rows: list[dict]) -> None:
             f"{condition:<23}{stats['n']:>5}{stats['pass1']:>9.1%}"
             f"{stats['pre']:>8.1%}{stats['post']:>8.1%}"
             f"{stats['majority']:>10.1%}{stats['seed_variance']:>10.4f}"
-            f"{ci:>17}{stats['all_trials']:>12.1%}"
+            f"{ci:>19}{stats['all_trials']:>12.1%}"
         )
     print("\nSupplemental repeated-sampling metric")
+    observed_k = min(summarize(group)["pass_k"] for group in groups.values())
     print(
-        f"{'condition':<23}{'pass@5':>9}{'action chance':>15}"
+        f"{'condition':<23}{f'pass@{observed_k}':>9}{'action chance':>15}"
         f"{'2-action chance':>18}{'full chance':>14}"
     )
     for condition, group in groups.items():
         stats = summarize(group)
         print(
-            f"{condition:<23}{stats['pass_at_5']:>9.1%}"
+            f"{condition:<23}{stats['pass_at_k']:>9.1%}"
             f"{stats['action_chance']:>15.1%}"
             f"{stats['two_action_chance']:>18.1%}"
             f"{stats['trajectory_chance']:>14.3%}"
@@ -277,6 +392,173 @@ def summarize_beliefs(rows: list[dict]) -> dict:
     }
 
 
+def _belief_jsd(left: dict, right: dict) -> float:
+    """Return normalized Jensen-Shannon divergence across shared variables."""
+
+    divergences = []
+    for variable in left.keys() & right.keys():
+        labels = left[variable].keys() | right[variable].keys()
+        p = [float(left[variable].get(label, 0.0)) for label in labels]
+        q = [float(right[variable].get(label, 0.0)) for label in labels]
+        midpoint = [(a + b) / 2 for a, b in zip(p, q)]
+
+        def kl(values, target):
+            return sum(
+                value * math.log(value / reference)
+                for value, reference in zip(values, target)
+                if value > 0 and reference > 0
+            )
+
+        divergences.append((kl(p, midpoint) + kl(q, midpoint)) / (2 * math.log(2)))
+    return _mean(divergences)
+
+
+def _clustered_pair_summary(pairs: list[tuple[dict, dict]], value_fn) -> dict:
+    """Summarize a paired quantity after averaging dependent rows by domain."""
+
+    grouped = defaultdict(list)
+    for left, right in pairs:
+        value = float(value_fn(left, right))
+        if math.isfinite(value):
+            grouped[left.get("domain") or left["scenario_id"]].append(value)
+    effects = [_mean(values) for values in grouped.values()]
+    if not effects:
+        return {"mean": math.nan, "ci": (math.nan, math.nan), "clusters": 0}
+    rng = random.Random(8128)
+    boot = sorted(
+        _mean(rng.choice(effects) for _ in effects)
+        for _ in range(20000)
+    )
+    return {
+        "mean": _mean(effects),
+        "ci": (boot[500], boot[19500]),
+        "clusters": len(effects),
+    }
+
+
+def summarize_prosody(rows: list[dict]) -> dict:
+    """Measure style sensitivity and factual invariance on high/low pairs."""
+
+    high = {
+        (row["scenario_id"], row["seed"]): row
+        for row in rows
+        if row["condition"] == "prosody_high"
+    }
+    low = {
+        (row["scenario_id"], row["seed"]): row
+        for row in rows
+        if row["condition"] == "prosody_low"
+    }
+    pairs = [
+        (high[key], low[key])
+        for key in sorted(high.keys() & low.keys())
+        if high[key]["post_gap_observation"] == low[key]["post_gap_observation"]
+    ]
+    if not pairs:
+        return {"paired_n": 0, "unique_stimuli": 0}
+
+    def belief(row, checkpoint):
+        return row["belief_checkpoints"][checkpoint]["state_belief"]
+
+    def top_assignment(value):
+        return {
+            variable: max(distribution, key=distribution.get)
+            for variable, distribution in value.items()
+            if distribution
+        }
+
+    style_contrast = _clustered_pair_summary(
+        pairs,
+        lambda high_row, low_row: (
+            (high_row.get("response_style") == high_row.get("expected_response_style"))
+            - (low_row.get("response_style") == high_row.get("expected_response_style"))
+        ),
+    )
+    both_correct = _clustered_pair_summary(
+        pairs,
+        lambda high_row, low_row: (
+            high_row.get("response_style_success") is True
+            and low_row.get("response_style_success") is True
+        ),
+    )
+    action_invariance = _clustered_pair_summary(
+        pairs,
+        lambda high_row, low_row: (
+            high_row.get("post_gap_action") == low_row.get("post_gap_action")
+        ),
+    )
+    belief_invariance = _clustered_pair_summary(
+        pairs,
+        lambda high_row, low_row: (
+            top_assignment(belief(high_row, "post_observation"))
+            == top_assignment(belief(low_row, "post_observation"))
+        ),
+    )
+    post_jsd = _clustered_pair_summary(
+        pairs,
+        lambda high_row, low_row: _belief_jsd(
+            belief(high_row, "post_observation"),
+            belief(low_row, "post_observation"),
+        ),
+    )
+    final_jsd = _clustered_pair_summary(
+        pairs,
+        lambda high_row, low_row: _belief_jsd(
+            belief(high_row, "pre_final_action"),
+            belief(low_row, "pre_final_action"),
+        ),
+    )
+    categories = {}
+    for category in sorted({left["post_gap_prosody"] for left, _ in pairs}):
+        category_pairs = [pair for pair in pairs if pair[0]["post_gap_prosody"] == category]
+        categories[category] = {
+            "pairs": len(category_pairs),
+            "both_correct": _clustered_pair_summary(
+                category_pairs,
+                lambda left, right: (
+                    left.get("response_style_success") is True
+                    and right.get("response_style_success") is True
+                ),
+            ),
+        }
+    return {
+        "paired_n": len(pairs),
+        "unique_stimuli": len(
+            {
+                left.get("prosody_stimulus_id") or left["scenario_id"]
+                for left, _ in pairs
+            }
+        ),
+        "both_style_random_chance": _mean(
+            1
+            / max(left.get("response_style_menu_size", 1), 1)
+            / max(right.get("response_style_menu_size", 1), 1)
+            for left, right in pairs
+        ),
+        "high_style_accuracy": _mean(
+            left.get("response_style_success") is True for left, _ in pairs
+        ),
+        "low_style_accuracy": _mean(
+            right.get("response_style_success") is True for _, right in pairs
+        ),
+        "high_style": _clustered_pair_summary(
+            pairs,
+            lambda left, right: left.get("response_style_success") is True,
+        ),
+        "low_style": _clustered_pair_summary(
+            pairs,
+            lambda left, right: right.get("response_style_success") is True,
+        ),
+        "both_style_correct": both_correct,
+        "style_contrast": style_contrast,
+        "technical_action_invariance": action_invariance,
+        "post_observation_top_belief_invariance": belief_invariance,
+        "post_observation_belief_jsd": post_jsd,
+        "pre_final_belief_jsd": final_jsd,
+        "categories": categories,
+    }
+
+
 def belief_report(rows: list[dict]) -> None:
     """Print explicit belief-state, revision, calibration, and coupling metrics."""
 
@@ -337,74 +619,81 @@ def belief_report(rows: list[dict]) -> None:
 
 
 def paired_control_report(rows: list[dict]) -> None:
-    """Report matched clue-ablation and identical-transcript prosody effects."""
+    """Report matched controls with domain-clustered uncertainty."""
 
-    indexed = {
-        (row["scenario_id"], row["seed"], row["condition"]): row for row in rows
-    }
-
-    def paired_delta(left: str, right: str, field: str) -> tuple[int, float]:
-        """Return matched sample count and mean left-minus-right difference."""
-
-        differences = []
-        for scenario_id, seed, condition in indexed:
-            if condition != left:
-                continue
-            other = indexed.get((scenario_id, seed, right))
-            if other:
-                differences.append(
-                    float(indexed[(scenario_id, seed, left)][field])
-                    - float(other[field])
-                )
-        return len(differences), _mean(differences)
-
-    n, clue_delta = paired_delta(
-        "full_audio", "clue_removed", "post_gap_success"
-    )
-    if n:
-        print(
-            f"\nClue-ablation check: full minus clue-removed post-gap accuracy "
-            f"= {clue_delta:+.1%} across {n} paired trials."
-        )
-        if abs(clue_delta) < 0.05:
+    if {"full_audio", "transcript_only"} <= {
+        row["condition"] for row in rows
+    }:
+        print("\nTranscript minus audio paired effects (domain clustered)")
+        modality_effects = [
+            (
+                "pre-gap action",
+                paired_cluster_effect(
+                    rows, "transcript_only", "full_audio", "pre_gap_success"
+                ),
+            ),
+            (
+                "post-gap action",
+                paired_cluster_effect(
+                    rows, "transcript_only", "full_audio", "post_gap_success"
+                ),
+            ),
+            (
+                "post-observation belief",
+                paired_checkpoint_effect(
+                    rows, "transcript_only", "full_audio", "post_observation"
+                ),
+            ),
+            (
+                "strict trajectory",
+                paired_cluster_effect(
+                    rows, "transcript_only", "full_audio", "trajectory_success"
+                ),
+            ),
+        ]
+        for label, effect in modality_effects:
             print(
-                "WARNING: performance barely changes under clue ablation; "
-                "the tasks may not be measuring clue use."
+                f"  {label:<25}{effect['delta']:+.1%} "
+                f"[{effect['ci'][0]:+.1%}, {effect['ci'][1]:+.1%}] "
+                f"p={effect['p_value']:.4f}"
             )
 
-    high = {
-        (row["scenario_id"], row["seed"]): row
-        for row in rows
-        if row["condition"] == "prosody_high"
-    }
-    low = {
-        (row["scenario_id"], row["seed"]): row
-        for row in rows
-        if row["condition"] == "prosody_low"
-    }
-    paired = [
-        (high[key], low[key])
-        for key in high.keys() & low.keys()
-        if high[key]["post_gap_observation"] == low[key]["post_gap_observation"]
-    ]
-    if paired:
-        both = _mean(
-            high_row["response_style_success"] is True
-            and low_row["response_style_success"] is True
-            for high_row, low_row in paired
-        )
+    clue = paired_cluster_effect(
+        rows, "full_audio", "clue_removed", "post_gap_success"
+    )
+    if clue["paired_n"]:
         print(
-            f"Prosodic contrast: {both:.1%} of {len(paired)} identical-transcript "
-            "pairs selected the expected approach in both deliveries."
+            f"\nClue-ablation check: full minus clue-removed post-gap accuracy "
+            f"= {clue['delta']:+.1%} "
+            f"[{clue['ci'][0]:+.1%}, {clue['ci'][1]:+.1%}], "
+            f"p={clue['p_value']:.4f}; {clue['clusters']} domain clusters, "
+            f"{clue['paired_n']} paired trials."
+        )
+        if clue["ci"][0] <= 0 <= clue["ci"][1]:
+            print(
+                "WARNING: the domain-clustered clue effect is inconclusive."
+            )
+
+    prosody = summarize_prosody(rows)
+    if prosody["paired_n"]:
+        both = prosody["both_style_correct"]
+        print(
+            f"Prosodic contrast: {both['mean']:.1%} both-correct "
+            f"[{both['ci'][0]:.1%}, {both['ci'][1]:.1%}] across "
+            f"{prosody['paired_n']} pairs/{prosody['unique_stimuli']} stimuli; "
+            f"action invariance={prosody['technical_action_invariance']['mean']:.1%}, "
+            f"belief invariance={prosody['post_observation_top_belief_invariance']['mean']:.1%}, "
+            f"belief JSD={prosody['post_observation_belief_jsd']['mean']:.3f}."
         )
 
-    n, user_action_delta = paired_delta(
-        "hidden_user_action", "full_audio", "post_gap_success"
+    user_action = paired_cluster_effect(
+        rows, "hidden_user_action", "full_audio", "post_gap_success"
     )
-    if n:
+    if user_action["paired_n"]:
         print(
             f"Hidden-user-action check: dual-control minus external-only "
-            f"post-gap accuracy = {user_action_delta:+.1%} across {n} paired trials."
+            f"post-gap accuracy = {user_action['delta']:+.1%} "
+            f"[{user_action['ci'][0]:+.1%}, {user_action['ci'][1]:+.1%}]."
         )
 
 
@@ -445,16 +734,33 @@ def retention_curve(rows: list[dict], path: Path) -> None:
     import matplotlib.pyplot as plt
 
     plt.figure(figsize=(6.4, 4.2))
-    plt.plot(
+    plt.errorbar(
         [bucket for bucket, _ in points],
         [stats["pass1"] for _, stats in points],
-        "o-",
+        yerr=[
+            [stats["pass1"] - stats["ci"][0] for _, stats in points],
+            [stats["ci"][1] - stats["pass1"] for _, stats in points],
+        ],
+        fmt="o-",
+        capsize=3,
         label="trajectory pass@1",
     )
-    plt.plot(
+    post_cis = [
+        clustered_bootstrap_ci(
+            [row for row in full if row["bucket"] == bucket],
+            "post_gap_success",
+        )
+        for bucket, _ in points
+    ]
+    plt.errorbar(
         [bucket for bucket, _ in points],
         [stats["post"] for _, stats in points],
-        "s--",
+        yerr=[
+            [stats["post"] - ci[0] for (_, stats), ci in zip(points, post_cis)],
+            [ci[1] - stats["post"] for (_, stats), ci in zip(points, post_cis)],
+        ],
+        fmt="s--",
+        capsize=3,
         label="post-gap action pass@1",
     )
     trajectory_chance = _mean(
@@ -495,6 +801,102 @@ def retention_curve(rows: list[dict], path: Path) -> None:
     print(f"\nRetention curve -> {path}")
 
 
+def modality_belief_curve(rows: list[dict], path: Path) -> None:
+    """Plot immediate belief accuracy by distance for audio and transcript."""
+
+    conditions = ("full_audio", "transcript_only")
+    if not set(conditions) <= {row["condition"] for row in rows}:
+        return
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    plt.figure(figsize=(6.4, 4.2))
+    for condition, label, marker in (
+        ("full_audio", "audio replay", "o"),
+        ("transcript_only", "transcript", "s"),
+    ):
+        means, lows, highs = [], [], []
+        for bucket in BUCKETS:
+            group = [
+                row
+                for row in rows
+                if row["condition"] == condition and row["bucket"] == bucket
+            ]
+            values = [
+                {
+                    **row,
+                    "_belief": bool(
+                        row["belief_checkpoints"]["post_observation"]["evaluation"][
+                            "all_correct"
+                        ]
+                    ),
+                }
+                for row in group
+            ]
+            mean = _mean(row["_belief"] for row in values)
+            low, high = clustered_bootstrap_ci(values, "_belief")
+            means.append(mean)
+            lows.append(mean - low)
+            highs.append(high - mean)
+        plt.errorbar(
+            BUCKETS,
+            means,
+            yerr=[lows, highs],
+            fmt=f"{marker}-",
+            capsize=3,
+            label=label,
+        )
+    plt.ylim(0, 1.05)
+    plt.xlabel("clue-to-gap turn-distance bucket")
+    plt.ylabel("post-observation belief accuracy")
+    plt.title("Immediate state resynchronization by modality")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(path, dpi=150)
+    print(f"Modality belief curve -> {path}")
+
+
+def prosody_summary_plot(rows: list[dict], path: Path) -> None:
+    """Plot category-specific paired prosody adaptation with domain CIs."""
+
+    stats = summarize_prosody(rows)
+    if not stats.get("paired_n"):
+        return
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    labels = list(stats["categories"])
+    values = [stats["categories"][label]["both_correct"]["mean"] for label in labels]
+    lows = [
+        value - stats["categories"][label]["both_correct"]["ci"][0]
+        for label, value in zip(labels, values)
+    ]
+    highs = [
+        stats["categories"][label]["both_correct"]["ci"][1] - value
+        for label, value in zip(labels, values)
+    ]
+    plt.figure(figsize=(6.4, 4.2))
+    plt.bar(labels, values, yerr=[lows, highs], capsize=4)
+    pair_chance = stats["both_style_random_chance"]
+    plt.axhline(
+        pair_chance,
+        color="gray",
+        linestyle=":",
+        label=f"random pair chance ({pair_chance:.2%})",
+    )
+    plt.ylim(0, 1.05)
+    plt.ylabel("both deliveries correct")
+    plt.title("Selective prosody grounding by high-affect category")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(path, dpi=150)
+    print(f"Prosody summary -> {path}")
+
+
 def score_closed_loop(path: str | Path) -> None:
     """Run all closed-loop reports and write the retention plot."""
 
@@ -507,6 +909,14 @@ def score_closed_loop(path: str | Path) -> None:
     failure_report(rows)
     output = Path(path).with_name(Path(path).stem + "_retention.png")
     retention_curve(rows, output)
+    modality_belief_curve(
+        rows,
+        Path(path).with_name(Path(path).stem + "_modality_belief.png"),
+    )
+    prosody_summary_plot(
+        rows,
+        Path(path).with_name(Path(path).stem + "_prosody.png"),
+    )
 
 
 if __name__ == "__main__":

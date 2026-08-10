@@ -19,7 +19,14 @@ import csv
 import json
 from pathlib import Path
 
-from score import load, summarize, summarize_beliefs
+from score import (
+    load,
+    paired_checkpoint_effect,
+    paired_cluster_effect,
+    summarize,
+    summarize_beliefs,
+    summarize_prosody,
+)
 
 
 OUTCOMES = (
@@ -78,6 +85,29 @@ def paired_delta(rows: list[dict], left: str, right: str) -> dict:
             "left_only": sum(1 for a, b in pairs if a and not b),
             "right_only": sum(1 for a, b in pairs if b and not a),
         }
+        inference = paired_cluster_effect(rows, left, right, field)
+        result["fields"][field].update(
+            {
+                "domain_clusters": inference["clusters"],
+                "domain_clustered_ci": [
+                    round(inference["ci"][0], 4),
+                    round(inference["ci"][1], 4),
+                ],
+                "exact_sign_flip_p": round(inference["p_value"], 6),
+            }
+        )
+    checkpoint = paired_checkpoint_effect(
+        rows, left, right, "post_observation"
+    )
+    result["post_observation_belief_effect"] = {
+        "delta": round(checkpoint["delta"], 4),
+        "domain_clusters": checkpoint["clusters"],
+        "domain_clustered_ci": [
+            round(checkpoint["ci"][0], 4),
+            round(checkpoint["ci"][1], 4),
+        ],
+        "exact_sign_flip_p": round(checkpoint["p_value"], 6),
+    }
     # belief-dynamics comparison, the quantity the modality control targets
     result["belief"] = {
         cond: {
@@ -152,12 +182,20 @@ def main() -> None:
         comparisons["full_vs_clue_removed"] = paired_delta(ok, "full_audio", "clue_removed")
     if {"transcript_only", "full_audio"} <= set(conditions):
         comparisons["transcript_vs_full_audio"] = paired_delta(ok, "transcript_only", "full_audio")
+    if {"prosody_high", "prosody_low"} <= set(conditions):
+        comparisons["prosody_high_vs_low"] = summarize_prosody(ok)
 
     deltas_path = prefix.with_name(prefix.name + "_paired_deltas.json")
     deltas_path.write_text(json.dumps(comparisons, indent=2) + "\n", encoding="utf-8")
     print(f"paired deltas            -> {deltas_path}")
 
     for name, comparison in comparisons.items():
+        if "left" not in comparison:
+            print(
+                f"\n{name}  (paired n={comparison.get('paired_n', 0)}, "
+                f"unique stimuli={comparison.get('unique_stimuli', 0)})"
+            )
+            continue
         print(f"\n{name}  (paired n={comparison['paired_n']})")
         for field, values in comparison["fields"].items():
             left_key = f"{comparison['left']}_rate"

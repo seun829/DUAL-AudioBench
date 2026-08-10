@@ -1,0 +1,335 @@
+{
+  "schema_version": "0.4",
+  "scenario_id": "router_1to2_v0_s04",
+  "domain": "tech_support",
+  "bucket": "1-2",
+  "clue_turn_distance": 2,
+  "distance_definition": "Number of agent/user turns after the clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "One thing I remember: this all started right after we had a power outage last week.",
+  "clue_answer": "a power outage",
+  "clue_ablation_text": "I am not sure; I do not have that detail available.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, my router keeps dropping the connection every few minutes.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Sorry to hear that. How long has this been happening?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "About a week now. I work from home, so it is disruptive.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the issue on wireless only, or wired too?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Both. Even my desktop on ethernet loses connection.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you moved it away from possible wireless interference?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, and that made no difference.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Can another nearby customer on the same service connect normally?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, my neighbor uses the same provider and hers is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do all devices drop at the same time?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes. Phones, TV, and laptop all lose it together.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you tried restarting the router?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I restarted it once already. It came back up but still drops.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "What do the lights do when the connection drops?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "The internet light goes orange for a bit, then back to green.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Does the unit itself ever lose power?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, it never fully turns off.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have any cables or ports been changed recently?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, the cabling is exactly as it was before.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Did your provider report a service interruption?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Their status page shows nothing in my area.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Was there any event around the time the problem first began?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "One thing I remember: this all started right after we had a power outage last week.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Begin the guided software maintenance procedure.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I have followed that step.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "restart_attempts": 1,
+    "firmware_status": "not_started",
+    "firmware_progress": 0,
+    "maintenance_attempts": 0,
+    "config_integrity": "corrupted",
+    "configuration_inspected": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": []
+  },
+  "pre_gap": {
+    "agent_turn_index": 23,
+    "correct_action": "run_maintenance"
+  },
+  "transition": {
+    "elapsed_minutes": 30,
+    "external_event": {
+      "type": "maintenance_window_elapsed",
+      "minimum_minutes": 30,
+      "stuck_percent": 47
+    },
+    "user_action": {
+      "action": "power_cycle_during_maintenance",
+      "at_minute": 10
+    }
+  },
+  "belief_schema": {
+    "firmware_status": [
+      "not_started",
+      "updating",
+      "stuck",
+      "completed",
+      "interrupted"
+    ]
+  },
+  "belief_definitions": {
+    "firmware_status": {
+      "not_started": "the maintenance update has not begun",
+      "updating": "the update is actively progressing within its expected window",
+      "stuck": "the update remains incomplete after the expected progress window",
+      "completed": "the update finished successfully",
+      "interrupted": "the update began but was stopped before completion"
+    }
+  },
+  "revalidation_actions": [
+    "inspect_persistent_state"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "run_maintenance",
+      "description": "Begin the guided software maintenance procedure.",
+      "failure_tags": []
+    },
+    {
+      "action": "repeat_power_cycle",
+      "description": "Run the basic power recovery procedure one more time.",
+      "failure_tags": [
+        "REPEATED_ACTION"
+      ]
+    },
+    {
+      "action": "inspect_upstream_service",
+      "description": "Investigate the upstream service path before changing the device.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "replace_hardware",
+      "description": "Escalate immediately to a hardware replacement.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the case and ask the user to monitor it independently.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "inspect_persistent_state",
+      "description": "Inspect persistent device settings for an inconsistent state.",
+      "failure_tags": []
+    },
+    {
+      "action": "run_maintenance",
+      "description": "Run the guided software maintenance procedure now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "repeat_power_cycle",
+      "description": "Repeat the basic power recovery procedure.",
+      "failure_tags": [
+        "REPEATED_ACTION",
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the current process alone and monitor it for another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the case because sufficient time has passed.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "prosody_pair": {
+    "native_prosody": "frustrated",
+    "high": {
+      "prosody": "frustrated",
+      "expected_style": "acknowledge_impact"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "router:1-2:voice0",
+    "transcript_variant": 0,
+    "voice_variant": 0
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f3",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "What event happened when the router problem began?",
+      "gold_answer": "a power outage",
+      "targets": "clue",
+      "turn_distance": 2,
+      "bucket": "1-2"
+    },
+    {
+      "q_id": "q2",
+      "question": "Had the router already been restarted?",
+      "gold_answer": "yes, once",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What percentage did the maintenance reach?",
+      "gold_answer": "47 percent",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}
