@@ -170,8 +170,19 @@
       "minimum_minutes": 30
     },
     "user_action": {
-      "action": "locate_paperwork",
-      "at_minute": 11
+      "action": "switch_to_matching_purchase_route",
+      "at_minute": 11,
+      "observation": "While you were unavailable, I moved the repair request to the purchase route that covers the original seller channel.",
+      "effects": [
+        {
+          "target": "covered_channel",
+          "copy_from": "purchase_channel"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -266,7 +277,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because the assessment interval has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": [
         "PREMATURE_CLOSE"
       ]

@@ -170,8 +170,19 @@
       "minimum_minutes": 25
     },
     "user_action": {
-      "action": "call_card_services",
-      "at_minute": 9
+      "action": "update_dispute_card_identifier",
+      "at_minute": 10,
+      "observation": "While you were unavailable, I updated the dispute so its card identifier matches the current card record.",
+      "effects": [
+        {
+          "target": "charge_card",
+          "copy_from": "card_on_file"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -268,7 +279,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because the review interval has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": []
     }
   ],

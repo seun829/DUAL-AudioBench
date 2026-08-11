@@ -321,6 +321,8 @@ def summarize_beliefs(rows: list[dict]) -> dict:
     checkpoint_validity = {}
     calibration_predictions = []
     brier_scores = []
+    nll_scores = []
+    normalized_entropies = []
     action_consistency = {"pre_gap": [], "pre_final_action": []}
     risk_consistency = []
     uncertainty = Counter()
@@ -358,6 +360,8 @@ def summarize_beliefs(rows: list[dict]) -> dict:
                     (variable["confidence"], variable["correct"])
                 )
                 brier_scores.append(variable["brier"])
+                nll_scores.append(variable["nll"])
+                normalized_entropies.append(variable["normalized_entropy"])
 
     revision = [
         row["belief_revision"]["mean_revision_gain"]
@@ -381,6 +385,8 @@ def summarize_beliefs(rows: list[dict]) -> dict:
         "final_revision_gain": _mean(final_revision),
         "stale_belief_persistence": _mean(stale),
         "mean_brier": _mean(brier_scores),
+        "mean_nll": _mean(nll_scores),
+        "mean_normalized_entropy": _mean(normalized_entropies),
         "ece": expected_calibration_error(calibration_predictions),
         "pre_action_belief_consistency": _mean(action_consistency["pre_gap"]),
         "final_action_belief_consistency": _mean(

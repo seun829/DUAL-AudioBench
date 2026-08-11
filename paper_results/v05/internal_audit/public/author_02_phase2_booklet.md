@@ -1,5 +1,7 @@
 # DUAL-AudioBench v0.5 internal audit — phase 2 (author_02)
 
+Scenario freeze: `e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9`
+
 Open this only after saving the completed phase-1 CSV. The benchmark's
 declared pre-gap operation is now shown so every auditor evaluates the
 same gold-path transition. Infer the terminal state and best final
@@ -54,7 +56,7 @@ After **30 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Put the identical booking through for approval again now.
-- **B.** Close the request because the review interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Ring the specialist office about the booking.
 - **D.** Leave the request in place and wait another interval.
 - **E.** Obtain the qualifying document from the provider type the policy requires.
@@ -114,7 +116,7 @@ After **40 minutes**, the user resumes:
 - **A.** Ring the depot about the parcel.
 - **B.** Leave the booking alone and wait another interval.
 - **C.** Update the stored destination details before booking another run.
-- **D.** Close the request because the delivery interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Book the parcel onto another delivery run right now.
 
 Record the terminal-state label, final-action label,
@@ -170,7 +172,7 @@ After **25 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Send the identical figure for validation again now.
-- **B.** Close the request because the validation interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Read back through old tariff rates instead.
 - **D.** Record every supply connection on the account before validating again.
 - **E.** Leave the submission alone and wait another interval.
@@ -230,7 +232,7 @@ After **35 minutes**, the user resumes:
 - **A.** Get fresh entry permissions issued for whoever now holds the contract.
 - **B.** Leave the job alone and wait another interval.
 - **C.** Send the same job to the contractor rota again now.
-- **D.** Close the request because the visit interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Post out portable heaters instead.
 
 Record the terminal-state label, final-action label,
@@ -287,7 +289,7 @@ After **30 minutes**, the user resumes:
 
 - **A.** Take the repair through the seller channel that matches the original purchase route.
 - **B.** Send the identical claim for assessment again now.
-- **C.** Close the request because the assessment interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Talk the user through fixing it themselves.
 - **E.** Leave the claim alone and wait another interval.
 
@@ -344,7 +346,7 @@ After **20 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Send the same transaction through the automated process now.
-- **B.** Close the request because processing time has elapsed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Wait another interval for the existing transaction.
 - **D.** Review the account information used by the automated transaction before retrying.
 - **E.** Ask the prescriber to issue a replacement order.
@@ -401,7 +403,7 @@ After **35 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the visit interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Send the same job to the contractor rota again now.
 - **C.** Post out portable heaters instead.
 - **D.** Get fresh entry permissions issued for whoever now holds the contract.
@@ -460,7 +462,7 @@ After **30 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Leave the request in place and wait another interval.
-- **B.** Close the request because the review interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Ring the specialist office about the booking.
 - **D.** Obtain the qualifying document from the provider type the policy requires.
 - **E.** Put the identical booking through for approval again now.
@@ -517,7 +519,7 @@ After **20 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because processing time has elapsed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Review the account information used by the automated transaction before retrying.
 - **C.** Ask the prescriber to issue a replacement order.
 - **D.** Wait another interval for the existing transaction.
@@ -578,7 +580,7 @@ After **30 minutes**, the user resumes:
 - **A.** Bring the stored account ownership details into line before trying again.
 - **B.** Read the transfer code back once more.
 - **C.** Leave the transfer alone and wait another interval.
-- **D.** Close the request because the transfer interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Push the identical transfer into the queue again now.
 
 Record the terminal-state label, final-action label,
@@ -636,7 +638,7 @@ After **30 minutes**, the user resumes:
 - **A.** Leave the transfer alone and wait another interval.
 - **B.** Read the transfer code back once more.
 - **C.** Push the identical transfer into the queue again now.
-- **D.** Close the request because the transfer interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Bring the stored account ownership details into line before trying again.
 
 Record the terminal-state label, final-action label,
@@ -694,7 +696,7 @@ After **20 minutes**, the user resumes:
 - **A.** Run the same credential reset over again now.
 - **B.** Leave the reset alone and wait another interval.
 - **C.** Take the account to the external directory team that owns the sign-in path.
-- **D.** Close the request because the reset interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Have the user wipe stored browser data.
 
 Record the terminal-state label, final-action label,
@@ -752,7 +754,7 @@ After **45 minutes**, the user resumes:
 - **A.** Continue monitoring the existing itinerary without changing it.
 - **B.** Protect the later segment now and offer a compatible alternative.
 - **C.** Offer disruption compensation without changing the itinerary.
-- **D.** Confirm the delay and close the request.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Work only on the delayed departure and leave later segments unchanged.
 
 Record the terminal-state label, final-action label,
@@ -807,7 +809,7 @@ After **45 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Confirm the delay and close the request.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Offer disruption compensation without changing the itinerary.
 - **C.** Continue monitoring the existing itinerary without changing it.
 - **D.** Protect the later segment now and offer a compatible alternative.
@@ -869,7 +871,7 @@ After **30 minutes**, the user resumes:
 - **B.** Ring the specialist office about the booking.
 - **C.** Leave the request in place and wait another interval.
 - **D.** Put the identical booking through for approval again now.
-- **E.** Close the request because the review interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -923,7 +925,7 @@ After **30 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the transfer interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Push the identical transfer into the queue again now.
 - **C.** Bring the stored account ownership details into line before trying again.
 - **D.** Leave the transfer alone and wait another interval.
@@ -984,7 +986,7 @@ After **35 minutes**, the user resumes:
 - **A.** Leave the report alone and wait another interval.
 - **B.** Put the identical report through the assessment run again now.
 - **C.** Chase the bystander for a statement instead.
-- **D.** Close the report because the assessment interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Bring the policy paperwork into line with who legally owns the car.
 
 Record the terminal-state label, final-action label,
@@ -1042,7 +1044,7 @@ After **30 minutes**, the user resumes:
 
 - **A.** Leave the current process alone and monitor it for another interval.
 - **B.** Repeat the basic power recovery procedure.
-- **C.** Close the case because sufficient time has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Inspect persistent device settings for an inconsistent state.
 - **E.** Run the guided software maintenance procedure now.
 
@@ -1100,7 +1102,7 @@ After **30 minutes**, the user resumes:
 
 - **A.** Leave the transfer alone and wait another interval.
 - **B.** Read the transfer code back once more.
-- **C.** Close the request because the transfer interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Bring the stored account ownership details into line before trying again.
 - **E.** Push the identical transfer into the queue again now.
 
@@ -1157,7 +1159,7 @@ After **30 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Push the identical transfer into the queue again now.
-- **B.** Close the request because the transfer interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Leave the transfer alone and wait another interval.
 - **D.** Bring the stored account ownership details into line before trying again.
 - **E.** Read the transfer code back once more.
@@ -1214,7 +1216,7 @@ After **20 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the reset interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Have the user wipe stored browser data.
 - **C.** Leave the reset alone and wait another interval.
 - **D.** Run the same credential reset over again now.
@@ -1272,7 +1274,7 @@ After **25 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the validation interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Read back through old tariff rates instead.
 - **C.** Send the identical figure for validation again now.
 - **D.** Record every supply connection on the account before validating again.
@@ -1333,7 +1335,7 @@ After **25 minutes**, the user resumes:
 - **A.** Leave the application alone and wait another interval.
 - **B.** Read the plate back once more instead.
 - **C.** Send the identical application through the check again now.
-- **D.** Close the request because the checking interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Provide a different document that shows the applicant lives at the address.
 
 Record the terminal-state label, final-action label,
@@ -1392,7 +1394,7 @@ After **30 minutes**, the user resumes:
 - **B.** Obtain the qualifying document from the provider type the policy requires.
 - **C.** Put the identical booking through for approval again now.
 - **D.** Ring the specialist office about the booking.
-- **E.** Close the request because the review interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -1446,7 +1448,7 @@ After **25 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the validation interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Send the identical figure for validation again now.
 - **C.** Leave the submission alone and wait another interval.
 - **D.** Read back through old tariff rates instead.
@@ -1508,7 +1510,7 @@ After **35 minutes**, the user resumes:
 - **B.** Chase the bystander for a statement instead.
 - **C.** Leave the report alone and wait another interval.
 - **D.** Put the identical report through the assessment run again now.
-- **E.** Close the report because the assessment interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -1565,7 +1567,7 @@ After **25 minutes**, the user resumes:
 - **A.** Send the identical application through the check again now.
 - **B.** Leave the application alone and wait another interval.
 - **C.** Provide a different document that shows the applicant lives at the address.
-- **D.** Close the request because the checking interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Read the plate back once more instead.
 
 Record the terminal-state label, final-action label,
@@ -1621,7 +1623,7 @@ After **40 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Leave the booking alone and wait another interval.
-- **B.** Close the request because the delivery interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Book the parcel onto another delivery run right now.
 - **D.** Update the stored destination details before booking another run.
 - **E.** Ring the depot about the parcel.
@@ -1681,7 +1683,7 @@ After **35 minutes**, the user resumes:
 - **A.** Send the same job to the contractor rota again now.
 - **B.** Post out portable heaters instead.
 - **C.** Leave the job alone and wait another interval.
-- **D.** Close the request because the visit interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Get fresh entry permissions issued for whoever now holds the contract.
 
 Record the terminal-state label, final-action label,
@@ -1739,7 +1741,7 @@ After **30 minutes**, the user resumes:
 - **A.** Go back over the chosen modules instead.
 - **B.** Leave the enrolment alone and wait another interval.
 - **C.** Have the earlier qualifications formally evaluated before submitting again.
-- **D.** Close the request because the registration interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Send the identical enrolment through the run again now.
 
 Record the terminal-state label, final-action label,
@@ -1794,7 +1796,7 @@ After **35 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the visit interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Send the same job to the contractor rota again now.
 - **C.** Get fresh entry permissions issued for whoever now holds the contract.
 - **D.** Leave the job alone and wait another interval.
@@ -1852,7 +1854,7 @@ After **20 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the reset interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Leave the reset alone and wait another interval.
 - **C.** Take the account to the external directory team that owns the sign-in path.
 - **D.** Have the user wipe stored browser data.
@@ -1914,7 +1916,7 @@ After **35 minutes**, the user resumes:
 - **B.** Bring the policy paperwork into line with who legally owns the car.
 - **C.** Leave the report alone and wait another interval.
 - **D.** Put the identical report through the assessment run again now.
-- **E.** Close the report because the assessment interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -1970,7 +1972,7 @@ After **30 minutes**, the user resumes:
 
 - **A.** Obtain the qualifying document from the provider type the policy requires.
 - **B.** Put the identical booking through for approval again now.
-- **C.** Close the request because the review interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Leave the request in place and wait another interval.
 - **E.** Ring the specialist office about the booking.
 
@@ -2026,7 +2028,7 @@ After **40 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the delivery interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Update the stored destination details before booking another run.
 - **C.** Leave the booking alone and wait another interval.
 - **D.** Ring the depot about the parcel.
@@ -2084,7 +2086,7 @@ After **25 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the validation interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Read back through old tariff rates instead.
 - **C.** Send the identical figure for validation again now.
 - **D.** Record every supply connection on the account before validating again.
@@ -2142,7 +2144,7 @@ After **35 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the visit interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Leave the job alone and wait another interval.
 - **C.** Get fresh entry permissions issued for whoever now holds the contract.
 - **D.** Send the same job to the contractor rota again now.
@@ -2204,7 +2206,7 @@ After **30 minutes**, the user resumes:
 - **B.** Have the earlier qualifications formally evaluated before submitting again.
 - **C.** Leave the enrolment alone and wait another interval.
 - **D.** Go back over the chosen modules instead.
-- **E.** Close the request because the registration interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -2261,7 +2263,7 @@ After **20 minutes**, the user resumes:
 - **A.** Take the account to the external directory team that owns the sign-in path.
 - **B.** Run the same credential reset over again now.
 - **C.** Have the user wipe stored browser data.
-- **D.** Close the request because the reset interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Leave the reset alone and wait another interval.
 
 Record the terminal-state label, final-action label,
@@ -2318,7 +2320,7 @@ After **30 minutes**, the user resumes:
 
 - **A.** Go back over the chosen modules instead.
 - **B.** Have the earlier qualifications formally evaluated before submitting again.
-- **C.** Close the request because the registration interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Send the identical enrolment through the run again now.
 - **E.** Leave the enrolment alone and wait another interval.
 
@@ -2376,7 +2378,7 @@ After **20 minutes**, the user resumes:
 
 - **A.** Run the same credential reset over again now.
 - **B.** Leave the reset alone and wait another interval.
-- **C.** Close the request because the reset interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Take the account to the external directory team that owns the sign-in path.
 - **E.** Have the user wipe stored browser data.
 
@@ -2435,7 +2437,7 @@ After **35 minutes**, the user resumes:
 - **A.** Leave the job alone and wait another interval.
 - **B.** Send the same job to the contractor rota again now.
 - **C.** Get fresh entry permissions issued for whoever now holds the contract.
-- **D.** Close the request because the visit interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Post out portable heaters instead.
 
 Record the terminal-state label, final-action label,
@@ -2493,7 +2495,7 @@ After **25 minutes**, the user resumes:
 - **A.** Provide a different document that shows the applicant lives at the address.
 - **B.** Leave the application alone and wait another interval.
 - **C.** Read the plate back once more instead.
-- **D.** Close the request because the checking interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Send the identical application through the check again now.
 
 Record the terminal-state label, final-action label,
@@ -2549,7 +2551,7 @@ After **30 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Leave the request in place and wait another interval.
-- **B.** Close the request because the review interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Ring the specialist office about the booking.
 - **D.** Obtain the qualifying document from the provider type the policy requires.
 - **E.** Put the identical booking through for approval again now.
@@ -2607,7 +2609,7 @@ After **30 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Take the repair through the seller channel that matches the original purchase route.
-- **B.** Close the request because the assessment interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Leave the claim alone and wait another interval.
 - **D.** Talk the user through fixing it themselves.
 - **E.** Send the identical claim for assessment again now.
@@ -2664,7 +2666,7 @@ After **25 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the checking interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Read the plate back once more instead.
 - **C.** Send the identical application through the check again now.
 - **D.** Leave the application alone and wait another interval.
@@ -2723,7 +2725,7 @@ After **45 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Work only on the delayed departure and leave later segments unchanged.
-- **B.** Confirm the delay and close the request.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Offer disruption compensation without changing the itinerary.
 - **D.** Protect the later segment now and offer a compatible alternative.
 - **E.** Continue monitoring the existing itinerary without changing it.
@@ -2785,7 +2787,7 @@ After **30 minutes**, the user resumes:
 - **B.** Repeat the basic power recovery procedure.
 - **C.** Leave the current process alone and monitor it for another interval.
 - **D.** Run the guided software maintenance procedure now.
-- **E.** Close the case because sufficient time has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -2843,7 +2845,7 @@ After **25 minutes**, the user resumes:
 - **B.** Record every supply connection on the account before validating again.
 - **C.** Read back through old tariff rates instead.
 - **D.** Send the identical figure for validation again now.
-- **E.** Close the request because the validation interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -2901,7 +2903,7 @@ After **30 minutes**, the user resumes:
 - **B.** Go back over the chosen modules instead.
 - **C.** Send the identical enrolment through the run again now.
 - **D.** Leave the enrolment alone and wait another interval.
-- **E.** Close the request because the registration interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -2959,7 +2961,7 @@ After **20 minutes**, the user resumes:
 - **B.** Wait another interval for the existing transaction.
 - **C.** Review the account information used by the automated transaction before retrying.
 - **D.** Send the same transaction through the automated process now.
-- **E.** Close the request because processing time has elapsed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -3016,7 +3018,7 @@ After **45 minutes**, the user resumes:
 - **A.** Work only on the delayed departure and leave later segments unchanged.
 - **B.** Offer disruption compensation without changing the itinerary.
 - **C.** Protect the later segment now and offer a compatible alternative.
-- **D.** Confirm the delay and close the request.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Continue monitoring the existing itinerary without changing it.
 
 Record the terminal-state label, final-action label,
@@ -3071,7 +3073,7 @@ After **45 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Confirm the delay and close the request.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Continue monitoring the existing itinerary without changing it.
 - **C.** Offer disruption compensation without changing the itinerary.
 - **D.** Work only on the delayed departure and leave later segments unchanged.
@@ -3130,7 +3132,7 @@ After **25 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Read the plate back once more instead.
-- **B.** Close the request because the checking interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Leave the application alone and wait another interval.
 - **D.** Send the identical application through the check again now.
 - **E.** Provide a different document that shows the applicant lives at the address.
@@ -3189,7 +3191,7 @@ After **25 minutes**, the user resumes:
 
 - **A.** Leave the submission alone and wait another interval.
 - **B.** Read back through old tariff rates instead.
-- **C.** Close the request because the validation interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Send the identical figure for validation again now.
 - **E.** Record every supply connection on the account before validating again.
 
@@ -3245,7 +3247,7 @@ After **40 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the delivery interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Ring the depot about the parcel.
 - **C.** Update the stored destination details before booking another run.
 - **D.** Book the parcel onto another delivery run right now.
@@ -3303,7 +3305,7 @@ After **25 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the review interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Ask the merchant for paperwork about the amount.
 - **C.** Leave the existing entry alone and wait another interval.
 - **D.** Match the stored account identifiers against the charge before trying again.
@@ -3361,7 +3363,7 @@ After **35 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the report because the assessment interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Put the identical report through the assessment run again now.
 - **C.** Chase the bystander for a statement instead.
 - **D.** Bring the policy paperwork into line with who legally owns the car.
@@ -3423,7 +3425,7 @@ After **25 minutes**, the user resumes:
 - **B.** Put the same amount through the automated queue again now.
 - **C.** Match the stored account identifiers against the charge before trying again.
 - **D.** Leave the existing entry alone and wait another interval.
-- **E.** Close the request because the review interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -3479,7 +3481,7 @@ After **20 minutes**, the user resumes:
 
 - **A.** Wait another interval for the existing transaction.
 - **B.** Ask the prescriber to issue a replacement order.
-- **C.** Close the request because processing time has elapsed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Send the same transaction through the automated process now.
 - **E.** Review the account information used by the automated transaction before retrying.
 
@@ -3537,7 +3539,7 @@ After **30 minutes**, the user resumes:
 
 - **A.** Leave the enrolment alone and wait another interval.
 - **B.** Go back over the chosen modules instead.
-- **C.** Close the request because the registration interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Send the identical enrolment through the run again now.
 - **E.** Have the earlier qualifications formally evaluated before submitting again.
 
@@ -3596,7 +3598,7 @@ After **20 minutes**, the user resumes:
 - **A.** Send the same transaction through the automated process now.
 - **B.** Ask the prescriber to issue a replacement order.
 - **C.** Wait another interval for the existing transaction.
-- **D.** Close the request because processing time has elapsed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Review the account information used by the automated transaction before retrying.
 
 Record the terminal-state label, final-action label,
@@ -3655,7 +3657,7 @@ After **30 minutes**, the user resumes:
 - **B.** Talk the user through fixing it themselves.
 - **C.** Leave the claim alone and wait another interval.
 - **D.** Send the identical claim for assessment again now.
-- **E.** Close the request because the assessment interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -3710,7 +3712,7 @@ After **40 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Ring the depot about the parcel.
-- **B.** Close the request because the delivery interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Book the parcel onto another delivery run right now.
 - **D.** Leave the booking alone and wait another interval.
 - **E.** Update the stored destination details before booking another run.
@@ -3770,7 +3772,7 @@ After **30 minutes**, the user resumes:
 - **A.** Send the identical enrolment through the run again now.
 - **B.** Have the earlier qualifications formally evaluated before submitting again.
 - **C.** Leave the enrolment alone and wait another interval.
-- **D.** Close the request because the registration interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Go back over the chosen modules instead.
 
 Record the terminal-state label, final-action label,
@@ -3830,7 +3832,7 @@ After **30 minutes**, the user resumes:
 - **B.** Inspect persistent device settings for an inconsistent state.
 - **C.** Leave the current process alone and monitor it for another interval.
 - **D.** Run the guided software maintenance procedure now.
-- **E.** Close the case because sufficient time has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -3886,7 +3888,7 @@ After **35 minutes**, the user resumes:
 
 - **A.** Put the identical report through the assessment run again now.
 - **B.** Leave the report alone and wait another interval.
-- **C.** Close the report because the assessment interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Chase the bystander for a statement instead.
 - **E.** Bring the policy paperwork into line with who legally owns the car.
 
@@ -3946,7 +3948,7 @@ After **25 minutes**, the user resumes:
 - **B.** Ask the merchant for paperwork about the amount.
 - **C.** Leave the existing entry alone and wait another interval.
 - **D.** Match the stored account identifiers against the charge before trying again.
-- **E.** Close the request because the review interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -4003,7 +4005,7 @@ After **30 minutes**, the user resumes:
 
 - **A.** Inspect persistent device settings for an inconsistent state.
 - **B.** Run the guided software maintenance procedure now.
-- **C.** Close the case because sufficient time has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Leave the current process alone and monitor it for another interval.
 - **E.** Repeat the basic power recovery procedure.
 
@@ -4059,7 +4061,7 @@ After **20 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the reset interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Leave the reset alone and wait another interval.
 - **C.** Run the same credential reset over again now.
 - **D.** Have the user wipe stored browser data.
@@ -4119,7 +4121,7 @@ After **45 minutes**, the user resumes:
 
 - **A.** Continue monitoring the existing itinerary without changing it.
 - **B.** Work only on the delayed departure and leave later segments unchanged.
-- **C.** Confirm the delay and close the request.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Protect the later segment now and offer a compatible alternative.
 - **E.** Offer disruption compensation without changing the itinerary.
 
@@ -4179,7 +4181,7 @@ After **30 minutes**, the user resumes:
 - **B.** Talk the user through fixing it themselves.
 - **C.** Send the identical claim for assessment again now.
 - **D.** Leave the claim alone and wait another interval.
-- **E.** Close the request because the assessment interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -4235,7 +4237,7 @@ After **25 minutes**, the user resumes:
 
 - **A.** Put the same amount through the automated queue again now.
 - **B.** Leave the existing entry alone and wait another interval.
-- **C.** Close the request because the review interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Match the stored account identifiers against the charge before trying again.
 - **E.** Ask the merchant for paperwork about the amount.
 
@@ -4294,7 +4296,7 @@ After **30 minutes**, the user resumes:
 - **A.** Send the identical claim for assessment again now.
 - **B.** Take the repair through the seller channel that matches the original purchase route.
 - **C.** Leave the claim alone and wait another interval.
-- **D.** Close the request because the assessment interval has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Talk the user through fixing it themselves.
 
 Record the terminal-state label, final-action label,
@@ -4349,7 +4351,7 @@ After **25 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the request because the review interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Ask the merchant for paperwork about the amount.
 - **C.** Match the stored account identifiers against the charge before trying again.
 - **D.** Put the same amount through the automated queue again now.
@@ -4411,7 +4413,7 @@ After **30 minutes**, the user resumes:
 - **B.** Bring the stored account ownership details into line before trying again.
 - **C.** Push the identical transfer into the queue again now.
 - **D.** Leave the transfer alone and wait another interval.
-- **E.** Close the request because the transfer interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -4465,7 +4467,7 @@ After **35 minutes**, the user resumes:
 
 ### Candidate final actions
 
-- **A.** Close the report because the assessment interval has passed.
+- **A.** Conclude that the completed operation succeeded, then close the request.
 - **B.** Bring the policy paperwork into line with who legally owns the car.
 - **C.** Chase the bystander for a statement instead.
 - **D.** Leave the report alone and wait another interval.
@@ -4528,7 +4530,7 @@ After **30 minutes**, the user resumes:
 - **B.** Run the guided software maintenance procedure now.
 - **C.** Repeat the basic power recovery procedure.
 - **D.** Inspect persistent device settings for an inconsistent state.
-- **E.** Close the case because sufficient time has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -4586,7 +4588,7 @@ After **40 minutes**, the user resumes:
 - **B.** Book the parcel onto another delivery run right now.
 - **C.** Update the stored destination details before booking another run.
 - **D.** Ring the depot about the parcel.
-- **E.** Close the request because the delivery interval has passed.
+- **E.** Conclude that the completed operation succeeded, then close the request.
 
 Record the terminal-state label, final-action label,
 answerability, ambiguity, and evidence in the phase-2 CSV.
@@ -4644,7 +4646,7 @@ After **30 minutes**, the user resumes:
 - **A.** Leave the current process alone and monitor it for another interval.
 - **B.** Repeat the basic power recovery procedure.
 - **C.** Inspect persistent device settings for an inconsistent state.
-- **D.** Close the case because sufficient time has passed.
+- **D.** Conclude that the completed operation succeeded, then close the request.
 - **E.** Run the guided software maintenance procedure now.
 
 Record the terminal-state label, final-action label,
@@ -4700,7 +4702,7 @@ After **30 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Talk the user through fixing it themselves.
-- **B.** Close the request because the assessment interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Take the repair through the seller channel that matches the original purchase route.
 - **D.** Leave the claim alone and wait another interval.
 - **E.** Send the identical claim for assessment again now.
@@ -4758,7 +4760,7 @@ After **20 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Ask the prescriber to issue a replacement order.
-- **B.** Close the request because processing time has elapsed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Wait another interval for the existing transaction.
 - **D.** Send the same transaction through the automated process now.
 - **E.** Review the account information used by the automated transaction before retrying.
@@ -4816,7 +4818,7 @@ After **25 minutes**, the user resumes:
 ### Candidate final actions
 
 - **A.** Match the stored account identifiers against the charge before trying again.
-- **B.** Close the request because the review interval has passed.
+- **B.** Conclude that the completed operation succeeded, then close the request.
 - **C.** Leave the existing entry alone and wait another interval.
 - **D.** Ask the merchant for paperwork about the amount.
 - **E.** Put the same amount through the automated queue again now.
@@ -4875,7 +4877,7 @@ After **25 minutes**, the user resumes:
 
 - **A.** Send the identical application through the check again now.
 - **B.** Leave the application alone and wait another interval.
-- **C.** Close the request because the checking interval has passed.
+- **C.** Conclude that the completed operation succeeded, then close the request.
 - **D.** Provide a different document that shows the applicant lives at the address.
 - **E.** Read the plate back once more instead.
 

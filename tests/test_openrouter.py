@@ -8,6 +8,9 @@ from models import openrouter
 
 
 class OpenRouterAdapterTests(unittest.TestCase):
+    def setUp(self):
+        openrouter.pop_usage()
+
     def _response(self, content="ok", usage=None):
         response = Mock()
         response.ok = True
@@ -34,7 +37,10 @@ class OpenRouterAdapterTests(unittest.TestCase):
         request = post.call_args.kwargs["json"]
         self.assertEqual(request["max_tokens"], openrouter.MAX_TOKENS)
         self.assertEqual(request["top_p"], 1)
-        self.assertEqual(request["reasoning"]["effort"], "none")
+        if openrouter.MODEL.startswith("google/gemini"):
+            self.assertEqual(request["reasoning"]["effort"], "none")
+        else:
+            self.assertNotIn("reasoning", request)
         response_format = request["response_format"]
         self.assertEqual(response_format["type"], "json_schema")
         schema = response_format["json_schema"]["schema"]
@@ -44,6 +50,24 @@ class OpenRouterAdapterTests(unittest.TestCase):
         )
         self.assertFalse(schema["additionalProperties"])
         self.assertIn("Choose.", request["messages"][1]["content"])
+
+    @patch.dict(
+        os.environ,
+        {"OPENROUTER_API_KEY": "test-key", "OPENROUTER_LOG_USAGE": "0"},
+        clear=False,
+    )
+    @patch.object(openrouter, "MODEL", "openai/gpt-audio-mini")
+    @patch("models.openrouter.requests.post")
+    def test_non_reasoning_audio_model_omits_reasoning_parameter(self, post):
+        post.return_value = self._response('{"choice":"A"}')
+
+        openrouter.ask_text(
+            'Choose. Return JSON only in this shape: {"choice": "A"}'
+        )
+
+        request = post.call_args.kwargs["json"]
+        self.assertNotIn("reasoning", request)
+        self.assertEqual(request["model"], "openai/gpt-audio-mini")
 
     @patch.dict(
         os.environ,
@@ -124,6 +148,7 @@ class OpenRouterAdapterTests(unittest.TestCase):
         usage = openrouter.pop_usage()
         self.assertEqual(usage["total_tokens"], 15)
         self.assertEqual(usage["resolved_model"], "resolved/model")
+        self.assertEqual(usage["provider_counts"], {"unknown": 1})
         self.assertEqual(openrouter.pop_usage(), {})
 
 

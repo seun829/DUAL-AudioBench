@@ -41,6 +41,9 @@ class ScriptedUserSimulator:
         """Describe the actual post-transition state in deterministic language."""
 
         observation = post_gap_observation(task["domain"], state)
+        user_action_observation = state.get("gap_user_action_observation")
+        if user_action_observation:
+            observation = f"{user_action_observation} {observation}"
         causal = task.get("causal_post_gap_observation")
         if (
             causal

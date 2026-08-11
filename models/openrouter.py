@@ -52,6 +52,7 @@ USAGE = {
     "audio_seconds_sent": 0.0,
     "cost_usd": 0.0,
     "errors": 0,
+    "provider_counts": {},
 }
 _PENDING_USAGE: dict[str, int | float | str] = {}
 _LOGGABLE_CALLS = 0
@@ -85,6 +86,7 @@ def _record(
     seconds: float,
     latency_s: float,
     resolved_model: str,
+    resolved_provider: str,
 ) -> None:
     """Accumulate reported token usage and upstream cost for one call."""
 
@@ -99,6 +101,10 @@ def _record(
         USAGE["audio_bytes_sent"] += audio_bytes
         USAGE["audio_seconds_sent"] = round(USAGE["audio_seconds_sent"] + seconds, 3)
         USAGE["cost_usd"] = round(USAGE["cost_usd"] + float(usage.get("cost") or 0.0), 6)
+        provider = resolved_provider or "unknown"
+        USAGE["provider_counts"][provider] = (
+            int(USAGE["provider_counts"].get(provider, 0)) + 1
+        )
         _PENDING_USAGE["model_calls"] = int(_PENDING_USAGE.get("model_calls", 0)) + 1
         _PENDING_USAGE["metered_calls"] = int(_PENDING_USAGE.get("metered_calls", 0)) + 1
         for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
@@ -115,6 +121,8 @@ def _record(
             3,
         )
         _PENDING_USAGE["resolved_model"] = resolved_model or MODEL
+        pending_providers = _PENDING_USAGE.setdefault("provider_counts", {})
+        pending_providers[provider] = int(pending_providers.get(provider, 0)) + 1
         if os.environ.get("OPENROUTER_LOG_USAGE", "1").lower() not in {
             "0", "false", "no"
         }:
@@ -272,6 +280,7 @@ def _post(body: dict, *, audio_bytes: int = 0, seconds: float = 0.0) -> str:
         seconds=seconds,
         latency_s=time.perf_counter() - started,
         resolved_model=str(payload.get("model") or MODEL),
+        resolved_provider=str(payload.get("provider") or "unknown"),
     )
     return _response_text(payload)
 
@@ -298,7 +307,6 @@ def ask(audio_path: str, question: str) -> str:
         "usage": {"include": True},
         "max_tokens": MAX_TOKENS,
         "top_p": 1,
-        "reasoning": {"effort": "none"},
         "messages": [
             {
                 "role": "system",
@@ -319,6 +327,8 @@ def ask(audio_path: str, question: str) -> str:
             }
         ],
     }
+    if MODEL.startswith("google/gemini"):
+        body["reasoning"] = {"effort": "none"}
     response_format = _response_format(question)
     if response_format:
         body["response_format"] = response_format
@@ -333,7 +343,6 @@ def ask_text(prompt: str) -> str:
         "usage": {"include": True},
         "max_tokens": MAX_TOKENS,
         "top_p": 1,
-        "reasoning": {"effort": "none"},
         "messages": [
             {
                 "role": "system",
@@ -342,6 +351,8 @@ def ask_text(prompt: str) -> str:
             {"role": "user", "content": prompt},
         ],
     }
+    if MODEL.startswith("google/gemini"):
+        body["reasoning"] = {"effort": "none"}
     response_format = _response_format(prompt)
     if response_format:
         body["response_format"] = response_format

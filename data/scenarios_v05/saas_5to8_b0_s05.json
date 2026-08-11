@@ -170,8 +170,19 @@
       "minimum_minutes": 20
     },
     "user_action": {
-      "action": "try_recovery_contact",
-      "at_minute": 7
+      "action": "redirect_reset_to_active_identity_system",
+      "at_minute": 7,
+      "observation": "While you were unavailable, I redirected the reset to the company's active identity system.",
+      "effects": [
+        {
+          "target": "reset_target",
+          "copy_from": "authentication_mode"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -266,7 +277,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because the reset interval has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": [
         "PREMATURE_CLOSE"
       ]

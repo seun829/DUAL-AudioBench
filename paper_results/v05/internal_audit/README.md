@@ -5,6 +5,11 @@ Two independent, readable audit packets are ready in `public/`, one for
 different randomized order with independently randomized menu labels.
 Counterfactual siblings are never adjacent.
 
+All four current booklets are stamped with scenario manifest
+`e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9`,
+matching `paper_results/v05/SCENARIO_FREEZE.md`. The response sheets were reset
+when the scenarios changed; do not reuse answers from an earlier packet.
+
 ## Blinding protocol
 
 For each author:
@@ -22,6 +27,11 @@ the public dialogue. Phase 2 discloses the benchmark operation that must be
 assumed executed, presents the public resumption, and asks for terminal state
 and final action. This separation prevents the declared operation from leaking
 the phase-1 gold answer.
+
+`causal_alignment` simply means **whether the clue matches the stated success
+rule**. Select `aligned` when the clue satisfies the rule and `misaligned` when
+it violates the rule. It is not asking whether the auditor agrees with the
+benchmark answer.
 
 Use exact labels from the booklets. Enter `yes` or `no` for answerability and an
 ambiguity score from 1 (unambiguous) through 5 (not answerable). Evidence and

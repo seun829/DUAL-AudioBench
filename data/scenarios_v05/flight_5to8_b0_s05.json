@@ -149,7 +149,7 @@
     "flight_status": "on_time",
     "departure_delay_minutes": 0,
     "layover_minutes": 90,
-    "connection_status": "at_risk_if_delayed",
+    "connection_status": "viable",
     "monitoring_enabled": false,
     "elapsed_minutes": 0,
     "ticket_status": "open",
@@ -194,8 +194,8 @@
       "viable": "the planned connection remains feasible with the current timing"
     },
     "causal_alignment": {
-      "misaligned": "the connection window is shorter than the departure delay",
-      "aligned": "the connection window remains longer than the departure delay"
+      "misaligned": "the scheduled connection window is the short ninety-minute option",
+      "aligned": "the scheduled connection window is the long four-hour option"
     }
   },
   "revalidation_actions": [
@@ -267,7 +267,7 @@
     },
     {
       "action": "close_case",
-      "description": "Confirm the delay and close the request.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": [
         "PREMATURE_CLOSE"
       ]

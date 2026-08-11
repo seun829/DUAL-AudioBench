@@ -194,8 +194,8 @@
       "viable": "the planned connection remains feasible with the current timing"
     },
     "causal_alignment": {
-      "misaligned": "the connection window is shorter than the departure delay",
-      "aligned": "the connection window remains longer than the departure delay"
+      "misaligned": "the scheduled connection window is the short ninety-minute option",
+      "aligned": "the scheduled connection window is the long four-hour option"
     }
   },
   "revalidation_actions": [
@@ -269,7 +269,7 @@
     },
     {
       "action": "close_case",
-      "description": "Confirm the delay and close the request.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": []
     }
   ],

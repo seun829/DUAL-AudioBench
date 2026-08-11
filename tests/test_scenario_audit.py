@@ -57,6 +57,10 @@ class ScenarioAuditTests(unittest.TestCase):
             )
             self.assertEqual(len(key_a["items"]), 84)
             self.assertEqual(len(key_b["items"]), 84)
+            self.assertEqual(
+                key_a["scenario_manifest_sha256"],
+                key_b["scenario_manifest_sha256"],
+            )
             pairs = [item["causal_pair_id"] for item in key_a["items"].values()]
             self.assertTrue(all(left != right for left, right in zip(pairs, pairs[1:])))
             self.assertNotEqual(
@@ -71,6 +75,10 @@ class ScenarioAuditTests(unittest.TestCase):
             ).read_text(encoding="utf-8")
             self.assertNotIn("Operation assumed executed", phase1)
             self.assertIn("Operation assumed executed", phase2)
+            self.assertIn(key_a["scenario_manifest_sha256"], phase1)
+            self.assertIn(key_a["scenario_manifest_sha256"], phase2)
+            self.assertIn("Does the clue match the success rule?", phase1)
+            self.assertIn("choose `aligned`", phase1)
             self.assertNotIn("scenario_id", phase1)
             self.assertNotIn("gold_", phase1)
             with (root / "public" / "auditor_a_phase1_responses.csv").open(

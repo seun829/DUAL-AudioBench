@@ -170,8 +170,19 @@
       "minimum_minutes": 40
     },
     "user_action": {
-      "action": "check_collection_point",
-      "at_minute": 15
+      "action": "correct_parcel_destination",
+      "at_minute": 12,
+      "observation": "While you were unavailable, I had the parcel destination corrected to match the current account address.",
+      "effects": [
+        {
+          "target": "label_address",
+          "copy_from": "account_address"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -266,7 +277,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because the delivery interval has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": [
         "PREMATURE_CLOSE"
       ]

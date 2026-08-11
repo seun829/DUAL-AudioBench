@@ -145,6 +145,34 @@ class V05CausalQualityTests(unittest.TestCase):
                 self.assertEqual(set(definitions), set(BRANCHES))
                 self.assertTrue(all(definitions.values()))
 
+    def test_pre_gap_gold_does_not_depend_on_the_unrevealed_future_event(self):
+        """Counterfactual worlds may diverge only after time advances."""
+
+        for name in TEMPLATES:
+            left, right = [build(name, "5-8", index) for index in range(2)]
+            variable = left["causal_design"]["outcome_variable"]
+            with self.subTest(template=name):
+                self.assertEqual(
+                    left["initial_state"][variable],
+                    right["initial_state"][variable],
+                )
+
+    def test_aligned_close_option_states_a_successful_outcome(self):
+        for name in TEMPLATES:
+            left, right = [build(name, "5-8", index) for index in range(2)]
+            descriptions = []
+            for task in (left, right):
+                close = next(
+                    item
+                    for item in task["post_gap_actions"]
+                    if item["action"] == "close_case"
+                )
+                descriptions.append(close["description"])
+                self.assertNotIn("time has", close["description"].lower())
+                self.assertNotIn("interval has passed", close["description"].lower())
+            with self.subTest(template=name):
+                self.assertEqual(descriptions[0], descriptions[1])
+
     def test_standard_event_hides_terminal_result_but_controls_remain_truthful(self):
         user = ScriptedUserSimulator()
         for name in TEMPLATES:
@@ -175,6 +203,48 @@ class V05CausalQualityTests(unittest.TestCase):
                     ),
                     causal["text"],
                 )
+
+    def test_hidden_user_action_changes_a_scored_target_in_every_domain(self):
+        user = ScriptedUserSimulator()
+        for name in TEMPLATES:
+            changed = []
+            for branch in range(2):
+                task = build(name, "5-8", branch)
+                action = task["pre_gap"]["correct_action"]
+                before = execute_action(
+                    task["domain"], task["initial_state"], action
+                )
+                full = transition(
+                    task["domain"],
+                    before,
+                    action,
+                    task["transition"]["elapsed_minutes"],
+                    task["transition"]["external_event"],
+                    None,
+                )
+                intervened = transition(
+                    task["domain"],
+                    before,
+                    action,
+                    task["transition"]["elapsed_minutes"],
+                    task["transition"]["external_event"],
+                    task["transition"]["user_action"],
+                )
+                target_changed = any(
+                    full[variable] != intervened[variable]
+                    for variable in task["belief_schema"]
+                )
+                action_changed = (
+                    correct_action(task["domain"], full)
+                    != correct_action(task["domain"], intervened)
+                )
+                changed.append(target_changed or action_changed)
+                observation = user.post_gap(
+                    task, intervened, CONDITIONS["hidden_user_action"]
+                )
+                self.assertTrue(observation.strip())
+            with self.subTest(template=name):
+                self.assertTrue(any(changed))
 
     def test_prosody_pairs_preserve_words_and_technical_gold(self):
         user = ScriptedUserSimulator()

@@ -170,8 +170,19 @@
       "minimum_minutes": 25
     },
     "user_action": {
-      "action": "photograph_dials",
-      "at_minute": 10
+      "action": "register_missing_supply_points",
+      "at_minute": 9,
+      "observation": "While you were unavailable, I added every property meter to the supplier account.",
+      "effects": [
+        {
+          "target": "registered_points",
+          "copy_from": "actual_points"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -266,7 +277,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because the validation interval has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": [
         "PREMATURE_CLOSE"
       ]

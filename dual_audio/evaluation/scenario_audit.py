@@ -59,6 +59,16 @@ def _safe_slug(value: str) -> str:
     return slug.strip("_").lower() or "auditor"
 
 
+def _scenario_manifest_sha256(paths: list[Path]) -> str:
+    """Match the paid launcher's filename-plus-file-hash freeze digest."""
+
+    records = [
+        f"{path.name}:{hashlib.sha256(path.read_bytes()).hexdigest()}"
+        for path in sorted(paths, key=lambda path: path.name)
+    ]
+    return hashlib.sha256("\n".join(records).encode("utf-8")).hexdigest()
+
+
 def _task_order(tasks: list[dict], auditor: str) -> list[dict]:
     """Randomize tasks without placing counterfactual siblings together."""
 
@@ -143,9 +153,10 @@ def _menu_markdown(menu: list[dict]) -> list[str]:
 def export_packet(tasks_dir: str, output_dir: str, auditor: str) -> None:
     """Create two-phase blinded booklets, response sheets, and a private key."""
 
+    task_paths = sorted(Path(tasks_dir).glob("*.json"))
     tasks = [
         json.loads(path.read_text(encoding="utf-8"))
-        for path in sorted(Path(tasks_dir).glob("*.json"))
+        for path in task_paths
     ]
     if not tasks:
         raise SystemExit(f"No task JSON files found in {tasks_dir}.")
@@ -158,21 +169,29 @@ def export_packet(tasks_dir: str, output_dir: str, auditor: str) -> None:
     public.mkdir(parents=True, exist_ok=True)
     private.mkdir(parents=True, exist_ok=True)
     slug = _safe_slug(auditor)
+    scenario_hash = _scenario_manifest_sha256(task_paths)
     ordered = _task_order(tasks, auditor)
     width = len(str(len(ordered)))
 
     phase1 = [
         f"# DUAL-AudioBench v0.5 internal audit — phase 1 ({auditor})",
         "",
+        f"Scenario freeze: `{scenario_hash}`",
+        "",
         "Complete the phase-1 CSV before opening phase 2. Do not inspect task",
         "JSON, code, private keys, or another auditor's responses. Select the",
         "best next action using only the public dialogue. `Answerable` asks",
         "whether exactly one option follows without outside domain knowledge.",
+        "The rule-match question is simple: choose `aligned` when the user's",
+        "clue satisfies the stated success rule, or `misaligned` when it",
+        "violates that rule. It does not ask whether you agree with the gold.",
         "Ambiguity is 1 (unambiguous) through 5 (not answerable).",
         "",
     ]
     phase2 = [
         f"# DUAL-AudioBench v0.5 internal audit — phase 2 ({auditor})",
+        "",
+        f"Scenario freeze: `{scenario_hash}`",
         "",
         "Open this only after saving the completed phase-1 CSV. The benchmark's",
         "declared pre-gap operation is now shown so every auditor evaluates the",
@@ -183,6 +202,7 @@ def export_packet(tasks_dir: str, output_dir: str, auditor: str) -> None:
     ]
     key: dict[str, Any] = {
         "schema_version": "0.5",
+        "scenario_manifest_sha256": scenario_hash,
         "auditor": auditor,
         "instructions": "PRIVATE: do not distribute before both phases are complete.",
         "items": {},
@@ -218,7 +238,7 @@ def export_packet(tasks_dir: str, output_dir: str, auditor: str) -> None:
                 "",
                 *_dialogue_markdown(_dialogue(task)),
                 "",
-                "### Causal-alignment labels",
+                "### Does the clue match the success rule? (`causal_alignment`)",
                 "",
                 *_definitions_markdown(
                     task["belief_definitions"]["causal_alignment"]
@@ -228,7 +248,7 @@ def export_packet(tasks_dir: str, output_dir: str, auditor: str) -> None:
                 "",
                 *_menu_markdown(pre_menu),
                 "",
-                "Record the action label, causal-alignment label, answerability,",
+                "Record the action label, rule-match label, answerability,",
                 "ambiguity, and supporting dialogue turn in the phase-1 CSV.",
                 "",
                 "---",
@@ -374,6 +394,7 @@ def _score_auditor(root: Path, auditor: str) -> tuple[dict[str, Any], dict[str, 
     n = len(key["items"])
     metrics = {
         "auditor": auditor,
+        "scenario_manifest_sha256": key.get("scenario_manifest_sha256"),
         "n": n,
         "pre_action_accuracy": sum(
             row["pre_action"] == key["items"][item_id]["gold_pre_action"]
@@ -406,6 +427,9 @@ def report(output_dir: str, auditors: list[str]) -> None:
     root = Path(output_dir)
     scored = [_score_auditor(root, auditor) for auditor in auditors]
     metrics = [item[0] for item in scored]
+    hashes = {metric.get("scenario_manifest_sha256") for metric in metrics}
+    if len(hashes) != 1 or None in hashes:
+        raise SystemExit("Auditor packets do not share one recorded scenario freeze.")
     canonical = {metric["auditor"]: rows for metric, rows in scored}
     lines = ["# Schema-v0.5 internal author-audit report", ""]
     for metric in metrics:

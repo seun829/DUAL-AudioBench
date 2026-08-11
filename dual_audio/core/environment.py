@@ -245,6 +245,40 @@ def execute_user_action(
     state["last_gap_user_action"] = action
     state["gap_user_action_minute"] = user_action.get("at_minute")
 
+    # Schema-v0.5 user interventions may declare atomic field effects.  These
+    # are action semantics only; the subsequent domain transition still derives
+    # the terminal state from the updated world and external event.
+    effects = user_action.get("effects")
+    if effects is not None:
+        if not isinstance(effects, list) or not effects:
+            raise InvalidStateError("user_action.effects must be a non-empty list")
+        for effect in effects:
+            target = effect.get("target")
+            if not isinstance(target, str) or target not in state:
+                raise InvalidStateError(f"Unknown user-action target: {target}")
+            has_value = "value" in effect
+            has_source = "copy_from" in effect
+            if has_value == has_source:
+                raise InvalidStateError(
+                    "Each user-action effect needs exactly one of value/copy_from"
+                )
+            if has_source:
+                source = effect["copy_from"]
+                if source not in state:
+                    raise InvalidStateError(
+                        f"Unknown user-action source: {source}"
+                    )
+                state[target] = copy.deepcopy(state[source])
+            else:
+                state[target] = copy.deepcopy(effect["value"])
+        observation = user_action.get("observation")
+        if not isinstance(observation, str) or not observation.strip():
+            raise InvalidStateError(
+                "Declarative user actions require a public observation"
+            )
+        state["gap_user_action_observation"] = observation.strip()
+        return state
+
     if domain == "tech_support":
         if action != "power_cycle_during_maintenance":
             raise InvalidStateError(f"Unknown tech-support user action: {action}")

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import unittest
 
 from dual_audio.core.beliefs import (
@@ -9,6 +10,7 @@ from dual_audio.core.beliefs import (
 from dual_audio.core.types import AgentResponse
 from dual_audio.interaction.runner import _belief_checkpoint
 from scenarios.generate import build
+from score import summarize_beliefs
 
 
 class BeliefTests(unittest.TestCase):
@@ -120,6 +122,36 @@ class BeliefTests(unittest.TestCase):
             checkpoint["uncertainty_behavior"],
             "UNCERTAIN_RECHECKED",
         )
+
+    def test_aggregate_belief_metrics_include_nll_and_entropy(self):
+        task = build("router", "1-2", 0)
+        response = AgentResponse(
+            state_belief={
+                "firmware_status": {
+                    "not_started": 0.8,
+                    "updating": 0.05,
+                    "stuck": 0.05,
+                    "completed": 0.05,
+                    "interrupted": 0.05,
+                }
+            },
+            needs_revalidation=False,
+        )
+        checkpoint = _belief_checkpoint(task, task["initial_state"], response)
+        row = {
+            "belief_checkpoints": {
+                name: checkpoint
+                for name in ("pre_gap", "post_observation", "pre_final_action")
+            },
+            "belief_revision": {
+                "mean_revision_gain": None,
+                "mean_final_revision_gain": None,
+                "mean_stale_belief_persistence": None,
+            },
+        }
+        metrics = summarize_beliefs([row])
+        self.assertAlmostEqual(metrics["mean_nll"], -math.log(0.8))
+        self.assertGreater(metrics["mean_normalized_entropy"], 0.0)
 
 
 if __name__ == "__main__":

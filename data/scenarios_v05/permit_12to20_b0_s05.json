@@ -170,8 +170,19 @@
       "minimum_minutes": 25
     },
     "user_action": {
-      "action": "visit_local_office",
-      "at_minute": 10
+      "action": "upload_applicant_named_proof",
+      "at_minute": 8,
+      "observation": "While you were unavailable, I uploaded replacement proof in the permit applicant's name.",
+      "effects": [
+        {
+          "target": "proof_name",
+          "copy_from": "applicant_name"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -266,7 +277,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because the checking interval has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": [
         "PREMATURE_CLOSE"
       ]

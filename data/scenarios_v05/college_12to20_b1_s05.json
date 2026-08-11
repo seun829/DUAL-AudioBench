@@ -170,8 +170,19 @@
       "minimum_minutes": 30
     },
     "user_action": {
-      "action": "email_records_office",
-      "at_minute": 12
+      "action": "complete_prior_study_assessment",
+      "at_minute": 10,
+      "observation": "While you were unavailable, the records office completed the required prior-study assessment.",
+      "effects": [
+        {
+          "target": "prior_study_state",
+          "copy_from": "required_state"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -268,7 +279,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because the registration interval has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": []
     }
   ],

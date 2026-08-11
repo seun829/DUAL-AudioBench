@@ -103,15 +103,17 @@ CAUSAL_DESIGNS = {
             "Based on the connection time I mentioned earlier, what should we do next?"
         ),
         "causal_definitions": {
-            "misaligned": "the connection window is shorter than the departure delay",
-            "aligned": "the connection window remains longer than the departure delay",
+            "misaligned": "the scheduled connection window is the short ninety-minute option",
+            "aligned": "the scheduled connection window is the long four-hour option",
         },
         "branches": [
             {
                 "id": "misaligned",
                 "clue": "There are only ninety minutes between the flights in Denver.",
                 "clue_answer": "the Denver connection time was ninety minutes",
-                "state_patch": {"layover_minutes": 90, "connection_status": "at_risk_if_delayed"},
+                # Before any delay is announced, both branches are viable.  The
+                # later two-hour event is what makes only this branch missed.
+                "state_patch": {"layover_minutes": 90, "connection_status": "viable"},
                 "expected_post_action": "protect_onward_segment",
                 "post_answer": "120 minutes",
             },
@@ -541,6 +543,160 @@ CAUSAL_DESIGNS = {
                 "expected_post_action": "close_case",
                 "post_answer": "it was issued",
             },
+        ],
+    },
+}
+
+
+# These user-initiated corrections occur during the fast-forward gap.  Each
+# one repairs the relation encoded by the misaligned branch before the external
+# processor runs.  Effects are declarative action semantics, not precomputed
+# terminal states: the normal transition rules still determine the outcome.
+# Router and flight retain their domain-specific interruption/protection actions
+# from the base templates because those already change a scored state.
+HIDDEN_USER_INTERVENTIONS = {
+    "pharmacy": {
+        "action": "correct_pharmacy_billing_profile",
+        "at_minute": 8,
+        "observation": (
+            "While you were unavailable, I corrected the pharmacy billing "
+            "profile so it uses the active plan."
+        ),
+        "effects": [
+            {"target": "billing_plan", "copy_from": "active_plan"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "bank": {
+        "action": "update_dispute_card_identifier",
+        "at_minute": 10,
+        "observation": (
+            "While you were unavailable, I updated the dispute so its card "
+            "identifier matches the current card record."
+        ),
+        "effects": [
+            {"target": "charge_card", "copy_from": "card_on_file"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "clinic": {
+        "action": "replace_referral_with_qualifying_source",
+        "at_minute": 12,
+        "observation": (
+            "While you were unavailable, I replaced the referral with one "
+            "from the required primary-care source."
+        ),
+        "effects": [
+            {"target": "referral_source", "copy_from": "required_source"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "delivery": {
+        "action": "correct_parcel_destination",
+        "at_minute": 12,
+        "observation": (
+            "While you were unavailable, I had the parcel destination "
+            "corrected to match the current account address."
+        ),
+        "effects": [
+            {"target": "label_address", "copy_from": "account_address"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "utility": {
+        "action": "register_missing_supply_points",
+        "at_minute": 9,
+        "observation": (
+            "While you were unavailable, I added every property meter to the "
+            "supplier account."
+        ),
+        "effects": [
+            {"target": "registered_points", "copy_from": "actual_points"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "saas": {
+        "action": "redirect_reset_to_active_identity_system",
+        "at_minute": 7,
+        "observation": (
+            "While you were unavailable, I redirected the reset to the "
+            "company's active identity system."
+        ),
+        "effects": [
+            {"target": "reset_target", "copy_from": "authentication_mode"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "warranty": {
+        "action": "switch_to_matching_purchase_route",
+        "at_minute": 11,
+        "observation": (
+            "While you were unavailable, I moved the repair request to the "
+            "purchase route that covers the original seller channel."
+        ),
+        "effects": [
+            {"target": "covered_channel", "copy_from": "purchase_channel"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "tenancy": {
+        "action": "refresh_contractor_access_authority",
+        "at_minute": 10,
+        "observation": (
+            "While you were unavailable, I had the contractor's access "
+            "authority updated to the current required credentials."
+        ),
+        "effects": [
+            {"target": "vendor_credentials", "copy_from": "required_credentials"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "telecom": {
+        "action": "update_transfer_ownership_record",
+        "at_minute": 9,
+        "observation": (
+            "While you were unavailable, I updated the transfer to the "
+            "required direct ownership record."
+        ),
+        "effects": [
+            {"target": "ownership_record", "copy_from": "required_record"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "college": {
+        "action": "complete_prior_study_assessment",
+        "at_minute": 10,
+        "observation": (
+            "While you were unavailable, the records office completed the "
+            "required prior-study assessment."
+        ),
+        "effects": [
+            {"target": "prior_study_state", "copy_from": "required_state"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "motor": {
+        "action": "align_policyholder_record",
+        "at_minute": 12,
+        "observation": (
+            "While you were unavailable, I corrected the policy record so it "
+            "matches the registered keeper."
+        ),
+        "effects": [
+            {"target": "policy_name", "copy_from": "keeper_name"},
+            {"target": "causal_alignment", "value": "aligned"},
+        ],
+    },
+    "permit": {
+        "action": "upload_applicant_named_proof",
+        "at_minute": 8,
+        "observation": (
+            "While you were unavailable, I uploaded replacement proof in the "
+            "permit applicant's name."
+        ),
+        "effects": [
+            {"target": "proof_name", "copy_from": "applicant_name"},
+            {"target": "causal_alignment", "value": "aligned"},
         ],
     },
 }

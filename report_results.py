@@ -101,6 +101,9 @@ def usage_summary(rows: list[dict]) -> dict[str, Any]:
     """Aggregate trajectory-level API telemetry."""
 
     usage = [row.get("api_usage", {}) for row in rows]
+    provider_counts = Counter()
+    for item in usage:
+        provider_counts.update(item.get("provider_counts", {}))
     return {
         "trajectories": len(rows),
         "model_calls": sum(int(item.get("model_calls", 0) or 0) for item in usage),
@@ -126,6 +129,7 @@ def usage_summary(rows: list[dict]) -> dict[str, Any]:
             3,
         ),
         "errors": sum(bool(row.get("error")) for row in rows),
+        "provider_counts": dict(provider_counts),
     }
 
 
@@ -362,15 +366,30 @@ def build_metrics(rows: list[dict]) -> dict[str, Any]:
         )
         model_scenarios = len({row["scenario_id"] for row in model_rows})
         model_seeds = len({row["seed"] for row in model_rows})
-        expected_per_model = (
+        observed_grid_expected = (
             model_scenarios * len(condition_groups) * max(model_seeds, 1)
+        )
+        schema_versions = {str(row.get("schema_version")) for row in model_rows}
+        required_conditions = (
+            tuple(CONTROL_CONDITIONS)
+            if schema_versions == {"0.5"}
+            else tuple(sorted(condition_groups))
+        )
+        registered_grid_expected = (
+            model_scenarios * len(required_conditions) * max(model_seeds, 1)
         )
         output["models"][model] = {
             "usage": usage_summary(model_rows),
             "coverage": {
                 "completed": len(model_rows),
-                "expected": expected_per_model,
-                "fraction": len(model_rows) / expected_per_model,
+                "expected": registered_grid_expected,
+                "fraction": len(model_rows) / registered_grid_expected,
+                "observed_grid_expected": observed_grid_expected,
+                "observed_grid_fraction": len(model_rows) / observed_grid_expected,
+                "conditions_observed": sorted(condition_groups),
+                "conditions_missing": sorted(
+                    set(required_conditions) - set(condition_groups)
+                ),
             },
             "overall": {
                 "n": len(model_rows),
@@ -448,6 +467,8 @@ def write_metrics_csv(metrics: dict[str, Any], path: Path) -> None:
         "revision_gain",
         "stale_belief_persistence",
         "brier",
+        "nll",
+        "normalized_entropy",
         "ece",
         "prompt_tokens",
         "completion_tokens",
@@ -517,6 +538,10 @@ def write_metrics_csv(metrics: dict[str, Any], path: Path) -> None:
                             "stale_belief_persistence"
                         ],
                         "brier": beliefs["mean_brier"],
+                        "nll": beliefs["mean_nll"],
+                        "normalized_entropy": beliefs[
+                            "mean_normalized_entropy"
+                        ],
                         "ece": beliefs["ece"],
                         "prompt_tokens": usage["prompt_tokens"],
                         "completion_tokens": usage["completion_tokens"],
@@ -662,6 +687,28 @@ def markdown_report(metrics: dict[str, Any]) -> str:
                 f"{_percent(beliefs['checkpoint_accuracy']['pre_gap'])} | "
                 f"{_percent(beliefs['checkpoint_accuracy']['post_observation'])} | "
                 f"${condition_data['usage']['cost']:.4f} |"
+            )
+        lines.extend(
+            [
+                "",
+                "### Belief probability metrics",
+                "",
+                "| Condition | Brier | NLL | Normalized entropy | ECE | Revision gain | Stale mass |",
+                "|---|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for condition in CONTROL_CONDITIONS:
+            condition_data = data["conditions"].get(condition)
+            if not condition_data:
+                continue
+            beliefs = condition_data["beliefs"]
+            lines.append(
+                f"| {condition} | {_number(beliefs['mean_brier'])} | "
+                f"{_number(beliefs['mean_nll'])} | "
+                f"{_number(beliefs['mean_normalized_entropy'])} | "
+                f"{_number(beliefs['ece'])} | "
+                f"{_number(beliefs['revision_gain'])} | "
+                f"{_number(beliefs['stale_belief_persistence'])} |"
             )
         controls = data["controls"]
         lines.extend(

@@ -171,8 +171,19 @@
       "minimum_minutes": 20
     },
     "user_action": {
-      "action": "contact_plan_provider",
-      "at_minute": 8
+      "action": "correct_pharmacy_billing_profile",
+      "at_minute": 8,
+      "observation": "While you were unavailable, I corrected the pharmacy billing profile so it uses the active plan.",
+      "effects": [
+        {
+          "target": "billing_plan",
+          "copy_from": "active_plan"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -267,7 +278,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because processing time has elapsed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": [
         "PREMATURE_CLOSE"
       ]

@@ -272,7 +272,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the case because sufficient time has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": []
     }
   ],

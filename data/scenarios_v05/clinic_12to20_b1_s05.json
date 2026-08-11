@@ -170,8 +170,19 @@
       "minimum_minutes": 30
     },
     "user_action": {
-      "action": "call_insurer",
-      "at_minute": 12
+      "action": "replace_referral_with_qualifying_source",
+      "at_minute": 12,
+      "observation": "While you were unavailable, I replaced the referral with one from the required primary-care source.",
+      "effects": [
+        {
+          "target": "referral_source",
+          "copy_from": "required_source"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
     }
   },
   "belief_schema": {
@@ -268,7 +279,7 @@
     },
     {
       "action": "close_case",
-      "description": "Close the request because the review interval has passed.",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
       "failure_tags": []
     }
   ],
