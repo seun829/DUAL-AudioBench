@@ -14,3 +14,6 @@ results/fake_closed_loop_smoke_retention.png
 
 # Local API credentials (OpenRouter/Gemini keys).
 .env
+
+# Blinded internal-audit answer keys; distribute only the public packets.
+paper_results/v05/internal_audit/private/
