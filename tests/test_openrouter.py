@@ -68,6 +68,7 @@ class OpenRouterAdapterTests(unittest.TestCase):
         request = post.call_args.kwargs["json"]
         self.assertNotIn("reasoning", request)
         self.assertEqual(request["model"], "openai/gpt-audio-mini")
+        self.assertNotIn("response_format", request)
 
     @patch.dict(
         os.environ,

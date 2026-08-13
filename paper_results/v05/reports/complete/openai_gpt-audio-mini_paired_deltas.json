@@ -1,0 +1,598 @@
+{
+  "full_vs_clue_removed": {
+    "left": "full_audio",
+    "right": "clue_removed",
+    "paired_n": 168,
+    "fields": {
+      "trajectory_success": {
+        "n": 168,
+        "full_audio_rate": 0.0,
+        "clue_removed_rate": 0.006,
+        "delta": -0.006,
+        "left_only": 0,
+        "right_only": 1,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0179,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0
+      },
+      "pre_gap_success": {
+        "n": 168,
+        "full_audio_rate": 0.6548,
+        "clue_removed_rate": 0.5536,
+        "delta": 0.1012,
+        "left_only": 35,
+        "right_only": 18,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0119,
+          0.1786
+        ],
+        "exact_sign_flip_p": 0.060547
+      },
+      "post_gap_success": {
+        "n": 168,
+        "full_audio_rate": 0.2202,
+        "clue_removed_rate": 0.2679,
+        "delta": -0.0476,
+        "left_only": 14,
+        "right_only": 22,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.1429,
+          0.0536
+        ],
+        "exact_sign_flip_p": 0.433594
+      },
+      "state_belief_success": {
+        "n": 168,
+        "full_audio_rate": 0.0298,
+        "clue_removed_rate": 0.0179,
+        "delta": 0.0119,
+        "left_only": 5,
+        "right_only": 3,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0119,
+          0.0357
+        ],
+        "exact_sign_flip_p": 0.625
+      }
+    },
+    "post_observation_belief_effect": {
+      "delta": 0.1369,
+      "domain_clusters": 14,
+      "domain_clustered_ci": [
+        0.0595,
+        0.2143
+      ],
+      "exact_sign_flip_p": 0.008789
+    },
+    "belief": {
+      "full_audio": {
+        "revision_gain": -0.0102,
+        "final_revision_gain": 0.0276,
+        "stale_belief_persistence": 0.1035,
+        "mean_brier": 0.5588,
+        "mean_nll": 1.3263,
+        "mean_normalized_entropy": 0.8033,
+        "ece": 0.0776,
+        "pre_action_belief_consistency": 0.1497,
+        "final_action_belief_consistency": 0.256,
+        "risk_calibration_consistency": 0.5456
+      },
+      "clue_removed": {
+        "revision_gain": 0.0452,
+        "final_revision_gain": 0.0878,
+        "stale_belief_persistence": 0.1155,
+        "mean_brier": 0.678,
+        "mean_nll": 1.2279,
+        "mean_normalized_entropy": 0.8877,
+        "ece": 0.1478,
+        "pre_action_belief_consistency": 0.2202,
+        "final_action_belief_consistency": 0.2814,
+        "risk_calibration_consistency": 0.7083
+      }
+    }
+  },
+  "no_state_change_vs_full_audio": {
+    "left": "gap_no_state_change",
+    "right": "full_audio",
+    "paired_n": 168,
+    "fields": {
+      "trajectory_success": {
+        "n": 168,
+        "gap_no_state_change_rate": 0.0298,
+        "full_audio_rate": 0.0,
+        "delta": 0.0298,
+        "left_only": 5,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.006,
+          0.0595
+        ],
+        "exact_sign_flip_p": 0.125
+      },
+      "pre_gap_success": {
+        "n": 168,
+        "gap_no_state_change_rate": 0.6131,
+        "full_audio_rate": 0.6548,
+        "delta": -0.0417,
+        "left_only": 15,
+        "right_only": 22,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0952,
+          0.0119
+        ],
+        "exact_sign_flip_p": 0.241211
+      },
+      "post_gap_success": {
+        "n": 168,
+        "gap_no_state_change_rate": 0.2143,
+        "full_audio_rate": 0.2202,
+        "delta": -0.006,
+        "left_only": 31,
+        "right_only": 32,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.1488,
+          0.131
+        ],
+        "exact_sign_flip_p": 1.0
+      },
+      "state_belief_success": {
+        "n": 168,
+        "gap_no_state_change_rate": 0.1071,
+        "full_audio_rate": 0.0298,
+        "delta": 0.0774,
+        "left_only": 18,
+        "right_only": 5,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.006,
+          0.1548
+        ],
+        "exact_sign_flip_p": 0.097656
+      }
+    },
+    "post_observation_belief_effect": {
+      "delta": 0.3214,
+      "domain_clusters": 14,
+      "domain_clustered_ci": [
+        0.1905,
+        0.4464
+      ],
+      "exact_sign_flip_p": 0.001099
+    },
+    "belief": {
+      "gap_no_state_change": {
+        "revision_gain": 0.2721,
+        "final_revision_gain": 0.2117,
+        "stale_belief_persistence": 0.1258,
+        "mean_brier": 0.452,
+        "mean_nll": 0.9671,
+        "mean_normalized_entropy": 0.7679,
+        "ece": 0.0807,
+        "pre_action_belief_consistency": 0.1617,
+        "final_action_belief_consistency": 0.3274,
+        "risk_calibration_consistency": 0.5595
+      },
+      "full_audio": {
+        "revision_gain": -0.0102,
+        "final_revision_gain": 0.0276,
+        "stale_belief_persistence": 0.1035,
+        "mean_brier": 0.5588,
+        "mean_nll": 1.3263,
+        "mean_normalized_entropy": 0.8033,
+        "ece": 0.0776,
+        "pre_action_belief_consistency": 0.1497,
+        "final_action_belief_consistency": 0.256,
+        "risk_calibration_consistency": 0.5456
+      }
+    }
+  },
+  "short_distance_vs_full_audio": {
+    "left": "state_change_short",
+    "right": "full_audio",
+    "paired_n": 168,
+    "fields": {
+      "trajectory_success": {
+        "n": 168,
+        "state_change_short_rate": 0.0119,
+        "full_audio_rate": 0.0,
+        "delta": 0.0119,
+        "left_only": 2,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0,
+          0.0357
+        ],
+        "exact_sign_flip_p": 1.0
+      },
+      "pre_gap_success": {
+        "n": 168,
+        "state_change_short_rate": 0.6667,
+        "full_audio_rate": 0.6548,
+        "delta": 0.0119,
+        "left_only": 16,
+        "right_only": 14,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0536,
+          0.0714
+        ],
+        "exact_sign_flip_p": 0.862305
+      },
+      "post_gap_success": {
+        "n": 168,
+        "state_change_short_rate": 0.2083,
+        "full_audio_rate": 0.2202,
+        "delta": -0.0119,
+        "left_only": 16,
+        "right_only": 18,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0655,
+          0.0476
+        ],
+        "exact_sign_flip_p": 0.851562
+      },
+      "state_belief_success": {
+        "n": 168,
+        "state_change_short_rate": 0.0536,
+        "full_audio_rate": 0.0298,
+        "delta": 0.0238,
+        "left_only": 9,
+        "right_only": 5,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0179,
+          0.0655
+        ],
+        "exact_sign_flip_p": 0.4375
+      }
+    },
+    "post_observation_belief_effect": {
+      "delta": 0.0179,
+      "domain_clusters": 14,
+      "domain_clustered_ci": [
+        -0.0595,
+        0.0893
+      ],
+      "exact_sign_flip_p": 0.755371
+    },
+    "belief": {
+      "state_change_short": {
+        "revision_gain": -0.0573,
+        "final_revision_gain": -0.0478,
+        "stale_belief_persistence": 0.1144,
+        "mean_brier": 0.5679,
+        "mean_nll": 1.5476,
+        "mean_normalized_entropy": 0.7713,
+        "ece": 0.0663,
+        "pre_action_belief_consistency": 0.119,
+        "final_action_belief_consistency": 0.3095,
+        "risk_calibration_consistency": 0.5635
+      },
+      "full_audio": {
+        "revision_gain": -0.0102,
+        "final_revision_gain": 0.0276,
+        "stale_belief_persistence": 0.1035,
+        "mean_brier": 0.5588,
+        "mean_nll": 1.3263,
+        "mean_normalized_entropy": 0.8033,
+        "ece": 0.0776,
+        "pre_action_belief_consistency": 0.1497,
+        "final_action_belief_consistency": 0.256,
+        "risk_calibration_consistency": 0.5456
+      }
+    }
+  },
+  "explicit_user_update_vs_full_audio": {
+    "left": "hidden_user_action",
+    "right": "full_audio",
+    "paired_n": 168,
+    "fields": {
+      "trajectory_success": {
+        "n": 168,
+        "hidden_user_action_rate": 0.0893,
+        "full_audio_rate": 0.0,
+        "delta": 0.0893,
+        "left_only": 15,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0238,
+          0.1726
+        ],
+        "exact_sign_flip_p": 0.015625
+      },
+      "pre_gap_success": {
+        "n": 168,
+        "hidden_user_action_rate": 0.6548,
+        "full_audio_rate": 0.6548,
+        "delta": 0.0,
+        "left_only": 18,
+        "right_only": 18,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0833,
+          0.0833
+        ],
+        "exact_sign_flip_p": 1.0
+      },
+      "post_gap_success": {
+        "n": 168,
+        "hidden_user_action_rate": 0.631,
+        "full_audio_rate": 0.2202,
+        "delta": 0.4107,
+        "left_only": 86,
+        "right_only": 17,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.2202,
+          0.5714
+        ],
+        "exact_sign_flip_p": 0.002197
+      },
+      "state_belief_success": {
+        "n": 168,
+        "hidden_user_action_rate": 0.1071,
+        "full_audio_rate": 0.0298,
+        "delta": 0.0774,
+        "left_only": 18,
+        "right_only": 5,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0119,
+          0.1607
+        ],
+        "exact_sign_flip_p": 0.089844
+      }
+    },
+    "post_observation_belief_effect": {
+      "delta": 0.369,
+      "domain_clusters": 14,
+      "domain_clustered_ci": [
+        0.1905,
+        0.5238
+      ],
+      "exact_sign_flip_p": 0.003174
+    },
+    "belief": {
+      "hidden_user_action": {
+        "revision_gain": 0.4346,
+        "final_revision_gain": 0.4513,
+        "stale_belief_persistence": 0.1201,
+        "mean_brier": 0.3937,
+        "mean_nll": 0.9907,
+        "mean_normalized_entropy": 0.6523,
+        "ece": 0.0826,
+        "pre_action_belief_consistency": 0.1617,
+        "final_action_belief_consistency": 0.6905,
+        "risk_calibration_consistency": 0.7282
+      },
+      "full_audio": {
+        "revision_gain": -0.0102,
+        "final_revision_gain": 0.0276,
+        "stale_belief_persistence": 0.1035,
+        "mean_brier": 0.5588,
+        "mean_nll": 1.3263,
+        "mean_normalized_entropy": 0.8033,
+        "ece": 0.0776,
+        "pre_action_belief_consistency": 0.1497,
+        "final_action_belief_consistency": 0.256,
+        "risk_calibration_consistency": 0.5456
+      }
+    }
+  },
+  "neutral_audio_vs_full_audio": {
+    "left": "neutral_audio",
+    "right": "full_audio",
+    "paired_n": 168,
+    "fields": {
+      "trajectory_success": {
+        "n": 168,
+        "neutral_audio_rate": 0.006,
+        "full_audio_rate": 0.0,
+        "delta": 0.006,
+        "left_only": 1,
+        "right_only": 0,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          0.0,
+          0.0179
+        ],
+        "exact_sign_flip_p": 1.0
+      },
+      "pre_gap_success": {
+        "n": 168,
+        "neutral_audio_rate": 0.631,
+        "full_audio_rate": 0.6548,
+        "delta": -0.0238,
+        "left_only": 14,
+        "right_only": 18,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0833,
+          0.0417
+        ],
+        "exact_sign_flip_p": 0.580078
+      },
+      "post_gap_success": {
+        "n": 168,
+        "neutral_audio_rate": 0.1905,
+        "full_audio_rate": 0.2202,
+        "delta": -0.0298,
+        "left_only": 11,
+        "right_only": 16,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0833,
+          0.0179
+        ],
+        "exact_sign_flip_p": 0.408203
+      },
+      "state_belief_success": {
+        "n": 168,
+        "neutral_audio_rate": 0.0417,
+        "full_audio_rate": 0.0298,
+        "delta": 0.0119,
+        "left_only": 7,
+        "right_only": 5,
+        "domain_clusters": 14,
+        "domain_clustered_ci": [
+          -0.0357,
+          0.0714
+        ],
+        "exact_sign_flip_p": 0.875
+      }
+    },
+    "post_observation_belief_effect": {
+      "delta": 0.0119,
+      "domain_clusters": 14,
+      "domain_clustered_ci": [
+        -0.0536,
+        0.0774
+      ],
+      "exact_sign_flip_p": 0.865723
+    },
+    "belief": {
+      "neutral_audio": {
+        "revision_gain": -0.0078,
+        "final_revision_gain": 0.0173,
+        "stale_belief_persistence": 0.1167,
+        "mean_brier": 0.5605,
+        "mean_nll": 1.1348,
+        "mean_normalized_entropy": 0.8008,
+        "ece": 0.057,
+        "pre_action_belief_consistency": 0.1607,
+        "final_action_belief_consistency": 0.3434,
+        "risk_calibration_consistency": 0.5476
+      },
+      "full_audio": {
+        "revision_gain": -0.0102,
+        "final_revision_gain": 0.0276,
+        "stale_belief_persistence": 0.1035,
+        "mean_brier": 0.5588,
+        "mean_nll": 1.3263,
+        "mean_normalized_entropy": 0.8033,
+        "ece": 0.0776,
+        "pre_action_belief_consistency": 0.1497,
+        "final_action_belief_consistency": 0.256,
+        "risk_calibration_consistency": 0.5456
+      }
+    }
+  },
+  "prosody_high_vs_low": {
+    "paired_n": 119,
+    "unique_stimuli": 71,
+    "both_style_random_chance": 0.0625,
+    "high_style_accuracy": 0.37815126050420167,
+    "low_style_accuracy": 0.09243697478991597,
+    "high_style": {
+      "mean": 0.3628968253968254,
+      "ci": [
+        0.2457482993197279,
+        0.4840960626674912
+      ],
+      "clusters": 14
+    },
+    "low_style": {
+      "mean": 0.09133168418882705,
+      "ci": [
+        0.05757575757575757,
+        0.1246340960626675
+      ],
+      "clusters": 14
+    },
+    "both_style_correct": {
+      "mean": 0.022366522366522368,
+      "ci": [
+        0.0,
+        0.04617604617604617
+      ],
+      "clusters": 14
+    },
+    "style_contrast": {
+      "mean": 0.06516955266955267,
+      "ci": [
+        -0.06530612244897958,
+        0.1993841475984333
+      ],
+      "clusters": 14
+    },
+    "technical_action_invariance": {
+      "mean": 0.6261750154607297,
+      "ci": [
+        0.5007988043702329,
+        0.7523088023088024
+      ],
+      "clusters": 14
+    },
+    "post_observation_top_belief_invariance": {
+      "mean": 0.46376262626262627,
+      "ci": [
+        0.35948773448773447,
+        0.5666099773242631
+      ],
+      "clusters": 14
+    },
+    "post_observation_belief_jsd": {
+      "mean": 0.06442772582798616,
+      "ci": [
+        0.05438589742847173,
+        0.07537656371839929
+      ],
+      "clusters": 14
+    },
+    "pre_final_belief_jsd": {
+      "mean": 0.055758670771336824,
+      "ci": [
+        0.046118251944986886,
+        0.06632539433332738
+      ],
+      "clusters": 14
+    },
+    "categories": {
+      "confused": {
+        "pairs": 38,
+        "both_correct": {
+          "mean": 0.027777777777777776,
+          "ci": [
+            0.0,
+            0.08333333333333333
+          ],
+          "clusters": 4
+        }
+      },
+      "frustrated": {
+        "pairs": 35,
+        "both_correct": {
+          "mean": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "clusters": 5
+        }
+      },
+      "urgent": {
+        "pairs": 46,
+        "both_correct": {
+          "mean": 0.0404040404040404,
+          "ci": [
+            0.0,
+            0.08484848484848484
+          ],
+          "clusters": 5
+        }
+      }
+    }
+  }
+}

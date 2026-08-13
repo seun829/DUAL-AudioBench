@@ -210,6 +210,21 @@ def _response_format(prompt: str) -> dict | None:
     }
 
 
+def _model_response_format(prompt: str) -> dict | None:
+    """Use the strongest JSON mode the selected upstream model accepts.
+
+    OpenAI's audio models advertise ``response_format`` through OpenRouter but
+    the upstream provider currently rejects both ``json_schema`` and
+    ``json_object``.  Their prompts still contain an explicit JSON shape; the
+    benchmark's hardened parser and validity checks reject malformed reports.
+    """
+
+    response_format = _response_format(prompt)
+    if response_format and MODEL.startswith("openai/gpt-audio"):
+        return None
+    return response_format
+
+
 def _response_text(payload: dict) -> str:
     """Normalize OpenRouter string or typed-list message content to text."""
 
@@ -329,7 +344,7 @@ def ask(audio_path: str, question: str) -> str:
     }
     if MODEL.startswith("google/gemini"):
         body["reasoning"] = {"effort": "none"}
-    response_format = _response_format(question)
+    response_format = _model_response_format(question)
     if response_format:
         body["response_format"] = response_format
     return _post(body, audio_bytes=len(raw), seconds=_wav_seconds(path))
@@ -353,7 +368,7 @@ def ask_text(prompt: str) -> str:
     }
     if MODEL.startswith("google/gemini"):
         body["reasoning"] = {"effort": "none"}
-    response_format = _response_format(prompt)
+    response_format = _model_response_format(prompt)
     if response_format:
         body["response_format"] = response_format
     return _post(body)

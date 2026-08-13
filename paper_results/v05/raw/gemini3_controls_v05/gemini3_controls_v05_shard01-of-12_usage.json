@@ -1,0 +1,17 @@
+{
+  "model": "google/gemini-3-flash-preview",
+  "calls": 840,
+  "audio_calls": 840,
+  "text_calls": 0,
+  "prompt_tokens": 1539886,
+  "completion_tokens": 30027,
+  "total_tokens": 1569913,
+  "audio_bytes_sent": 1782936960,
+  "audio_seconds_sent": 55715.625,
+  "cost_usd": 1.556655,
+  "errors": 0,
+  "provider_counts": {
+    "Google": 823,
+    "Google AI Studio": 17
+  }
+}

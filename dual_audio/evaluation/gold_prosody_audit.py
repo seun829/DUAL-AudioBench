@@ -1,0 +1,363 @@
+"""Export and score a one-author prosody audit on the scenario gold set.
+
+Usage:
+  python -m dual_audio.evaluation.gold_prosody_audit export \
+      data/scenarios_v05 paper_results/v05/internal_audit author_01
+
+  python -m dual_audio.evaluation.gold_prosody_audit report \
+      paper_results/v05/internal_audit author_01
+"""
+
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import shutil
+import sys
+import wave
+from collections import Counter
+from pathlib import Path
+from typing import Any
+
+from dual_audio.core.conditions import CONDITIONS, prosody_for
+from dual_audio.core.environment import execute_action, transition
+from dual_audio.evaluation.audit_utils import (
+    completed_gold_items,
+    safe_slug,
+    stable_rng,
+)
+from dual_audio.modalities.audio import TurnAudioRenderer
+from dual_audio.users.scripted import ScriptedUserSimulator
+
+
+RESPONSE_FIELDS = (
+    "auditor",
+    "audit_item_id",
+    "clip_a_delivery_high_or_low",
+    "clip_b_delivery_high_or_low",
+    "clip_a_perceived_category",
+    "clip_b_perceived_category",
+    "more_intense_clip_a_or_b_or_same",
+    "clip_a_appropriate_response_style",
+    "clip_b_appropriate_response_style",
+    "confidence_1_to_5",
+    "clip_a_intelligibility_1_to_5",
+    "clip_b_intelligibility_1_to_5",
+    "clip_a_naturalness_1_to_5",
+    "clip_b_naturalness_1_to_5",
+    "notes",
+)
+
+
+def _gold_observation(task: dict, condition_name: str) -> tuple[str, str, str]:
+    condition = CONDITIONS[condition_name]
+    action = task["pre_gap"]["correct_action"]
+    state = execute_action(task["domain"], task["initial_state"], action)
+    state = transition(
+        task["domain"],
+        state,
+        action,
+        task["transition"]["elapsed_minutes"],
+        task["transition"]["external_event"],
+        None,
+    )
+    text = ScriptedUserSimulator().post_gap(task, state, condition)
+    prosody, style = prosody_for(task, condition)
+    if style is None:
+        raise ValueError(f"{condition_name} must declare an expected style.")
+    return text, prosody, style
+
+
+def _duration_seconds(path: Path) -> float:
+    with wave.open(str(path), "rb") as handle:
+        return handle.getnframes() / handle.getframerate()
+
+
+def _render_or_reuse(
+    renderer: TurnAudioRenderer,
+    text: str,
+    prosody: str,
+    voice: str | None,
+) -> Path:
+    """Reuse an identical runtime stimulus before invoking local TTS."""
+
+    resolved_voice = voice or "en-us+f3"
+    filename = (
+        hashlib.sha256(
+            f"user|{resolved_voice}|{prosody}|{text}".encode("utf-8")
+        ).hexdigest()[:24]
+        + ".wav"
+    )
+    runtime_root = Path.cwd() / "data" / "runtime_audio"
+    existing = sorted(runtime_root.glob(f"*/turns/{filename}"))
+    if existing:
+        return existing[0]
+    return renderer.render(text, "user", prosody, voice=voice)
+
+
+def export_packet(tasks_dir: str, audit_root: str, auditor: str) -> None:
+    """Render two blinded post-gap clips per gold-set scenario."""
+
+    root = Path(audit_root)
+    output = root / "prosody"
+    public = output / "public"
+    private = output / "private"
+    clips_dir = public / "clips"
+    clips_dir.mkdir(parents=True, exist_ok=True)
+    private.mkdir(parents=True, exist_ok=True)
+    slug = safe_slug(auditor)
+    gold_items = completed_gold_items(root, auditor)
+    tasks = {
+        task["scenario_id"]: task
+        for path in sorted(Path(tasks_dir).glob("*.json"))
+        for task in [json.loads(path.read_text(encoding="utf-8"))]
+    }
+    missing = {item["scenario_id"] for item in gold_items} - set(tasks)
+    if missing:
+        raise SystemExit(f"Gold scenarios missing from task directory: {sorted(missing)}")
+
+    source_audio = output / "source_audio"
+    renderer = TurnAudioRenderer(source_audio)
+    items = list(gold_items)
+    stable_rng(auditor, "prosody_item_order").shuffle(items)
+    lines = [
+        f"# DUAL-AudioBench internal prosody audit ({auditor})",
+        "",
+        "This packet contains one matched audio pair for each scenario in the",
+        f"prespecified {len(items)}-scenario author gold set. The words and voice",
+        "are identical within a pair; only pitch and speaking rate differ.",
+        "Listen without opening the private key or scenario files.",
+        "",
+        "For every pair, label each clip `high` or `low`; label its perceived",
+        "category using one of `frustrated`, `confused`, `urgent`, `confident`,",
+        "or `calm`; choose which clip sounds more intense (`A`, `B`, or `same`);",
+        "and select an appropriate response style from:",
+        "",
+        "- `acknowledge_impact`: acknowledge frustration or experienced impact.",
+        "- `acknowledge_urgency`: acknowledge time pressure and prioritize the next step.",
+        "- `clarify_and_reassure`: clarify and reassure before proceeding.",
+        "- `proceed_directly`: proceed neutrally to the operational step.",
+        "",
+        "Rate confidence, intelligibility, and naturalness from 1 (low) to 5 (high).",
+        "",
+    ]
+    key: dict[str, Any] = {
+        "auditor": auditor,
+        "gold_set_size": len(items),
+        "selection": "both prosody variants for every completed author-gold scenario",
+        "items": {},
+    }
+    response_rows = []
+    for index, gold in enumerate(items, start=1):
+        item_id = f"PROSODY-{index:02d}"
+        task = tasks[gold["scenario_id"]]
+        rendered = {}
+        for condition_name in ("prosody_high", "prosody_low"):
+            text, prosody, style = _gold_observation(task, condition_name)
+            source_path = _render_or_reuse(
+                renderer,
+                text,
+                prosody,
+                task.get("audio_profile", {}).get("user_voice"),
+            )
+            rendered[condition_name] = {
+                "source_path": source_path,
+                "text": text,
+                "prosody": prosody,
+                "expected_style": style,
+            }
+        if rendered["prosody_high"]["text"] != rendered["prosody_low"]["text"]:
+            raise SystemExit(f"Prosody pair transcript mismatch: {gold['scenario_id']}")
+
+        variants = ["prosody_high", "prosody_low"]
+        stable_rng(auditor, gold["scenario_id"], "prosody_ab").shuffle(variants)
+        public_variants = {}
+        for letter, condition_name in zip(("A", "B"), variants):
+            destination = clips_dir / f"{item_id}_{letter}.wav"
+            shutil.copyfile(rendered[condition_name]["source_path"], destination)
+            public_variants[letter] = {
+                "condition": condition_name,
+                "delivery": condition_name.removeprefix("prosody_"),
+                "prosody": rendered[condition_name]["prosody"],
+                "expected_style": rendered[condition_name]["expected_style"],
+                "audio_path": str(destination.relative_to(public)),
+                "duration_seconds": _duration_seconds(destination),
+            }
+        high_letter = next(
+            letter
+            for letter, item in public_variants.items()
+            if item["delivery"] == "high"
+        )
+        lines.extend(
+            [
+                f"## Item {item_id}",
+                "",
+                f"- Clip A: [open audio]({public_variants['A']['audio_path'].replace(chr(92), '/')})",
+                f"- Clip B: [open audio]({public_variants['B']['audio_path'].replace(chr(92), '/')})",
+                "",
+                "Record both delivery labels, perceived categories, relative",
+                "intensity, response styles, and ratings in the response CSV.",
+                "",
+                "---",
+                "",
+            ]
+        )
+        response_rows.append(
+            {
+                field: auditor if field == "auditor" else item_id if field == "audit_item_id" else ""
+                for field in RESPONSE_FIELDS
+            }
+        )
+        key["items"][item_id] = {
+            **gold,
+            "transcript": rendered["prosody_high"]["text"],
+            "variants": public_variants,
+            "more_intense_clip": high_letter,
+        }
+
+    booklet_path = public / f"{slug}_prosody_booklet.md"
+    responses_path = public / f"{slug}_prosody_responses.csv"
+    key_path = private / f"{slug}_prosody_key.json"
+    booklet_path.write_text("\n".join(lines), encoding="utf-8")
+    with responses_path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=RESPONSE_FIELDS)
+        writer.writeheader()
+        writer.writerows(response_rows)
+    key_path.write_text(
+        json.dumps(key, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    print(f"Exported {len(response_rows)} blinded prosody pairs -> {public}")
+    print(f"Private scoring key -> {key_path}")
+
+
+def _rating(row: dict[str, str], field: str) -> float:
+    try:
+        value = float(row[field])
+    except (KeyError, ValueError) as exc:
+        raise SystemExit(f"Invalid rating in {field}: {row.get(field)!r}") from exc
+    if not 1 <= value <= 5:
+        raise SystemExit(f"Rating outside 1--5 in {field}: {value}")
+    return value
+
+
+def report(audit_root: str, auditor: str) -> None:
+    """Score delivery, category, style, and audio-quality judgments."""
+
+    root = Path(audit_root) / "prosody"
+    slug = safe_slug(auditor)
+    key = json.loads(
+        (root / "private" / f"{slug}_prosody_key.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    responses_path = root / "public" / f"{slug}_prosody_responses.csv"
+    with responses_path.open(encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    required = [field for field in RESPONSE_FIELDS if field != "notes"]
+    if any(not row.get(field, "").strip() for row in rows for field in required):
+        raise SystemExit("Prosody response sheet contains unrated fields.")
+    if len(rows) != len(key["items"]):
+        raise SystemExit("Prosody response count does not match private key.")
+
+    delivery_total = category_total = style_total = 0
+    delivery_correct = category_correct = style_correct = 0
+    both_delivery = both_category = both_style = 0
+    intensity_correct = 0
+    quality: dict[str, list[float]] = {
+        "intelligibility": [],
+        "naturalness": [],
+    }
+    category_confusion: Counter[tuple[str, str]] = Counter()
+    for row in rows:
+        item = key["items"].get(row["audit_item_id"])
+        if item is None:
+            raise SystemExit(f"Unknown prosody audit item: {row['audit_item_id']}")
+        item_delivery = item_category = item_style = 0
+        for letter in ("A", "B"):
+            variant = item["variants"][letter]
+            delivery = row[f"clip_{letter.lower()}_delivery_high_or_low"].strip().lower()
+            category = row[f"clip_{letter.lower()}_perceived_category"].strip().lower()
+            style = row[f"clip_{letter.lower()}_appropriate_response_style"].strip()
+            if delivery not in {"high", "low"}:
+                raise SystemExit(f"Delivery must be high or low: {delivery}")
+            item_delivery += delivery == variant["delivery"]
+            item_category += category == variant["prosody"]
+            item_style += style == variant["expected_style"]
+            delivery_total += 1
+            category_total += 1
+            style_total += 1
+            category_confusion[(variant["prosody"], category)] += 1
+            quality["intelligibility"].append(
+                _rating(row, f"clip_{letter.lower()}_intelligibility_1_to_5")
+            )
+            quality["naturalness"].append(
+                _rating(row, f"clip_{letter.lower()}_naturalness_1_to_5")
+            )
+        delivery_correct += item_delivery
+        category_correct += item_category
+        style_correct += item_style
+        both_delivery += item_delivery == 2
+        both_category += item_category == 2
+        both_style += item_style == 2
+        intensity_correct += (
+            row["more_intense_clip_a_or_b_or_same"].strip().upper()
+            == item["more_intense_clip"]
+        )
+
+    n = len(rows)
+    metrics = {
+        "auditor": auditor,
+        "n_pairs": n,
+        "n_clips": 2 * n,
+        "delivery_identification": delivery_correct / delivery_total,
+        "both_deliveries_correct": both_delivery / n,
+        "category_identification": category_correct / category_total,
+        "both_categories_correct": both_category / n,
+        "expected_style_agreement": style_correct / style_total,
+        "both_styles_correct": both_style / n,
+        "relative_intensity_accuracy": intensity_correct / n,
+        "mean_intelligibility": sum(quality["intelligibility"]) / len(quality["intelligibility"]),
+        "mean_naturalness": sum(quality["naturalness"]) / len(quality["naturalness"]),
+        "category_confusion": [
+            {"intended": intended, "perceived": perceived, "n": count}
+            for (intended, perceived), count in sorted(category_confusion.items())
+        ],
+    }
+    lines = [
+        "# Internal prosody audit report",
+        "",
+        f"- Auditor: {auditor}",
+        f"- Gold-set pairs: {n} ({2*n} clips)",
+        f"- High/low identification: {metrics['delivery_identification']:.1%}",
+        f"- Both clips correctly identified: {metrics['both_deliveries_correct']:.1%}",
+        f"- Intended category identification: {metrics['category_identification']:.1%}",
+        f"- Expected response-style agreement: {metrics['expected_style_agreement']:.1%}",
+        f"- Relative-intensity accuracy: {metrics['relative_intensity_accuracy']:.1%}",
+        f"- Mean intelligibility: {metrics['mean_intelligibility']:.2f}/5",
+        f"- Mean naturalness: {metrics['mean_naturalness']:.2f}/5",
+        "",
+        "This is a one-author manipulation check, not inter-listener agreement.",
+    ]
+    (root / "prosody_audit_report.md").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8"
+    )
+    (root / "prosody_audit_metrics.json").write_text(
+        json.dumps(metrics, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    print(f"Readable report -> {root / 'prosody_audit_report.md'}")
+
+
+def main() -> None:
+    command = sys.argv[1] if len(sys.argv) > 1 else ""
+    if command == "export" and len(sys.argv) == 5:
+        export_packet(sys.argv[2], sys.argv[3], sys.argv[4])
+    elif command == "report" and len(sys.argv) == 4:
+        report(sys.argv[2], sys.argv[3])
+    else:
+        print(__doc__)
+
+
+if __name__ == "__main__":
+    main()

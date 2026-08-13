@@ -32,6 +32,13 @@ from score import (
 )
 
 
+# GPT Audio Mini was evaluated through the audio interface only, so the
+# transcript-only control is outside its planned model--condition matrix.
+MODEL_EXCLUDED_CONDITIONS = {
+    "openai/gpt-audio-mini": {"transcript_only"},
+}
+
+
 def _mean(values: Iterable[float | bool]) -> float:
     values = list(values)
     return sum(values) / len(values) if values else math.nan
@@ -142,8 +149,14 @@ def paired_controls(rows: list[dict]) -> dict[str, Any]:
         "clue_ablation_trajectory": paired_cluster_effect(
             rows, "full_audio", "clue_removed", "trajectory_success"
         ),
+        "clue_ablation_post_observation_belief": paired_checkpoint_effect(
+            rows, "full_audio", "clue_removed", "post_observation"
+        ),
         "hidden_user_action_post_gap": paired_cluster_effect(
             rows, "hidden_user_action", "full_audio", "post_gap_success"
+        ),
+        "hidden_user_action_post_observation_belief": paired_checkpoint_effect(
+            rows, "hidden_user_action", "full_audio", "post_observation"
         ),
         "modality_pre_gap_action": paired_cluster_effect(
             rows, "transcript_only", "full_audio", "pre_gap_success"
@@ -159,6 +172,15 @@ def paired_controls(rows: list[dict]) -> dict[str, Any]:
         ),
         "state_change_post_gap": paired_cluster_effect(
             rows, "full_audio", "gap_no_state_change", "post_gap_success"
+        ),
+        "no_state_change_post_observation_belief": paired_checkpoint_effect(
+            rows, "gap_no_state_change", "full_audio", "post_observation"
+        ),
+        "short_distance_post_gap": paired_cluster_effect(
+            rows, "state_change_short", "full_audio", "post_gap_success"
+        ),
+        "short_distance_post_observation_belief": paired_checkpoint_effect(
+            rows, "state_change_short", "full_audio", "post_observation"
         ),
         "neutral_audio_post_gap": paired_cluster_effect(
             rows, "neutral_audio", "full_audio", "post_gap_success"
@@ -370,8 +392,13 @@ def build_metrics(rows: list[dict]) -> dict[str, Any]:
             model_scenarios * len(condition_groups) * max(model_seeds, 1)
         )
         schema_versions = {str(row.get("schema_version")) for row in model_rows}
+        excluded_conditions = MODEL_EXCLUDED_CONDITIONS.get(model, set())
         required_conditions = (
-            tuple(CONTROL_CONDITIONS)
+            tuple(
+                condition
+                for condition in CONTROL_CONDITIONS
+                if condition not in excluded_conditions
+            )
             if schema_versions == {"0.5"}
             else tuple(sorted(condition_groups))
         )
@@ -725,6 +752,13 @@ def markdown_report(metrics: dict[str, Any]) -> str:
                 f"{_percent(controls['clue_ablation_post_gap']['ci'][0])} to "
                 f"{_percent(controls['clue_ablation_post_gap']['ci'][1])} | "
                 f"{_number(controls['clue_ablation_post_gap']['p_value'], 4)} |",
+                "| Full audio - clue removed, immediate belief | "
+                f"{controls['clue_ablation_post_observation_belief']['paired_n']} | "
+                f"{controls['clue_ablation_post_observation_belief']['clusters']} | "
+                f"{_percent(controls['clue_ablation_post_observation_belief']['delta'])} | "
+                f"{_percent(controls['clue_ablation_post_observation_belief']['ci'][0])} to "
+                f"{_percent(controls['clue_ablation_post_observation_belief']['ci'][1])} | "
+                f"{_number(controls['clue_ablation_post_observation_belief']['p_value'], 4)} |",
                 "| Full audio - clue removed, full trajectory | "
                 f"{controls['clue_ablation_trajectory']['paired_n']} | "
                 f"{controls['clue_ablation_trajectory']['clusters']} | "
@@ -739,6 +773,13 @@ def markdown_report(metrics: dict[str, Any]) -> str:
                 f"{_percent(controls['hidden_user_action_post_gap']['ci'][0])} to "
                 f"{_percent(controls['hidden_user_action_post_gap']['ci'][1])} | "
                 f"{_number(controls['hidden_user_action_post_gap']['p_value'], 4)} |",
+                "| Hidden user action - full audio, immediate belief | "
+                f"{controls['hidden_user_action_post_observation_belief']['paired_n']} | "
+                f"{controls['hidden_user_action_post_observation_belief']['clusters']} | "
+                f"{_percent(controls['hidden_user_action_post_observation_belief']['delta'])} | "
+                f"{_percent(controls['hidden_user_action_post_observation_belief']['ci'][0])} to "
+                f"{_percent(controls['hidden_user_action_post_observation_belief']['ci'][1])} | "
+                f"{_number(controls['hidden_user_action_post_observation_belief']['p_value'], 4)} |",
                 "| Transcript - full audio, pre-gap action | "
                 f"{controls['modality_pre_gap_action']['paired_n']} | "
                 f"{controls['modality_pre_gap_action']['clusters']} | "
@@ -774,6 +815,27 @@ def markdown_report(metrics: dict[str, Any]) -> str:
                 f"{_percent(controls['state_change_post_gap']['ci'][0])} to "
                 f"{_percent(controls['state_change_post_gap']['ci'][1])} | "
                 f"{_number(controls['state_change_post_gap']['p_value'], 4)} |",
+                "| No-state-change gap - full audio, immediate belief | "
+                f"{controls['no_state_change_post_observation_belief']['paired_n']} | "
+                f"{controls['no_state_change_post_observation_belief']['clusters']} | "
+                f"{_percent(controls['no_state_change_post_observation_belief']['delta'])} | "
+                f"{_percent(controls['no_state_change_post_observation_belief']['ci'][0])} to "
+                f"{_percent(controls['no_state_change_post_observation_belief']['ci'][1])} | "
+                f"{_number(controls['no_state_change_post_observation_belief']['p_value'], 4)} |",
+                "| Short clue - full audio, post-gap action | "
+                f"{controls['short_distance_post_gap']['paired_n']} | "
+                f"{controls['short_distance_post_gap']['clusters']} | "
+                f"{_percent(controls['short_distance_post_gap']['delta'])} | "
+                f"{_percent(controls['short_distance_post_gap']['ci'][0])} to "
+                f"{_percent(controls['short_distance_post_gap']['ci'][1])} | "
+                f"{_number(controls['short_distance_post_gap']['p_value'], 4)} |",
+                "| Short clue - full audio, immediate belief | "
+                f"{controls['short_distance_post_observation_belief']['paired_n']} | "
+                f"{controls['short_distance_post_observation_belief']['clusters']} | "
+                f"{_percent(controls['short_distance_post_observation_belief']['delta'])} | "
+                f"{_percent(controls['short_distance_post_observation_belief']['ci'][0])} to "
+                f"{_percent(controls['short_distance_post_observation_belief']['ci'][1])} | "
+                f"{_number(controls['short_distance_post_observation_belief']['p_value'], 4)} |",
                 "| Neutral audio - full audio, immediate belief | "
                 f"{controls['neutral_audio_post_observation_belief']['paired_n']} | "
                 f"{controls['neutral_audio_post_observation_belief']['clusters']} | "

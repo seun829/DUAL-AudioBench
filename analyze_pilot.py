@@ -4,8 +4,7 @@
 persists the specific comparisons a pilot write-up needs:
 
 * the belief/action outcome matrix, overall and per condition;
-* the paired full_audio minus clue_removed ablation delta;
-* the paired transcript_only versus full_audio modality comparison;
+* paired effects for every registered control with a full-audio counterpart;
 * per-condition headline rates with chance floors.
 
 Deltas are paired by ``(scenario_id, seed)`` so each comparison uses matched
@@ -182,6 +181,22 @@ def main() -> None:
         comparisons["full_vs_clue_removed"] = paired_delta(ok, "full_audio", "clue_removed")
     if {"transcript_only", "full_audio"} <= set(conditions):
         comparisons["transcript_vs_full_audio"] = paired_delta(ok, "transcript_only", "full_audio")
+    if {"gap_no_state_change", "full_audio"} <= set(conditions):
+        comparisons["no_state_change_vs_full_audio"] = paired_delta(
+            ok, "gap_no_state_change", "full_audio"
+        )
+    if {"state_change_short", "full_audio"} <= set(conditions):
+        comparisons["short_distance_vs_full_audio"] = paired_delta(
+            ok, "state_change_short", "full_audio"
+        )
+    if {"hidden_user_action", "full_audio"} <= set(conditions):
+        comparisons["explicit_user_update_vs_full_audio"] = paired_delta(
+            ok, "hidden_user_action", "full_audio"
+        )
+    if {"neutral_audio", "full_audio"} <= set(conditions):
+        comparisons["neutral_audio_vs_full_audio"] = paired_delta(
+            ok, "neutral_audio", "full_audio"
+        )
     if {"prosody_high", "prosody_low"} <= set(conditions):
         comparisons["prosody_high_vs_low"] = summarize_prosody(ok)
 

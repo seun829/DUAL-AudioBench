@@ -1,0 +1,4 @@
+[openrouter/closed_loop] 499 trajectories logged; conditions=['full_audio', 'clue_removed', 'transcript_only']
+fail warranty_5to8_b1_s05/clue_removed/seed=0
+fail warranty_5to8_b1_s05/clue_removed/seed=1
+Done -> C:\Users\shlee\OneDrive\Documents\GitHub\DUAL-AudioBench\paper_results\v05\raw\gemini3_priority\gemini3_priority_shard11-of-12.jsonl

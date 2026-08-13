@@ -1,0 +1,123 @@
+﻿{
+    "schema_version":  "0.5",
+    "model":  "google/gemini-3-flash-preview",
+    "run_slug":  "gemini3_prosody_v05",
+    "conditions":  [
+                       "prosody_high",
+                       "prosody_low"
+                   ],
+    "passes":  2,
+    "shards":  12,
+    "expected_trajectories":  336,
+    "scenario_root":  "data/scenarios_v05",
+    "scenario_files":  84,
+    "scenario_manifest_sha256":  "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+    "resume_from":  [
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard00-of-06.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard00-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard01-of-06.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard01-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard02-of-06.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard02-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard03-of-06.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard03-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard04-of-06.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard04-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard05-of-06.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard05-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard06-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard07-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard08-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard09-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard10-of-12.jsonl",
+                        "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard11-of-12.jsonl"
+                    ],
+    "resume_completed_at_start":  0,
+    "started_at":  "2026-08-13T21:45:02.8620231Z",
+    "processes":  [
+                      {
+                          "shard":  0,
+                          "pid":  2632,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard00-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard00-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard00-of-12.err.log"
+                      },
+                      {
+                          "shard":  1,
+                          "pid":  16524,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard01-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard01-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard01-of-12.err.log"
+                      },
+                      {
+                          "shard":  2,
+                          "pid":  18336,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard02-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard02-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard02-of-12.err.log"
+                      },
+                      {
+                          "shard":  3,
+                          "pid":  16264,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard03-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard03-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard03-of-12.err.log"
+                      },
+                      {
+                          "shard":  4,
+                          "pid":  18764,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard04-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard04-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard04-of-12.err.log"
+                      },
+                      {
+                          "shard":  5,
+                          "pid":  6804,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard05-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard05-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard05-of-12.err.log"
+                      },
+                      {
+                          "shard":  6,
+                          "pid":  22404,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard06-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard06-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard06-of-12.err.log"
+                      },
+                      {
+                          "shard":  7,
+                          "pid":  9476,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard07-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard07-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard07-of-12.err.log"
+                      },
+                      {
+                          "shard":  8,
+                          "pid":  17528,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard08-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard08-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard08-of-12.err.log"
+                      },
+                      {
+                          "shard":  9,
+                          "pid":  21392,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard09-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard09-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard09-of-12.err.log"
+                      },
+                      {
+                          "shard":  10,
+                          "pid":  15312,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard10-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard10-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard10-of-12.err.log"
+                      },
+                      {
+                          "shard":  11,
+                          "pid":  14816,
+                          "output":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\gemini3_prosody_v05_shard11-of-12.jsonl",
+                          "stdout":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard11-of-12.out.log",
+                          "stderr":  "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_prosody_v05\\logs\\shard11-of-12.err.log"
+                      }
+                  ]
+}

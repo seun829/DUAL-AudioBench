@@ -1,73 +1,77 @@
-# Schema-v0.5 internal author audit
+# Internal author audits
 
-Two independent, readable audit packets are ready in `public/`, one for
-`author_01` and one for `author_02`. Each contains all 84 scenarios in a
-different randomized order with independently randomized menu labels.
-Counterfactual siblings are never adjacent.
+All three audits use the same prespecified 21-scenario gold set: the completed
+25% subset in the author-1 scenario booklet. The subset contains one member of
+21 different causal pairs, spans 13 domains and all three clue distances, and
+includes 10 aligned and 11 misaligned scenarios.
 
-All four current booklets are stamped with scenario manifest
-`e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9`,
-matching `paper_results/v05/SCENARIO_FREEZE.md`. The response sheets were reset
-when the scenarios changed; do not reuse answers from an earlier packet.
+These are internal construction and manipulation checks performed by one
+author. They are not an independent human-performance baseline and do not
+provide inter-rater agreement.
 
-## Blinding protocol
+## 1. Scenario construction audit
 
-For each author:
+The completed files are in `public/`:
 
-1. Receive only that author's files from `public/`.
-2. Read `author_XX_phase1_booklet.md` and complete the corresponding phase-1
-   response CSV.
-3. Save and timestamp the completed phase-1 CSV before opening phase 2.
-4. Read `author_XX_phase2_booklet.md` and complete the phase-2 response CSV.
-5. Do not inspect task JSON, source code, `private/`, or the other author's
-   packet/responses until both phases are complete.
+- `author_01_phase1_booklet.md` and `author_01_phase1_responses.csv`
+- `author_01_phase2_booklet.md` and `author_01_phase2_responses.csv`
 
-Phase 1 asks for the best pre-gap action and causal-alignment label using only
-the public dialogue. Phase 2 discloses the benchmark operation that must be
-assumed executed, presents the public resumption, and asks for terminal state
-and final action. This separation prevents the declared operation from leaking
-the phase-1 gold answer.
+Only the 21 prespecified rows are intended to be completed. The remaining rows
+belong to the unaudited 75% and should stay blank. The completed subset recovered
+the causal branch and delayed terminal state in all 21 items.
 
-`causal_alignment` simply means **whether the clue matches the stated success
-rule**. Select `aligned` when the clue satisfies the rule and `misaligned` when
-it violates the rule. It is not asking whether the auditor agrees with the
-benchmark answer.
+## 2. Failure-tag audit
 
-Use exact labels from the booklets. Enter `yes` or `no` for answerability and an
-ambiguity score from 1 (unambiguous) through 5 (not answerable). Evidence and
-notes should identify any unclear wording or competing action.
+Open:
+
+- `failure_tags/public/author_01_failure_tag_booklet.md`
+- `failure_tags/public/author_01_failure_tag_responses.csv`
+
+The packet contains one failed trajectory for every gold-set scenario. Model
+identity, evaluation condition, and automatic tags are hidden. For each item,
+enter every tag supported by the visible trace, separated with semicolons, or
+enter `NONE`. Also provide a short reason and confidence from 1 to 5.
+
+After all 21 rows are complete, score the packet with:
+
+```powershell
+python -m dual_audio.evaluation.failure_tag_audit report `
+  paper_results/v05/internal_audit author_01
+```
+
+The report gives exact-set agreement and per-tag precision/recall between the
+automatic diagnostics and the author's judgments.
+
+## 3. Prosody manipulation check
+
+Open:
+
+- `prosody/public/author_01_prosody_booklet.md`
+- `prosody/public/author_01_prosody_responses.csv`
+
+The packet contains 21 randomized high/low pairs (42 clips), one pair for every
+gold-set scenario. Within a pair, the words and voice are identical. Listen in
+a quiet setting with the same device and volume throughout. Do not inspect the
+private key while rating.
+
+After all 21 rows are complete, score the packet with:
+
+```powershell
+python -m dual_audio.evaluation.gold_prosody_audit report `
+  paper_results/v05/internal_audit author_01
+```
+
+The report gives high/low identification, intended-category identification,
+response-style agreement, relative-intensity accuracy, intelligibility, and
+naturalness.
 
 ## Private material
 
-The files in `private/` map anonymous items and randomized labels back to
-scenario IDs, executable gold states, and actions. Never distribute or commit
-them before auditing is complete. The directory is ignored by Git.
+The nested `private/` directories contain scenario mappings, model and
+condition identities, automatic failure tags, and intended prosody labels.
+They are ignored by Git and must remain unopened until the corresponding audit
+is complete. Only the `public/` materials should be shared with the auditor.
 
-## Scoring completed packets
-
-After both authors finish:
-
-```powershell
-python -m dual_audio.evaluation.scenario_audit report `
-  paper_results/v05/internal_audit author_01 author_02
-```
-
-This produces:
-
-- `internal_audit_report.md`: readable gold accuracy and cross-author agreement;
-- `internal_audit_metrics.json`: indented structured metrics;
-- `adjudication.csv`: only items requiring author discussion.
-
-Resolve every row in `adjudication.csv` before freezing the paid run. Report
-this exercise as an **internal author audit**, not an independent human baseline.
-
-## Regenerating or adding authors
-
-```powershell
-python -m dual_audio.evaluation.scenario_audit export `
-  data/scenarios_v05 paper_results/v05/internal_audit `
-  author_01 author_02 author_03
-```
-
-Regeneration is deterministic for a given auditor ID and unchanged scenario
-files.
+Report completed results as an **internal author audit** or **one-author
+manipulation check**, not as independent human accuracy or inter-rater
+validation.

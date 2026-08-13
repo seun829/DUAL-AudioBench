@@ -1,0 +1,16 @@
+{
+  "model": "openai/gpt-audio-mini",
+  "calls": 1260,
+  "audio_calls": 1260,
+  "text_calls": 0,
+  "prompt_tokens": 1131553,
+  "completion_tokens": 54842,
+  "total_tokens": 1186395,
+  "audio_bytes_sent": 3187107182,
+  "audio_seconds_sent": 99595.374,
+  "cost_usd": 0.810553,
+  "errors": 0,
+  "provider_counts": {
+    "OpenAI": 1260
+  }
+}
