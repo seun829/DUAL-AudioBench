@@ -54,6 +54,9 @@ gold-set scenario. Within a pair, the words and voice are identical. Listen in
 a quiet setting with the same device and volume throughout. Do not inspect the
 private key while rating.
 
+Each row asks only which clip sounds stronger, the tone of clips A and B,
+whether the speech is clear, and confidence from 1 to 5.
+
 After all 21 rows are complete, score the packet with:
 
 ```powershell
@@ -61,9 +64,8 @@ python -m dual_audio.evaluation.gold_prosody_audit report `
   paper_results/v05/internal_audit author_01
 ```
 
-The report gives high/low identification, intended-category identification,
-response-style agreement, relative-intensity accuracy, intelligibility, and
-naturalness.
+The report gives relative-intensity accuracy, intended-tone accuracy, speech
+clarity, and mean confidence.
 
 ## Private material
 

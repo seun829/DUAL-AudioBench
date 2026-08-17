@@ -190,18 +190,11 @@ class InternalGoldAuditTests(unittest.TestCase):
                 {
                     "auditor": "author_01",
                     "audit_item_id": "PROSODY-01",
-                    "clip_a_delivery_high_or_low": "high",
-                    "clip_b_delivery_high_or_low": "low",
-                    "clip_a_perceived_category": "urgent",
-                    "clip_b_perceived_category": "calm",
-                    "more_intense_clip_a_or_b_or_same": "A",
-                    "clip_a_appropriate_response_style": "acknowledge_urgency",
-                    "clip_b_appropriate_response_style": "proceed_directly",
+                    "more_intense_clip": "A",
+                    "clip_a_tone": "urgent",
+                    "clip_b_tone": "calm",
+                    "speech_clarity": "both_clear",
                     "confidence_1_to_5": "5",
-                    "clip_a_intelligibility_1_to_5": "5",
-                    "clip_b_intelligibility_1_to_5": "5",
-                    "clip_a_naturalness_1_to_5": "3",
-                    "clip_b_naturalness_1_to_5": "3",
                 }
             )
             _write_csv(
@@ -214,8 +207,9 @@ class InternalGoldAuditTests(unittest.TestCase):
                 (root / "prosody_audit_metrics.json").read_text(encoding="utf-8")
             )
             self.assertEqual(metrics["n_pairs"], 1)
-            self.assertEqual(metrics["delivery_identification"], 1.0)
             self.assertEqual(metrics["relative_intensity_accuracy"], 1.0)
+            self.assertEqual(metrics["category_identification"], 1.0)
+            self.assertEqual(metrics["both_clips_clear"], 1.0)
 
 
 if __name__ == "__main__":

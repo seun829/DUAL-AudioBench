@@ -1,0 +1,74 @@
+{
+  "auditor": "author_01",
+  "n": 21,
+  "exact_set_agreement": 0.3333333333333333,
+  "micro_precision": 0.8378378378378378,
+  "micro_recall": 0.5535714285714286,
+  "micro_f1": 0.6666666666666666,
+  "per_tag": [
+    {
+      "tag": "ACTION_SELECTION_FAILURE",
+      "automatic_n": 1,
+      "human_n": 6,
+      "true_positive_n": 1,
+      "precision": 1.0,
+      "recall": 0.16666666666666666
+    },
+    {
+      "tag": "EARLY_CLUE_LOSS",
+      "automatic_n": 10,
+      "human_n": 6,
+      "true_positive_n": 4,
+      "precision": 0.4,
+      "recall": 0.6666666666666666
+    },
+    {
+      "tag": "PREMATURE_CLOSE",
+      "automatic_n": 1,
+      "human_n": 1,
+      "true_positive_n": 1,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "tag": "PREMATURE_ESCALATION",
+      "automatic_n": 1,
+      "human_n": 5,
+      "true_positive_n": 1,
+      "precision": 1.0,
+      "recall": 0.2
+    },
+    {
+      "tag": "REPEATED_ACTION",
+      "automatic_n": 0,
+      "human_n": 6,
+      "true_positive_n": 0,
+      "precision": null,
+      "recall": 0.0
+    },
+    {
+      "tag": "STATE_BELIEF_ERROR",
+      "automatic_n": 20,
+      "human_n": 20,
+      "true_positive_n": 20,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "tag": "STATE_SYNC_FAILURE",
+      "automatic_n": 1,
+      "human_n": 5,
+      "true_positive_n": 1,
+      "precision": 1.0,
+      "recall": 0.2
+    },
+    {
+      "tag": "TIME_INFERENCE_FAILURE",
+      "automatic_n": 3,
+      "human_n": 7,
+      "true_positive_n": 3,
+      "precision": 1.0,
+      "recall": 0.42857142857142855
+    }
+  ]
+}

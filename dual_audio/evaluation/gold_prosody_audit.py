@@ -34,20 +34,17 @@ from dual_audio.users.scripted import ScriptedUserSimulator
 RESPONSE_FIELDS = (
     "auditor",
     "audit_item_id",
-    "clip_a_delivery_high_or_low",
-    "clip_b_delivery_high_or_low",
-    "clip_a_perceived_category",
-    "clip_b_perceived_category",
-    "more_intense_clip_a_or_b_or_same",
-    "clip_a_appropriate_response_style",
-    "clip_b_appropriate_response_style",
+    "more_intense_clip",
+    "clip_a_tone",
+    "clip_b_tone",
+    "speech_clarity",
     "confidence_1_to_5",
-    "clip_a_intelligibility_1_to_5",
-    "clip_b_intelligibility_1_to_5",
-    "clip_a_naturalness_1_to_5",
-    "clip_b_naturalness_1_to_5",
     "notes",
 )
+
+TONE_OPTIONS = {"frustrated", "confused", "urgent", "confident", "calm", "unclear"}
+INTENSITY_OPTIONS = {"A", "B", "SAME", "UNCLEAR"}
+CLARITY_OPTIONS = {"both_clear", "only_a_clear", "only_b_clear", "neither_clear"}
 
 
 def _gold_observation(task: dict, condition_name: str) -> tuple[str, str, str]:
@@ -129,17 +126,12 @@ def export_packet(tasks_dir: str, audit_root: str, auditor: str) -> None:
         "are identical within a pair; only pitch and speaking rate differ.",
         "Listen without opening the private key or scenario files.",
         "",
-        "For every pair, label each clip `high` or `low`; label its perceived",
-        "category using one of `frustrated`, `confused`, `urgent`, `confident`,",
-        "or `calm`; choose which clip sounds more intense (`A`, `B`, or `same`);",
-        "and select an appropriate response style from:",
+        "For each pair, answer four short questions in the response CSV:",
         "",
-        "- `acknowledge_impact`: acknowledge frustration or experienced impact.",
-        "- `acknowledge_urgency`: acknowledge time pressure and prioritize the next step.",
-        "- `clarify_and_reassure`: clarify and reassure before proceeding.",
-        "- `proceed_directly`: proceed neutrally to the operational step.",
-        "",
-        "Rate confidence, intelligibility, and naturalness from 1 (low) to 5 (high).",
+        "1. Which clip sounds more emotionally intense or urgent? Enter `A`, `B`, `same`, or `unclear`.",
+        "2. What tone does each clip convey? Use `frustrated`, `confused`, `urgent`, `confident`, `calm`, or `unclear`.",
+        "3. Is the speech clear? Use `both_clear`, `only_a_clear`, `only_b_clear`, or `neither_clear`.",
+        "4. Rate confidence from 1 (guessing) to 5 (very sure).",
         "",
     ]
     key: dict[str, Any] = {
@@ -196,8 +188,7 @@ def export_packet(tasks_dir: str, audit_root: str, auditor: str) -> None:
                 f"- Clip A: [open audio]({public_variants['A']['audio_path'].replace(chr(92), '/')})",
                 f"- Clip B: [open audio]({public_variants['B']['audio_path'].replace(chr(92), '/')})",
                 "",
-                "Record both delivery labels, perceived categories, relative",
-                "intensity, response styles, and ratings in the response CSV.",
+                "Record the stronger clip, both tones, speech clarity, and confidence.",
                 "",
                 "---",
                 "",
@@ -242,7 +233,7 @@ def _rating(row: dict[str, str], field: str) -> float:
 
 
 def report(audit_root: str, auditor: str) -> None:
-    """Score delivery, category, style, and audio-quality judgments."""
+    """Score the compact intensity, tone, and intelligibility judgments."""
 
     root = Path(audit_root) / "prosody"
     slug = safe_slug(auditor)
@@ -260,65 +251,51 @@ def report(audit_root: str, auditor: str) -> None:
     if len(rows) != len(key["items"]):
         raise SystemExit("Prosody response count does not match private key.")
 
-    delivery_total = category_total = style_total = 0
-    delivery_correct = category_correct = style_correct = 0
-    both_delivery = both_category = both_style = 0
+    category_total = 0
+    category_correct = 0
+    both_category = 0
     intensity_correct = 0
-    quality: dict[str, list[float]] = {
-        "intelligibility": [],
-        "naturalness": [],
-    }
+    intelligible_pairs = 0
+    at_least_one_intelligible = 0
+    confidence: list[float] = []
     category_confusion: Counter[tuple[str, str]] = Counter()
     for row in rows:
         item = key["items"].get(row["audit_item_id"])
         if item is None:
             raise SystemExit(f"Unknown prosody audit item: {row['audit_item_id']}")
-        item_delivery = item_category = item_style = 0
+        intensity = row["more_intense_clip"].strip().upper()
+        if intensity not in INTENSITY_OPTIONS:
+            raise SystemExit(f"Invalid more_intense_clip value: {intensity!r}")
+        clarity = row["speech_clarity"].strip().lower()
+        if clarity not in CLARITY_OPTIONS:
+            raise SystemExit(f"Invalid speech_clarity value: {clarity!r}")
+        item_category = 0
         for letter in ("A", "B"):
             variant = item["variants"][letter]
-            delivery = row[f"clip_{letter.lower()}_delivery_high_or_low"].strip().lower()
-            category = row[f"clip_{letter.lower()}_perceived_category"].strip().lower()
-            style = row[f"clip_{letter.lower()}_appropriate_response_style"].strip()
-            if delivery not in {"high", "low"}:
-                raise SystemExit(f"Delivery must be high or low: {delivery}")
-            item_delivery += delivery == variant["delivery"]
+            category = row[f"clip_{letter.lower()}_tone"].strip().lower()
+            if category not in TONE_OPTIONS:
+                raise SystemExit(f"Invalid tone for clip {letter}: {category!r}")
             item_category += category == variant["prosody"]
-            item_style += style == variant["expected_style"]
-            delivery_total += 1
             category_total += 1
-            style_total += 1
             category_confusion[(variant["prosody"], category)] += 1
-            quality["intelligibility"].append(
-                _rating(row, f"clip_{letter.lower()}_intelligibility_1_to_5")
-            )
-            quality["naturalness"].append(
-                _rating(row, f"clip_{letter.lower()}_naturalness_1_to_5")
-            )
-        delivery_correct += item_delivery
         category_correct += item_category
-        style_correct += item_style
-        both_delivery += item_delivery == 2
         both_category += item_category == 2
-        both_style += item_style == 2
-        intensity_correct += (
-            row["more_intense_clip_a_or_b_or_same"].strip().upper()
-            == item["more_intense_clip"]
-        )
+        intensity_correct += intensity == item["more_intense_clip"]
+        intelligible_pairs += clarity == "both_clear"
+        at_least_one_intelligible += clarity != "neither_clear"
+        confidence.append(_rating(row, "confidence_1_to_5"))
 
     n = len(rows)
     metrics = {
         "auditor": auditor,
         "n_pairs": n,
         "n_clips": 2 * n,
-        "delivery_identification": delivery_correct / delivery_total,
-        "both_deliveries_correct": both_delivery / n,
         "category_identification": category_correct / category_total,
         "both_categories_correct": both_category / n,
-        "expected_style_agreement": style_correct / style_total,
-        "both_styles_correct": both_style / n,
         "relative_intensity_accuracy": intensity_correct / n,
-        "mean_intelligibility": sum(quality["intelligibility"]) / len(quality["intelligibility"]),
-        "mean_naturalness": sum(quality["naturalness"]) / len(quality["naturalness"]),
+        "both_clips_clear": intelligible_pairs / n,
+        "at_least_one_clip_clear": at_least_one_intelligible / n,
+        "mean_confidence": sum(confidence) / len(confidence),
         "category_confusion": [
             {"intended": intended, "perceived": perceived, "n": count}
             for (intended, perceived), count in sorted(category_confusion.items())
@@ -329,13 +306,11 @@ def report(audit_root: str, auditor: str) -> None:
         "",
         f"- Auditor: {auditor}",
         f"- Gold-set pairs: {n} ({2*n} clips)",
-        f"- High/low identification: {metrics['delivery_identification']:.1%}",
-        f"- Both clips correctly identified: {metrics['both_deliveries_correct']:.1%}",
-        f"- Intended category identification: {metrics['category_identification']:.1%}",
-        f"- Expected response-style agreement: {metrics['expected_style_agreement']:.1%}",
         f"- Relative-intensity accuracy: {metrics['relative_intensity_accuracy']:.1%}",
-        f"- Mean intelligibility: {metrics['mean_intelligibility']:.2f}/5",
-        f"- Mean naturalness: {metrics['mean_naturalness']:.2f}/5",
+        f"- Intended-tone accuracy: {metrics['category_identification']:.1%}",
+        f"- Both clips' tones correct: {metrics['both_categories_correct']:.1%}",
+        f"- Both clips clear: {metrics['both_clips_clear']:.1%}",
+        f"- Mean confidence: {metrics['mean_confidence']:.2f}/5",
         "",
         "This is a one-author manipulation check, not inter-listener agreement.",
     ]
