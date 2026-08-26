@@ -1,0 +1,44 @@
+% R1: belief accuracy against a corrected constant-policy baseline.
+% Paste into paper/main.tex. Columns use the \dualcolhead macro already defined there.
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.08}
+  \caption{Post-gap belief accuracy against a corrected baseline. Uniform chance is $1/|\mathcal{S}|$ as reported by the scoring code. Majority class is the best constant state assignment available to a policy that knows only the domain. Clears is whether the domain-clustered 95\% interval lies strictly above the majority-class rate.}
+  \label{tab:belief-baseline}
+  \begin{tabular}{@{}llrrrrl@{}}
+    \toprule
+    \dualcolhead{Model} & \dualcolhead{Condition} & \dualcolhead{Belief} & \dualcolhead{95\% CI} & \dualcolhead{Uniform} & \dualcolhead{Majority} & \dualcolhead{Clears} \\
+    \midrule
+    Gemini 2.5 & Ordinary audio & 39.3 & [28.0, 50.6] & 12.3 & 48.2 & unclear \\
+    Gemini 2.5 & No state change & 60.7 & [48.2, 73.2] & 12.3 & 45.2 & yes \\
+    Gemini 2.5 & Short clue & 35.7 & [26.8, 45.8] & 12.3 & 48.2 & \textbf{no} \\
+    Gemini 2.5 & Clue removed & 29.8 & [23.2, 36.3] & 12.3 & 43.5 & \textbf{no} \\
+    Gemini 2.5 & Transcript & 51.8 & [43.5, 59.5] & 12.3 & 48.2 & unclear \\
+    Gemini 2.5 & Neutral audio & 32.7 & [24.4, 41.1] & 12.3 & 44.0 & \textbf{no} \\
+    Gemini 2.5 & Explicit user update & 72.6 & [61.9, 83.3] & 12.3 & 69.6 & unclear \\
+    Gemini 2.5 & High prosody & 37.5 & [29.2, 46.4] & 12.3 & 44.0 & unclear \\
+    Gemini 2.5 & Low prosody & 35.7 & [28.6, 42.9] & 12.3 & 46.4 & \textbf{no} \\
+    \addlinespace
+    Gemini 3 & Ordinary audio & 51.2 & [43.5, 57.7] & 12.3 & 47.0 & unclear \\
+    Gemini 3 & No state change & 78.6 & [69.0, 87.5] & 12.3 & 45.2 & yes \\
+    Gemini 3 & Short clue & 50.6 & [45.8, 56.0] & 12.3 & 47.0 & unclear \\
+    Gemini 3 & Clue removed & 32.1 & [22.0, 41.7] & 12.3 & 44.0 & \textbf{no} \\
+    Gemini 3 & Transcript & 64.3 & [55.4, 73.8] & 12.3 & 48.8 & yes \\
+    Gemini 3 & Neutral audio & 54.2 & [47.6, 60.7] & 12.3 & 48.2 & unclear \\
+    Gemini 3 & Explicit user update & 85.1 & [71.4, 95.8] & 12.3 & 72.0 & unclear \\
+    Gemini 3 & High prosody & 51.2 & [44.0, 58.9] & 12.3 & 47.0 & unclear \\
+    Gemini 3 & Low prosody & 53.0 & [43.5, 63.1] & 12.3 & 47.6 & unclear \\
+    \addlinespace
+    GPT Audio Mini & Ordinary audio & 31.0 & [21.4, 41.1] & 12.3 & 48.2 & \textbf{no} \\
+    GPT Audio Mini & No state change & 63.1 & [49.4, 76.2] & 12.3 & 46.4 & yes \\
+    GPT Audio Mini & Short clue & 32.7 & [25.6, 41.7] & 12.3 & 47.6 & \textbf{no} \\
+    GPT Audio Mini & Clue removed & 17.3 & [10.1, 25.0] & 12.3 & 41.7 & \textbf{no} \\
+    GPT Audio Mini & Neutral audio & 32.1 & [21.4, 43.5] & 12.3 & 45.8 & \textbf{no} \\
+    GPT Audio Mini & Explicit user update & 67.9 & [50.6, 82.1] & 12.3 & 69.6 & unclear \\
+    GPT Audio Mini & High prosody & 30.4 & [20.8, 39.3] & 12.3 & 44.6 & \textbf{no} \\
+    GPT Audio Mini & Low prosody & 40.5 & [30.4, 51.2] & 12.3 & 44.6 & unclear \\
+    \bottomrule
+  \end{tabular}
+\end{table}
