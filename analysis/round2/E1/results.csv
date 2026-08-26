@@ -1,0 +1,2 @@
+model,condition,n,final_action,ci95,final_action_misaligned,final_action_aligned,final_action_full_audio,oracle_minus_full_audio,effect_ci95,effect_p,majority_class_baseline,uniform_baseline,first_action
+GPT Audio Mini,Oracle state,39,48.7,"[8.3, 70.8]",30.0,68.4,22.0,22.9,"[4.2, 52.1]",0.2500,53.8,20.0,56.4

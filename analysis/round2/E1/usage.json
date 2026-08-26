@@ -1,0 +1,11 @@
+{
+ "trajectories": 39,
+ "cost_usd": 0.2339,
+ "model_calls": 546,
+ "by_model": {
+  "GPT Audio Mini": {
+   "trajectories": 39,
+   "cost_usd": 0.2339
+  }
+ }
+}
