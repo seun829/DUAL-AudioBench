@@ -51,6 +51,20 @@ def _decision_prompt(observation: Observation) -> str:
             f"evidence was: {json.dumps(observation.prior_state_belief)}. "
             "Reconsider it if needed before returning the final action."
         )
+    # Oracle-state baseline: the realized hidden state is supplied, so the belief
+    # request is dropped. models.openrouter derives the enforced response_format
+    # from the JSON example below, so state_belief must leave the example too or
+    # the schema would demand a field the prompt no longer asks for.
+    if observation.oracle_state_text:
+        example.pop("state_belief", None)
+        example.pop("needs_revalidation", None)
+        return (
+            f"{observation.oracle_state_text}\n\n"
+            "Choose the single best next action from the equally plausible "
+            "options below. Use only the public option labels.\n\n"
+            f"Actions:\n{options}{style}\n\n"
+            f"Return JSON only in this shape: {json.dumps(example)}"
+        )
     return (
         "Choose the single best next action from the equally plausible options below. "
         "Also report a probability distribution over every allowed hidden-state "

@@ -19,6 +19,9 @@ class Observation:
     belief_schema: dict[str, tuple[str, ...]] = field(default_factory=dict)
     belief_definitions: dict[str, dict[str, str]] | None = None
     prior_state_belief: dict[str, dict[str, float]] = field(default_factory=dict)
+    # Plain-language statement of the realized hidden state, supplied only by
+    # the oracle-state baseline. Empty for every other condition.
+    oracle_state_text: str = ""
     # Test adapters may use private metadata. Production prompts never serialize it.
     private: dict[str, Any] = field(default_factory=dict, repr=False, compare=False)
 

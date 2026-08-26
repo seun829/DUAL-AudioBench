@@ -20,6 +20,9 @@ class Condition:
     prosody_variant: str = "native"
     score_style: bool = False
     apply_user_action: bool = False
+    # Defaults preserve the behavior of every pre-existing condition.
+    elicit_belief: bool = True
+    oracle_state: bool = False
 
 
 CONDITIONS = {
@@ -41,6 +44,14 @@ CONDITIONS = {
     ),
     "prosody_low": Condition(
         "prosody_low", prosody_variant="low", score_style=True
+    ),
+    # Oracle-state baseline: identical replay to full_audio, but the realized
+    # post-gap state is stated in plain language before the menu and the
+    # belief-only checkpoint is suppressed. Score post_gap_success only; the
+    # belief plumbing is deliberately not exercised, so trajectory_success is
+    # not meaningful for this condition.
+    "oracle_state": Condition(
+        "oracle_state", oracle_state=True, elicit_belief=False
     ),
 }
 

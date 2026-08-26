@@ -13,6 +13,7 @@ from dual_audio.core.beliefs import (
     probability_of,
     top_state_assignment,
 )
+from dual_audio.core.belief_definitions import definitions_for
 from dual_audio.core.conditions import Condition, condition_turns, prosody_for
 from dual_audio.core.environment import (
     correct_action,
@@ -504,15 +505,24 @@ class ClosedLoopRunner:
                 },
             },
         )
-        resumed_belief_response = agent.respond(belief_observation, history)
-        calls.append(
-            {
-                "stage": "post_gap_belief",
-                "raw": resumed_belief_response.raw,
-                "state_belief": resumed_belief_response.state_belief,
-                "needs_revalidation": resumed_belief_response.needs_revalidation,
-            }
-        )
+        # The belief-only checkpoint is skipped when a condition opts out, e.g.
+        # the oracle-state baseline, which collects the action alone. An empty
+        # AgentResponse degrades to a uniform belief downstream, so scoring for
+        # such conditions must use post_gap_success rather than trajectory_success.
+        if condition.elicit_belief:
+            resumed_belief_response = agent.respond(belief_observation, history)
+            calls.append(
+                {
+                    "stage": "post_gap_belief",
+                    "raw": resumed_belief_response.raw,
+                    "state_belief": resumed_belief_response.state_belief,
+                    "needs_revalidation": (
+                        resumed_belief_response.needs_revalidation
+                    ),
+                }
+            )
+        else:
+            resumed_belief_response = AgentResponse()
         history.append(
             {
                 "role": "user",
@@ -531,6 +541,18 @@ class ClosedLoopRunner:
         # The final decision is a separate introspection checkpoint. There is no
         # new user evidence: audio replay/history already contains the resumed
         # utterance exactly once.
+        oracle_text = ""
+        if condition.oracle_state:
+            definitions = definitions_for(belief_schema, belief_definitions)
+            oracle_text = (
+                "For this question, treat the following as confirmed: "
+                + "; ".join(
+                    f"{variable} is {state_after_gap[variable]}"
+                    f" ({definitions[variable][str(state_after_gap[variable])]})"
+                    for variable in belief_schema
+                )
+                + "."
+            )
         final_observation = Observation(
             text="",
             audio_path=None,
@@ -540,6 +562,7 @@ class ClosedLoopRunner:
             style_menu=style_menu,
             belief_schema=belief_schema,
             belief_definitions=belief_definitions,
+            oracle_state_text=oracle_text,
             prior_state_belief=resumed_belief_response.state_belief,
             private={
                 "scenario_id": task["scenario_id"],
@@ -667,6 +690,8 @@ class ClosedLoopRunner:
             "state_after_user_action": state_after_user_action,
             "state_after_gap": state_after_gap,
             "post_gap_observation": post_text,
+            "oracle_state_text": oracle_text or None,
+            "belief_elicited": condition.elicit_belief,
             "post_gap_prosody": post_prosody,
             "prosody_stimulus_id": task.get("prosody_stimulus", {}).get(
                 "stimulus_id"
