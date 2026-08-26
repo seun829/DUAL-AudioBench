@@ -1,0 +1,27 @@
+model,condition,lucky_pct_of_misaligned_rows,lucky_share_of_correct_misaligned,lucky_pct_of_aligned_rows,lucky_share_of_correct_aligned,lucky_pct_of_all_rows,lucky_share_of_all_correct
+Gemini 2.5,Ordinary audio,7.1,14.3,3.6,17.6,5.4,15.3
+Gemini 2.5,No state change,13.1,52.4,9.5,18.2,11.3,29.2
+Gemini 2.5,Short clue,16.7,36.8,11.9,45.5,14.3,40.0
+Gemini 2.5,Clue removed,11.9,27.0,1.2,20.0,6.5,26.2
+Gemini 2.5,Transcript,3.6,5.7,2.4,28.6,3.0,8.3
+Gemini 2.5,Neutral audio,7.1,14.3,3.6,27.3,5.4,17.0
+Gemini 2.5,Explicit user update,11.9,16.9,4.8,6.5,8.3,11.6
+Gemini 2.5,High prosody,11.9,19.6,2.4,18.2,7.1,19.4
+Gemini 2.5,Low prosody,10.7,20.5,2.4,20.0,6.5,20.4
+Gemini 3,Ordinary audio,4.8,7.8,0.0,0.0,2.4,5.1
+Gemini 3,No state change,16.7,73.7,2.4,3.2,9.5,19.8
+Gemini 3,Short clue,11.9,24.4,7.1,20.0,9.5,22.5
+Gemini 3,Clue removed,7.1,16.2,1.2,12.5,4.2,15.6
+Gemini 3,Transcript,2.4,3.3,1.2,2.7,1.8,3.1
+Gemini 3,Neutral audio,8.3,14.3,4.8,14.8,6.5,14.5
+Gemini 3,Explicit user update,0.0,0.0,2.4,3.1,1.2,1.5
+Gemini 3,High prosody,15.5,26.0,2.4,8.0,8.9,20.0
+Gemini 3,Low prosody,9.5,16.7,6.0,25.0,7.7,19.1
+GPT Audio Mini,Ordinary audio,22.6,57.6,0.0,0.0,11.3,51.4
+GPT Audio Mini,No state change,13.1,84.6,3.6,13.0,8.3,38.9
+GPT Audio Mini,Short clue,16.7,43.8,1.2,33.3,8.9,42.9
+GPT Audio Mini,Clue removed,32.1,69.2,6.0,83.3,19.0,71.1
+GPT Audio Mini,Neutral audio,13.1,36.7,2.4,100.0,7.7,40.6
+GPT Audio Mini,Explicit user update,14.3,27.9,4.8,6.3,9.5,15.1
+GPT Audio Mini,High prosody,15.5,43.3,2.4,66.7,8.9,45.5
+GPT Audio Mini,Low prosody,19.0,50.0,1.2,50.0,10.1,50.0

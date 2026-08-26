@@ -1,0 +1,44 @@
+% R5: belief revision gain and stale mass, pooled over changed variables.
+% Computed from belief_revision, already stored in every trajectory.
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.08}
+  \caption{Belief revision across the gap, pooled over variables whose true state changed. Revision gain is the probability mass moved onto the new true state by the resumed evidence; reflection gain is the further movement between the belief-only checkpoint and the final action; stale mass is the probability still on the superseded state after the resumed evidence. $k$ is the number of contributing variable observations.}
+  \label{tab:revision-gain}
+  \begin{tabular}{@{}llrrrrr@{}}
+    \toprule
+    \dualcolhead{Model} & \dualcolhead{Condition} & \dualcolhead{$k$} & \dualcolhead{Revision} & \dualcolhead{Reflection} & \dualcolhead{Final} & \dualcolhead{Stale} \\
+    \midrule
+    Gemini 2.5 & Ordinary audio & 116 & -0.009 & 0.006 & -0.003 & 0.021 \\
+    Gemini 2.5 & No state change & 108 & 0.596 & -0.298 & 0.298 & 0.028 \\
+    Gemini 2.5 & Short clue & 105 & 0.142 & 0.039 & 0.181 & 0.017 \\
+    Gemini 2.5 & Clue removed & 100 & 0.147 & 0.008 & 0.155 & 0.022 \\
+    Gemini 2.5 & Transcript & 125 & 0.282 & 0.007 & 0.289 & 0.018 \\
+    Gemini 2.5 & Neutral audio & 108 & 0.236 & 0.009 & 0.245 & 0.013 \\
+    Gemini 2.5 & Explicit user update & 184 & 0.778 & 0.016 & 0.795 & 0.044 \\
+    Gemini 2.5 & High prosody & 114 & 0.194 & 0.020 & 0.214 & 0.016 \\
+    Gemini 2.5 & Low prosody & 105 & 0.046 & 0.051 & 0.097 & 0.023 \\
+    \addlinespace
+    Gemini 3 & Ordinary audio & 130 & 0.309 & 0.089 & 0.398 & 0.020 \\
+    Gemini 3 & No state change & 117 & 0.585 & -0.085 & 0.500 & 0.013 \\
+    Gemini 3 & Short clue & 112 & 0.280 & 0.042 & 0.322 & 0.022 \\
+    Gemini 3 & Clue removed & 111 & 0.224 & 0.021 & 0.245 & 0.018 \\
+    Gemini 3 & Transcript & 137 & 0.413 & 0.119 & 0.532 & 0.025 \\
+    Gemini 3 & Neutral audio & 127 & 0.336 & 0.032 & 0.368 & 0.028 \\
+    Gemini 3 & Explicit user update & 198 & 0.811 & 0.051 & 0.862 & 0.047 \\
+    Gemini 3 & High prosody & 123 & 0.297 & 0.020 & 0.318 & 0.013 \\
+    Gemini 3 & Low prosody & 116 & 0.250 & 0.020 & 0.270 & 0.014 \\
+    \addlinespace
+    GPT Audio Mini & Ordinary audio & 105 & -0.010 & 0.038 & 0.028 & 0.103 \\
+    GPT Audio Mini & No state change & 91 & 0.272 & -0.060 & 0.212 & 0.126 \\
+    GPT Audio Mini & Short clue & 108 & -0.057 & 0.010 & -0.048 & 0.114 \\
+    GPT Audio Mini & Clue removed & 87 & 0.045 & 0.043 & 0.088 & 0.115 \\
+    GPT Audio Mini & Neutral audio & 102 & -0.008 & 0.025 & 0.017 & 0.117 \\
+    GPT Audio Mini & Explicit user update & 183 & 0.456 & 0.017 & 0.474 & 0.113 \\
+    GPT Audio Mini & High prosody & 97 & -0.027 & 0.009 & -0.019 & 0.111 \\
+    GPT Audio Mini & Low prosody & 96 & -0.010 & -0.016 & -0.026 & 0.119 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
