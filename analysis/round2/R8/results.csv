@@ -1,0 +1,27 @@
+model,condition,n,final_action_observed,always_A,always_B,always_C,always_D,always_E,best_fixed_position,best_label,uniform_chance
+Gemini 2.5,Ordinary audio,168,35.1,19.6,19.6,19.6,21.4,19.6,21.4,D,20.0
+Gemini 2.5,No state change,168,38.7,14.3,32.1,12.5,20.8,20.2,32.1,B,20.0
+Gemini 2.5,Short clue,168,35.7,19.6,17.9,22.0,20.2,20.2,22.0,C,20.0
+Gemini 2.5,Clue removed,168,25.0,22.0,19.6,18.5,20.2,19.6,22.0,A,20.0
+Gemini 2.5,Transcript,168,35.7,21.4,19.6,20.8,17.9,20.2,21.4,A,20.0
+Gemini 2.5,Neutral audio,168,31.5,25.0,19.0,17.9,18.5,19.6,25.0,A,20.0
+Gemini 2.5,Explicit user update,168,72.0,22.6,16.1,17.9,21.4,22.0,22.6,A,20.0
+Gemini 2.5,High prosody,168,36.9,22.0,20.2,22.6,17.3,17.9,22.6,C,20.0
+Gemini 2.5,Low prosody,168,32.1,20.8,19.6,20.2,19.6,19.6,20.8,A,20.0
+Gemini 3,Ordinary audio,168,47.0,25.0,16.1,17.9,18.5,22.6,25.0,A,20.0
+Gemini 3,No state change,168,48.2,14.9,28.0,16.1,16.7,24.4,28.0,B,20.0
+Gemini 3,Short clue,168,42.3,24.4,17.3,17.9,19.6,20.8,24.4,A,20.0
+Gemini 3,Clue removed,168,26.8,23.8,19.6,16.7,17.9,22.0,23.8,A,20.0
+Gemini 3,Transcript,168,58.3,19.6,19.0,18.5,22.6,20.2,22.6,D,20.0
+Gemini 3,Neutral audio,168,45.2,21.4,14.9,19.0,22.6,22.0,22.6,D,20.0
+Gemini 3,Explicit user update,168,79.8,22.6,13.1,17.3,24.4,22.6,24.4,D,20.0
+Gemini 3,High prosody,168,44.6,23.2,17.9,19.0,19.6,20.2,23.2,A,20.0
+Gemini 3,Low prosody,168,40.5,22.0,18.5,19.6,19.6,20.2,22.0,A,20.0
+GPT Audio Mini,Ordinary audio,168,22.0,23.2,17.9,20.8,20.2,17.9,23.2,A,20.0
+GPT Audio Mini,No state change,168,21.4,17.3,23.2,15.5,23.2,20.8,23.2,B,20.0
+GPT Audio Mini,Short clue,168,20.8,21.4,18.5,20.2,21.4,18.5,21.4,A,20.0
+GPT Audio Mini,Clue removed,168,26.8,22.0,18.5,20.8,19.0,19.6,22.0,A,20.0
+GPT Audio Mini,Neutral audio,168,19.0,22.6,17.3,19.6,19.6,20.8,22.6,A,20.0
+GPT Audio Mini,Explicit user update,168,63.1,20.2,17.3,18.5,22.0,22.0,22.0,D,20.0
+GPT Audio Mini,High prosody,168,19.6,18.5,22.0,19.6,21.4,18.5,22.0,B,20.0
+GPT Audio Mini,Low prosody,168,20.2,19.0,16.1,23.2,22.0,19.6,23.2,C,20.0

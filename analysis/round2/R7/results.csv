@@ -1,0 +1,27 @@
+model,condition,n,first_action_observed,ci95,uniform_chance,global_majority_class,global_majority_action,domain_conditional_majority_class,best_fixed_position,best_fixed_position_label,clears_domain_majority
+Gemini 2.5,Ordinary audio,168,69.6,"[56.0, 81.5]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 2.5,No state change,168,67.9,"[55.4, 80.4]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 2.5,Short clue,168,63.7,"[51.8, 75.0]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 2.5,Clue removed,168,59.5,"[43.5, 75.0]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 2.5,Transcript,168,77.4,"[63.1, 89.3]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 2.5,Neutral audio,168,64.9,"[53.0, 75.6]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 2.5,Explicit user update,168,63.7,"[51.8, 75.0]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 2.5,High prosody,168,68.5,"[60.1, 77.4]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 2.5,Low prosody,168,63.7,"[49.4, 77.4]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,Ordinary audio,168,80.4,"[70.2, 89.9]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,No state change,168,75.0,"[63.1, 85.7]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,Short clue,168,66.1,"[54.8, 77.4]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,Clue removed,168,66.7,"[50.0, 82.1]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,Transcript,168,84.5,"[75.0, 92.3]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,Neutral audio,168,78.0,"[69.0, 86.3]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,Explicit user update,168,75.0,"[63.1, 85.7]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,High prosody,168,74.4,"[63.1, 85.1]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+Gemini 3,Low prosody,168,72.0,"[58.3, 83.9]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+GPT Audio Mini,Ordinary audio,168,65.5,"[52.4, 78.0]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+GPT Audio Mini,No state change,168,61.3,"[46.4, 75.6]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+GPT Audio Mini,Short clue,168,66.7,"[56.5, 77.4]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+GPT Audio Mini,Clue removed,168,55.4,"[38.7, 71.4]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+GPT Audio Mini,Neutral audio,168,63.1,"[50.6, 75.6]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+GPT Audio Mini,Explicit user update,168,65.5,"[52.4, 78.0]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+GPT Audio Mini,High prosody,168,60.7,"[48.8, 73.2]",20.0,7.1,file_dispute,100.0,26.2,B,YES
+GPT Audio Mini,Low prosody,168,60.7,"[48.8, 72.6]",20.0,7.1,file_dispute,100.0,26.2,B,YES
