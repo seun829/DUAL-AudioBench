@@ -305,6 +305,37 @@ class OracleConditionTests(unittest.TestCase):
         self.assertEqual(oracle["post_gap_menu"], full["post_gap_menu"])
 
 
+class BaselineCorpusTests(unittest.TestCase):
+    """The frozen baseline must not absorb rows from newly added runs.
+
+    common.load_rows() globs paper_results/v05/raw/, so a new run directory
+    silently changed every Phase 1 figure until it was excluded.
+    """
+
+    def setUp(self):
+        analysis = ROOT / "analysis" / "round2"
+        if not (analysis / "common.py").exists():
+            self.skipTest("round-2 analysis tree not present")
+        import sys as _sys
+
+        _sys.path.insert(0, str(analysis))
+        import common
+
+        self.common = common
+
+    def test_frozen_baseline_is_exactly_4368_rows(self):
+        self.assertEqual(len(self.common.load_rows()), 4368)
+
+    def test_new_run_directories_are_excluded(self):
+        self.assertIn("oracle_state", self.common.NEW_RUN_DIRS)
+        conditions = {row["condition"] for row in self.common.load_rows()}
+        self.assertNotIn("oracle_state", conditions)
+
+    def test_baseline_has_26_populated_cells(self):
+        rows = self.common.load_rows()
+        self.assertEqual(len(self.common.populated_cells(rows)), 26)
+
+
 class ObservationDefaultTests(unittest.TestCase):
     """The new Observation field must default to empty for every caller."""
 

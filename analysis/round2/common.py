@@ -31,6 +31,11 @@ RAW = ROOT / "paper_results" / "v05" / "raw"
 SCENARIOS = ROOT / "data" / "scenarios_v05"
 OUTROOT = ROOT / "analysis" / "round2"
 
+# Run directories that are NOT part of the frozen 4,368-trajectory baseline the
+# paper reports.  load_rows() must exclude them or every Phase 1 figure shifts as
+# a new run writes rows.  E1 loads its own trajectories separately.
+NEW_RUN_DIRS = {"oracle_state"}
+
 clustered_bootstrap_ci = score.clustered_bootstrap_ci
 paired_cluster_effect = score.paired_cluster_effect
 
@@ -85,6 +90,8 @@ def load_rows(include_errors: bool = False) -> list[dict]:
 
     rows: list[dict] = []
     for path in sorted(RAW.rglob("*.jsonl")):
+        if set(path.relative_to(RAW).parts) & NEW_RUN_DIRS:
+            continue
         for line in path.read_text(encoding="utf-8").splitlines():
             if not line.strip():
                 continue

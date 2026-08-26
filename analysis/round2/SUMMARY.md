@@ -426,9 +426,36 @@ All use the `\dualcolhead` macro already defined at `main.tex:33` and `booktabs`
 \end{table}
 ```
 
+### E1. Oracle-state baseline
+
+```latex
+% E1: oracle-state baseline. The realized post-gap state is stated in
+% plain language before the menu and the belief checkpoint is suppressed,
+% so only the action is scored.
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.08}
+  \caption{Oracle-state baseline. The realized hidden state is supplied in plain language immediately before the action menu, so the remaining task is rule-to-action mapping with no state inference. Effect is the paired oracle-minus-ordinary difference on the same scenarios and seeds with a domain-clustered 95\% interval.}
+  \label{tab:oracle-state}
+  \begin{tabular}{@{}lrrrrrl@{}}
+    \toprule
+    \dualcolhead{Model} & \dualcolhead{$n$} & \dualcolhead{Oracle} & \dualcolhead{Ordinary} & \dualcolhead{Misaligned} & \dualcolhead{Aligned} & \dualcolhead{$\Delta$ [95\% CI]} \\
+    \midrule
+    GPT Audio Mini & 39 & 48.7 & 22.0 & 30.0 & 68.4 & 22.9 [4.2, 52.1] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+```
+
 ## 5. Phase 3: the oracle-state run (E1)
 
-**NOT YET COMPLETE** at the time this summary was generated.
+Ran and scored; see `analysis/round2/E1/README.md` for the full table and reading.
+
+| Model | Condition | n | Final action | 95% CI | Misaligned | Aligned |
+|---|---|---|---|---|---|---|
+| GPT Audio Mini | Oracle state | 39 | 48.7 | [8.3, 70.8] | 30.0 | 68.4 |
 
 ## 6. Code changes (Phase 2)
 
