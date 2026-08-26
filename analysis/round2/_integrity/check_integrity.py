@@ -25,6 +25,10 @@ G1_FILES = [
 ]
 # G1 + G2: whole trees that must not change.
 FROZEN_TREES = ["data/scenarios_v05", "paper_results"]
+# The E1 oracle-state run is a NEW directory that G2 explicitly permits under
+# paper_results/v05/raw/<new_slug>/. Additions there are expected; nothing
+# pre-existing may change.
+NEW_RUN_PREFIXES = ("paper_results/v05/raw/oracle_state/",)
 
 TEXT_SUFFIXES = {".py", ".json", ".jsonl", ".md", ".csv", ".tex", ".txt", ".sty", ".ps1", ".bib"}
 
@@ -45,7 +49,10 @@ def collect() -> dict[str, str]:
         base = ROOT / tree
         for p in sorted(base.rglob("*")):
             if p.is_file():
-                manifest[p.relative_to(ROOT).as_posix()] = digest(p)
+                rel = p.relative_to(ROOT).as_posix()
+                if rel.startswith(NEW_RUN_PREFIXES):
+                    continue
+                manifest[rel] = digest(p)
     return manifest
 
 
