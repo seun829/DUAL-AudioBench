@@ -295,13 +295,75 @@ def main() -> None:
             % ("/".join("%+.1f" % v for v in gaps), len(high), len(models))
         )
     md.append("")
+    md.append("### Which models clear their floor")
+    md.append("")
     md.append(
-        "The branch split is the sharper diagnostic. Under ordinary audio the "
-        "aligned branch is where models fail (they refuse to close a resolved "
-        "case, R2); the oracle condition tells us whether that refusal is a state "
-        "error or a policy preference. Compare the aligned columns above: if "
-        "aligned accuracy stays low with the state supplied, the models are not "
-        "misreading the world, they are declining to act on it."
+        C.md_table(
+            ["Model", "Oracle", "95% CI", "Majority-class floor", "Clears?"],
+            [
+                [
+                    C.MODEL_LABEL[m], "%.1f" % cells[m]["obs"],
+                    "[%.1f, %.1f]" % (cells[m]["lo"], cells[m]["hi"]),
+                    "%.1f" % cells[m]["majority"],
+                    "**YES**" if cells[m]["lo"] > cells[m]["majority"] else
+                    ("**no**" if cells[m]["hi"] < cells[m]["majority"]
+                     else "inconclusive"),
+                ]
+                for m in models
+            ],
+        )
+    )
+    md.append("")
+    md.append(
+        "This is the qualification the paper needs. Supplying the true state "
+        "produces a large, significant gain for two of three models, so state "
+        "inference is genuinely a major part of the bottleneck. But **only %s "
+        "exceeds a domain-aware constant policy even with the state handed to "
+        "it**. For the other two the oracle condition moves them from clearly "
+        "below the floor to roughly at it. A substantial residual failure "
+        "therefore survives the removal of all state uncertainty, and that "
+        "residual is rule-to-action mapping, not synchronization."
+        % ", ".join(
+            C.MODEL_LABEL[m] for m in models
+            if cells[m]["lo"] > cells[m]["majority"]
+        )
+    )
+    md.append("")
+    md.append("### The aligned branch: a state error, not a policy refusal")
+    md.append("")
+    ali_full = {
+        m: C.rate([r for r in full if r["model"] == m
+                   and r["causal_branch"] == "aligned"], "m_final_action")
+        for m in models
+    }
+    md.append(
+        "R2 found that models fail on the aligned branch because they will not "
+        "conclude that a resolved case is resolved. The oracle condition settles "
+        "why. Aligned-branch final action moves from %s under ordinary audio to "
+        "%s under the oracle. The refusal was a **state error**: once told the "
+        "operation completed successfully, all three models close the case at a "
+        "far higher rate. They were not declining to act on a world they "
+        "understood; they were misreading the world."
+        % (
+            "/".join("%.1f" % ali_full[m] for m in models),
+            "/".join("%.1f" % cells[m]["branch"]["aligned"] for m in models),
+        )
+    )
+    md.append("")
+    md.append(
+        "The misaligned branch barely moves by comparison (%s to %s), which is "
+        "consistent: that branch was already the one models handled better, and "
+        "it is the branch where the remaining work is applying the rule rather "
+        "than reading the state."
+        % (
+            "/".join(
+                "%.1f" % C.rate(
+                    [r for r in full if r["model"] == m
+                     and r["causal_branch"] == "misaligned"], "m_final_action")
+                for m in models
+            ),
+            "/".join("%.1f" % cells[m]["branch"]["misaligned"] for m in models),
+        )
     )
     md.append("")
     md.append("## Cost")

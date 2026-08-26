@@ -1,2 +1,4 @@
 model,condition,n,final_action,ci95,final_action_misaligned,final_action_aligned,final_action_full_audio,oracle_minus_full_audio,effect_ci95,effect_p,majority_class_baseline,uniform_baseline,first_action
-GPT Audio Mini,Oracle state,39,48.7,"[8.3, 70.8]",30.0,68.4,22.0,22.9,"[4.2, 52.1]",0.2500,53.8,20.0,56.4
+Gemini 2.5,Oracle state,168,47.0,"[35.1, 58.3]",50.0,44.0,35.1,11.9,"[-0.0, 23.2]",0.0958,51.2,20.0,62.5
+Gemini 3,Oracle state,168,68.5,"[58.9, 77.4]",58.3,78.6,47.0,21.4,"[11.9, 30.4]",0.0022,50.6,20.0,74.4
+GPT Audio Mini,Oracle state,168,52.4,"[38.1, 65.5]",47.6,57.1,22.0,30.4,"[17.9, 44.0]",0.0005,54.8,20.0,58.9

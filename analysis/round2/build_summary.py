@@ -205,7 +205,10 @@ def main() -> None:
         "| R10 | %s of 84 user actions overwrite `causal_alignment` | Explicit-"
         "user-update needs an explicit qualification |\n"
         "| R11 | 54 of 84 prosody pairs are not higher on both axes; listening "
-        "audit 2/21 done | Prosody cannot be pooled; report per contrast |"
+        "audit 2/21 done | Prosody cannot be pooled; report per contrast |\n"
+        "| E1 | Oracle state gains +11.9/+21.4/+30.4, but only 1 of 3 models "
+        "clears its floor even with the state supplied | State inference is "
+        "the largest component of the failure, not the whole of it |"
         % (
             joinm(pick(r2, model=m, condition="Ordinary audio",
                        branch="misaligned").get("final_action", "?")
@@ -373,6 +376,34 @@ def main() -> None:
             "rule to a clue the model has already retrieved, not losing the clue.",
         ),
     ]
+    if e1:
+        _clears = [
+            r for r in e1
+            if float(r["ci95"].strip("[]").split(",")[0])
+            > float(r["majority_class_baseline"])
+        ]
+        _deltas = "/".join(r["oracle_minus_full_audio"] for r in e1)
+        contradictions.append((
+            75,
+            "This scope keeps failures attributable to state inference and "
+            "belief revision.",
+            "E1 shows this is only partly true, and the qualification is now "
+            "measurable. Supplying the realized post-gap state in plain language "
+            "immediately before the menu -- removing all state uncertainty while "
+            "holding scenarios, menus and audio fixed -- raises final-action "
+            "accuracy by %s points. That is a large effect and it supports the "
+            "paper's emphasis. But %d of 3 models still fail to exceed a "
+            "domain-aware constant policy under the oracle, so a substantial "
+            "residual failure is *not* attributable to state inference. "
+            "Suggested addition to the results: *An oracle-state control that "
+            "supplies the realized state in plain language recovers %s points of "
+            "final-action accuracy, establishing state inference as the largest "
+            "single component of post-gap failure; a residual gap to the "
+            "constant-policy baseline remains for two of three models, "
+            "indicating that applying the completion rule is a second, separable "
+            "difficulty.*"
+            % (_deltas, 3 - len(_clears), _deltas),
+        ))
     for line, quote, correction in contradictions:
         A("### `main.tex:%d`" % line)
         A("")
@@ -427,22 +458,87 @@ def main() -> None:
     A("## 5. Phase 3: the oracle-state run (E1)")
     A("")
     if e1:
+        usage = json.loads((HERE / "E1" / "usage.json").read_text(encoding="utf-8"))
+        clears = [
+            r for r in e1
+            if float(r["ci95"].strip("[]").split(",")[0])
+            > float(r["majority_class_baseline"])
+        ]
         A(
-            "Ran and scored; see `analysis/round2/E1/README.md` for the full "
-            "table and reading."
+            "Complete: 504 trajectories (3 models x 84 scenarios x 2 passes), "
+            "**$%.2f** against the $25 cap and the $11 estimate. Scored on "
+            "`post_gap_success` only, because the belief checkpoint is "
+            "deliberately suppressed in this condition."
+            % usage["cost_usd"]
         )
         A("")
         A(
             C.md_table(
-                ["Model", "Condition", "n", "Final action", "95% CI",
-                 "Misaligned", "Aligned"],
+                ["Model", "n", "Oracle", "95% CI", "Ordinary", "Delta", "p",
+                 "Misaligned", "Aligned", "Majority floor", "Clears floor?"],
                 [
-                    [r.get("model"), r.get("condition"), r.get("n"),
-                     r.get("final_action"), r.get("ci95"),
-                     r.get("final_action_misaligned"),
-                     r.get("final_action_aligned")]
+                    [
+                        r["model"], r["n"], "**%s**" % r["final_action"],
+                        r["ci95"], r["final_action_full_audio"],
+                        "+%s" % r["oracle_minus_full_audio"], r["effect_p"],
+                        r["final_action_misaligned"], r["final_action_aligned"],
+                        r["majority_class_baseline"],
+                        "**YES**" if r in clears else "no",
+                    ]
                     for r in e1
                 ],
+            )
+        )
+        A("")
+        A("### Verdict")
+        A("")
+        A(
+            "**Mixed, and it lands on the side the work order called worth more.** "
+            "Supplying the realized state in plain language raises final-action "
+            "accuracy by %s points, significantly for two of three models "
+            "(p = %s). State inference is therefore a genuine and large part of "
+            "the bottleneck, which supports the paper's central claim."
+            % (
+                " / ".join("+" + r["oracle_minus_full_audio"] for r in e1),
+                " / ".join(r["effect_p"] for r in e1),
+            )
+        )
+        A("")
+        A(
+            "But **only %s exceeds a domain-aware constant policy even with the "
+            "state handed to it** (%s against a %s floor). The other two move "
+            "from clearly below their floor to roughly at it. A substantial "
+            "residual failure survives the complete removal of state uncertainty, "
+            "and that residual is rule-to-action mapping, not synchronization. "
+            "The paper cannot claim the benchmark isolates state tracking; it can "
+            "claim that state tracking is the largest single component of a "
+            "failure that also includes applying the completion rule."
+            % (
+                ", ".join(r["model"] for r in clears) or "no model",
+                ", ".join(r["final_action"] for r in clears),
+                ", ".join(r["majority_class_baseline"] for r in clears),
+            )
+        )
+        A("")
+        A(
+            "**The aligned branch is settled.** R2 found models failing there "
+            "because they would not conclude a resolved case was resolved. Under "
+            "the oracle, aligned-branch accuracy moves %s to %s. The refusal was "
+            "a state error, not a policy preference: told the operation "
+            "succeeded, all three models close the case. The misaligned branch "
+            "barely moves (%s to %s), which is where the rule-application "
+            "residual sits."
+            % (
+                " / ".join(
+                    pick(r2, model=r["model"], condition="Ordinary audio",
+                         branch="aligned").get("final_action", "?") for r in e1
+                ),
+                " / ".join(r["final_action_aligned"] for r in e1),
+                " / ".join(
+                    pick(r2, model=r["model"], condition="Ordinary audio",
+                         branch="misaligned").get("final_action", "?") for r in e1
+                ),
+                " / ".join(r["final_action_misaligned"] for r in e1),
             )
         )
     else:
