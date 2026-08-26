@@ -1,0 +1,44 @@
+% R3: branch-pair accuracy. A constant policy scores 0 here and uniform
+% random scores 4 percent for actions, so this metric was never inflated.
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.08}
+  \caption{Branch-pair accuracy (percent of 42 causal pairs, pooled over both passes). A pair counts only if both branches are correct in the same pass, so a constant policy scores 0 and uniform random scores 4.0 for actions. Intervals are domain-clustered over the 14 domains.}
+  \label{tab:branch-pair}
+  \begin{tabular}{@{}llrrrr@{}}
+    \toprule
+    \dualcolhead{Model} & \dualcolhead{Condition} & \dualcolhead{$n$} & \dualcolhead{Both actions} & \dualcolhead{Both beliefs} & \dualcolhead{Both, both} \\
+    \midrule
+    Gemini 2.5 & Ordinary audio & 84 & 11.9 & 16.7 & 4.8 \\
+    Gemini 2.5 & No state change & 84 & 17.9 & 39.3 & 6.0 \\
+    Gemini 2.5 & Short clue & 84 & 15.5 & 9.5 & 0.0 \\
+    Gemini 2.5 & Clue removed & 84 & 1.2 & 2.4 & 0.0 \\
+    Gemini 2.5 & Transcript & 84 & 8.3 & 20.2 & 3.6 \\
+    Gemini 2.5 & Neutral audio & 84 & 6.0 & 7.1 & 2.4 \\
+    Gemini 2.5 & Explicit user update & 84 & 57.1 & 54.8 & 39.3 \\
+    Gemini 2.5 & High prosody & 84 & 8.3 & 9.5 & 0.0 \\
+    Gemini 2.5 & Low prosody & 84 & 6.0 & 9.5 & 1.2 \\
+    \addlinespace
+    Gemini 3 & Ordinary audio & 84 & 16.7 & 23.8 & 10.7 \\
+    Gemini 3 & No state change & 84 & 15.5 & 60.7 & 7.1 \\
+    Gemini 3 & Short clue & 84 & 15.5 & 19.0 & 4.8 \\
+    Gemini 3 & Clue removed & 84 & 3.6 & 8.3 & 1.2 \\
+    Gemini 3 & Transcript & 84 & 32.1 & 32.1 & 16.7 \\
+    Gemini 3 & Neutral audio & 84 & 17.9 & 27.4 & 8.3 \\
+    Gemini 3 & Explicit user update & 84 & 69.0 & 76.2 & 60.7 \\
+    Gemini 3 & High prosody & 84 & 13.1 & 27.4 & 8.3 \\
+    Gemini 3 & Low prosody & 84 & 11.9 & 26.2 & 6.0 \\
+    \addlinespace
+    GPT Audio Mini & Ordinary audio & 84 & 1.2 & 4.8 & 0.0 \\
+    GPT Audio Mini & No state change & 84 & 8.3 & 41.7 & 1.2 \\
+    GPT Audio Mini & Short clue & 84 & 1.2 & 11.9 & 0.0 \\
+    GPT Audio Mini & Clue removed & 84 & 0.0 & 3.6 & 0.0 \\
+    GPT Audio Mini & Neutral audio & 84 & 1.2 & 11.9 & 0.0 \\
+    GPT Audio Mini & Explicit user update & 84 & 44.0 & 54.8 & 39.3 \\
+    GPT Audio Mini & High prosody & 84 & 0.0 & 10.7 & 0.0 \\
+    GPT Audio Mini & Low prosody & 84 & 1.2 & 17.9 & 0.0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
