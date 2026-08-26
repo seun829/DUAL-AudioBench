@@ -1,0 +1,85 @@
+scenario_id,domain,branch,user_action,spec_style,rewrites_causal_alignment,effects
+bank_12to20_b0_s05,banking,misaligned,update_dispute_card_identifier,declarative,YES,charge_card<-copy:card_on_file; causal_alignment<-aligned
+bank_12to20_b1_s05,banking,aligned,update_dispute_card_identifier,declarative,YES,charge_card<-copy:card_on_file; causal_alignment<-aligned
+bank_1to2_b0_s05,banking,misaligned,update_dispute_card_identifier,declarative,YES,charge_card<-copy:card_on_file; causal_alignment<-aligned
+bank_1to2_b1_s05,banking,aligned,update_dispute_card_identifier,declarative,YES,charge_card<-copy:card_on_file; causal_alignment<-aligned
+bank_5to8_b0_s05,banking,misaligned,update_dispute_card_identifier,declarative,YES,charge_card<-copy:card_on_file; causal_alignment<-aligned
+bank_5to8_b1_s05,banking,aligned,update_dispute_card_identifier,declarative,YES,charge_card<-copy:card_on_file; causal_alignment<-aligned
+clinic_12to20_b0_s05,scheduling,misaligned,replace_referral_with_qualifying_source,declarative,YES,referral_source<-copy:required_source; causal_alignment<-aligned
+clinic_12to20_b1_s05,scheduling,aligned,replace_referral_with_qualifying_source,declarative,YES,referral_source<-copy:required_source; causal_alignment<-aligned
+clinic_1to2_b0_s05,scheduling,misaligned,replace_referral_with_qualifying_source,declarative,YES,referral_source<-copy:required_source; causal_alignment<-aligned
+clinic_1to2_b1_s05,scheduling,aligned,replace_referral_with_qualifying_source,declarative,YES,referral_source<-copy:required_source; causal_alignment<-aligned
+clinic_5to8_b0_s05,scheduling,misaligned,replace_referral_with_qualifying_source,declarative,YES,referral_source<-copy:required_source; causal_alignment<-aligned
+clinic_5to8_b1_s05,scheduling,aligned,replace_referral_with_qualifying_source,declarative,YES,referral_source<-copy:required_source; causal_alignment<-aligned
+college_12to20_b0_s05,education,misaligned,complete_prior_study_assessment,declarative,YES,prior_study_state<-copy:required_state; causal_alignment<-aligned
+college_12to20_b1_s05,education,aligned,complete_prior_study_assessment,declarative,YES,prior_study_state<-copy:required_state; causal_alignment<-aligned
+college_1to2_b0_s05,education,misaligned,complete_prior_study_assessment,declarative,YES,prior_study_state<-copy:required_state; causal_alignment<-aligned
+college_1to2_b1_s05,education,aligned,complete_prior_study_assessment,declarative,YES,prior_study_state<-copy:required_state; causal_alignment<-aligned
+college_5to8_b0_s05,education,misaligned,complete_prior_study_assessment,declarative,YES,prior_study_state<-copy:required_state; causal_alignment<-aligned
+college_5to8_b1_s05,education,aligned,complete_prior_study_assessment,declarative,YES,prior_study_state<-copy:required_state; causal_alignment<-aligned
+delivery_12to20_b0_s05,logistics,misaligned,correct_parcel_destination,declarative,YES,label_address<-copy:account_address; causal_alignment<-aligned
+delivery_12to20_b1_s05,logistics,aligned,correct_parcel_destination,declarative,YES,label_address<-copy:account_address; causal_alignment<-aligned
+delivery_1to2_b0_s05,logistics,misaligned,correct_parcel_destination,declarative,YES,label_address<-copy:account_address; causal_alignment<-aligned
+delivery_1to2_b1_s05,logistics,aligned,correct_parcel_destination,declarative,YES,label_address<-copy:account_address; causal_alignment<-aligned
+delivery_5to8_b0_s05,logistics,misaligned,correct_parcel_destination,declarative,YES,label_address<-copy:account_address; causal_alignment<-aligned
+delivery_5to8_b1_s05,logistics,aligned,correct_parcel_destination,declarative,YES,label_address<-copy:account_address; causal_alignment<-aligned
+flight_12to20_b0_s05,travel,misaligned,self_protect_onward_segment,domain-coded,no,-
+flight_12to20_b1_s05,travel,aligned,self_protect_onward_segment,domain-coded,no,-
+flight_1to2_b0_s05,travel,misaligned,self_protect_onward_segment,domain-coded,no,-
+flight_1to2_b1_s05,travel,aligned,self_protect_onward_segment,domain-coded,no,-
+flight_5to8_b0_s05,travel,misaligned,self_protect_onward_segment,domain-coded,no,-
+flight_5to8_b1_s05,travel,aligned,self_protect_onward_segment,domain-coded,no,-
+motor_12to20_b0_s05,motor_insurance,misaligned,align_policyholder_record,declarative,YES,policy_name<-copy:keeper_name; causal_alignment<-aligned
+motor_12to20_b1_s05,motor_insurance,aligned,align_policyholder_record,declarative,YES,policy_name<-copy:keeper_name; causal_alignment<-aligned
+motor_1to2_b0_s05,motor_insurance,misaligned,align_policyholder_record,declarative,YES,policy_name<-copy:keeper_name; causal_alignment<-aligned
+motor_1to2_b1_s05,motor_insurance,aligned,align_policyholder_record,declarative,YES,policy_name<-copy:keeper_name; causal_alignment<-aligned
+motor_5to8_b0_s05,motor_insurance,misaligned,align_policyholder_record,declarative,YES,policy_name<-copy:keeper_name; causal_alignment<-aligned
+motor_5to8_b1_s05,motor_insurance,aligned,align_policyholder_record,declarative,YES,policy_name<-copy:keeper_name; causal_alignment<-aligned
+permit_12to20_b0_s05,permits,misaligned,upload_applicant_named_proof,declarative,YES,proof_name<-copy:applicant_name; causal_alignment<-aligned
+permit_12to20_b1_s05,permits,aligned,upload_applicant_named_proof,declarative,YES,proof_name<-copy:applicant_name; causal_alignment<-aligned
+permit_1to2_b0_s05,permits,misaligned,upload_applicant_named_proof,declarative,YES,proof_name<-copy:applicant_name; causal_alignment<-aligned
+permit_1to2_b1_s05,permits,aligned,upload_applicant_named_proof,declarative,YES,proof_name<-copy:applicant_name; causal_alignment<-aligned
+permit_5to8_b0_s05,permits,misaligned,upload_applicant_named_proof,declarative,YES,proof_name<-copy:applicant_name; causal_alignment<-aligned
+permit_5to8_b1_s05,permits,aligned,upload_applicant_named_proof,declarative,YES,proof_name<-copy:applicant_name; causal_alignment<-aligned
+pharmacy_12to20_b0_s05,pharmacy,misaligned,correct_pharmacy_billing_profile,declarative,YES,billing_plan<-copy:active_plan; causal_alignment<-aligned
+pharmacy_12to20_b1_s05,pharmacy,aligned,correct_pharmacy_billing_profile,declarative,YES,billing_plan<-copy:active_plan; causal_alignment<-aligned
+pharmacy_1to2_b0_s05,pharmacy,misaligned,correct_pharmacy_billing_profile,declarative,YES,billing_plan<-copy:active_plan; causal_alignment<-aligned
+pharmacy_1to2_b1_s05,pharmacy,aligned,correct_pharmacy_billing_profile,declarative,YES,billing_plan<-copy:active_plan; causal_alignment<-aligned
+pharmacy_5to8_b0_s05,pharmacy,misaligned,correct_pharmacy_billing_profile,declarative,YES,billing_plan<-copy:active_plan; causal_alignment<-aligned
+pharmacy_5to8_b1_s05,pharmacy,aligned,correct_pharmacy_billing_profile,declarative,YES,billing_plan<-copy:active_plan; causal_alignment<-aligned
+router_12to20_b0_s05,tech_support,misaligned,power_cycle_during_maintenance,domain-coded,no,-
+router_12to20_b1_s05,tech_support,aligned,power_cycle_during_maintenance,domain-coded,no,-
+router_1to2_b0_s05,tech_support,misaligned,power_cycle_during_maintenance,domain-coded,no,-
+router_1to2_b1_s05,tech_support,aligned,power_cycle_during_maintenance,domain-coded,no,-
+router_5to8_b0_s05,tech_support,misaligned,power_cycle_during_maintenance,domain-coded,no,-
+router_5to8_b1_s05,tech_support,aligned,power_cycle_during_maintenance,domain-coded,no,-
+saas_12to20_b0_s05,account_access,misaligned,redirect_reset_to_active_identity_system,declarative,YES,reset_target<-copy:authentication_mode; causal_alignment<-aligned
+saas_12to20_b1_s05,account_access,aligned,redirect_reset_to_active_identity_system,declarative,YES,reset_target<-copy:authentication_mode; causal_alignment<-aligned
+saas_1to2_b0_s05,account_access,misaligned,redirect_reset_to_active_identity_system,declarative,YES,reset_target<-copy:authentication_mode; causal_alignment<-aligned
+saas_1to2_b1_s05,account_access,aligned,redirect_reset_to_active_identity_system,declarative,YES,reset_target<-copy:authentication_mode; causal_alignment<-aligned
+saas_5to8_b0_s05,account_access,misaligned,redirect_reset_to_active_identity_system,declarative,YES,reset_target<-copy:authentication_mode; causal_alignment<-aligned
+saas_5to8_b1_s05,account_access,aligned,redirect_reset_to_active_identity_system,declarative,YES,reset_target<-copy:authentication_mode; causal_alignment<-aligned
+telecom_12to20_b0_s05,mobile_service,misaligned,update_transfer_ownership_record,declarative,YES,ownership_record<-copy:required_record; causal_alignment<-aligned
+telecom_12to20_b1_s05,mobile_service,aligned,update_transfer_ownership_record,declarative,YES,ownership_record<-copy:required_record; causal_alignment<-aligned
+telecom_1to2_b0_s05,mobile_service,misaligned,update_transfer_ownership_record,declarative,YES,ownership_record<-copy:required_record; causal_alignment<-aligned
+telecom_1to2_b1_s05,mobile_service,aligned,update_transfer_ownership_record,declarative,YES,ownership_record<-copy:required_record; causal_alignment<-aligned
+telecom_5to8_b0_s05,mobile_service,misaligned,update_transfer_ownership_record,declarative,YES,ownership_record<-copy:required_record; causal_alignment<-aligned
+telecom_5to8_b1_s05,mobile_service,aligned,update_transfer_ownership_record,declarative,YES,ownership_record<-copy:required_record; causal_alignment<-aligned
+tenancy_12to20_b0_s05,housing,misaligned,refresh_contractor_access_authority,declarative,YES,vendor_credentials<-copy:required_credentials; causal_alignment<-aligned
+tenancy_12to20_b1_s05,housing,aligned,refresh_contractor_access_authority,declarative,YES,vendor_credentials<-copy:required_credentials; causal_alignment<-aligned
+tenancy_1to2_b0_s05,housing,misaligned,refresh_contractor_access_authority,declarative,YES,vendor_credentials<-copy:required_credentials; causal_alignment<-aligned
+tenancy_1to2_b1_s05,housing,aligned,refresh_contractor_access_authority,declarative,YES,vendor_credentials<-copy:required_credentials; causal_alignment<-aligned
+tenancy_5to8_b0_s05,housing,misaligned,refresh_contractor_access_authority,declarative,YES,vendor_credentials<-copy:required_credentials; causal_alignment<-aligned
+tenancy_5to8_b1_s05,housing,aligned,refresh_contractor_access_authority,declarative,YES,vendor_credentials<-copy:required_credentials; causal_alignment<-aligned
+utility_12to20_b0_s05,energy,misaligned,register_missing_supply_points,declarative,YES,registered_points<-copy:actual_points; causal_alignment<-aligned
+utility_12to20_b1_s05,energy,aligned,register_missing_supply_points,declarative,YES,registered_points<-copy:actual_points; causal_alignment<-aligned
+utility_1to2_b0_s05,energy,misaligned,register_missing_supply_points,declarative,YES,registered_points<-copy:actual_points; causal_alignment<-aligned
+utility_1to2_b1_s05,energy,aligned,register_missing_supply_points,declarative,YES,registered_points<-copy:actual_points; causal_alignment<-aligned
+utility_5to8_b0_s05,energy,misaligned,register_missing_supply_points,declarative,YES,registered_points<-copy:actual_points; causal_alignment<-aligned
+utility_5to8_b1_s05,energy,aligned,register_missing_supply_points,declarative,YES,registered_points<-copy:actual_points; causal_alignment<-aligned
+warranty_12to20_b0_s05,repair,misaligned,switch_to_matching_purchase_route,declarative,YES,covered_channel<-copy:purchase_channel; causal_alignment<-aligned
+warranty_12to20_b1_s05,repair,aligned,switch_to_matching_purchase_route,declarative,YES,covered_channel<-copy:purchase_channel; causal_alignment<-aligned
+warranty_1to2_b0_s05,repair,misaligned,switch_to_matching_purchase_route,declarative,YES,covered_channel<-copy:purchase_channel; causal_alignment<-aligned
+warranty_1to2_b1_s05,repair,aligned,switch_to_matching_purchase_route,declarative,YES,covered_channel<-copy:purchase_channel; causal_alignment<-aligned
+warranty_5to8_b0_s05,repair,misaligned,switch_to_matching_purchase_route,declarative,YES,covered_channel<-copy:purchase_channel; causal_alignment<-aligned
+warranty_5to8_b1_s05,repair,aligned,switch_to_matching_purchase_route,declarative,YES,covered_channel<-copy:purchase_channel; causal_alignment<-aligned

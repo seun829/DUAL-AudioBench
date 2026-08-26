@@ -1,0 +1,29 @@
+% R9: no-change effect with the six travel scenarios excluded.
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.08}
+  \caption{Sensitivity of the no-change effect to the travel domain. In thirteen domains suppressing the gap event leaves the process unfinished; in travel it means the delay never arrived, and the gold action flips. Effects are paired no-change minus ordinary audio with domain-clustered 95\% intervals.}
+  \label{tab:nochange-sensitivity}
+  \begin{tabular}{@{}lllrl@{}}
+    \toprule
+    \dualcolhead{Model} & \dualcolhead{Scope} & \dualcolhead{Metric} & \dualcolhead{$\Delta$} & \dualcolhead{95\% CI} \\
+    \midrule
+    Gemini 2.5 & all 14 domains & belief after gap & 21.4 & [4.8, 36.3] \\
+    Gemini 2.5 & all 14 domains & final action & 3.6 & [-13.7, 20.2] \\
+    Gemini 2.5 & 13 domains, travel excluded & belief after gap & 23.7 & [7.1, 39.1] \\
+    Gemini 2.5 & 13 domains, travel excluded & final action & 5.8 & [-12.8, 22.4] \\
+    \addlinespace
+    Gemini 3 & all 14 domains & belief after gap & 27.4 & [17.3, 37.5] \\
+    Gemini 3 & all 14 domains & final action & 1.2 & [-7.1, 9.5] \\
+    Gemini 3 & 13 domains, travel excluded & belief after gap & 29.5 & [19.2, 39.7] \\
+    Gemini 3 & 13 domains, travel excluded & final action & 2.6 & [-5.8, 10.9] \\
+    \addlinespace
+    GPT Audio Mini & all 14 domains & belief after gap & 32.1 & [19.0, 44.6] \\
+    GPT Audio Mini & all 14 domains & final action & -0.6 & [-14.9, 13.1] \\
+    GPT Audio Mini & 13 domains, travel excluded & belief after gap & 33.3 & [19.9, 46.2] \\
+    GPT Audio Mini & 13 domains, travel excluded & final action & 3.2 & [-10.3, 15.4] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
