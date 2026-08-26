@@ -1,0 +1,52 @@
+
+Primary closed-loop metrics
+condition                  n   pass@1     pre    post  majority  seed var      domain 95% CI  all trials
+full_audio                14    14.3%   57.1%   50.0%      0.0%    0.0000         0.0%-28.6%        0.0%
+transcript_only           14    42.9%  100.0%  100.0%     28.6%    0.0000        14.3%-71.4%       28.6%
+clue_removed              14     0.0%   50.0%   50.0%      0.0%    0.0000          0.0%-0.0%        0.0%
+
+Supplemental repeated-sampling metric
+condition                 pass@2  action chance   2-action chance   full chance
+full_audio                 28.6%          20.0%              4.0%        0.007%
+transcript_only            57.1%          20.0%              4.0%        0.007%
+clue_removed                0.0%          20.0%              4.0%        0.007%
+
+Corrected constant-policy baselines (majority class is the primary floor; uniform is secondary)
+condition                  post  majority action  uniform action  fixed position  majority belief  uniform belief
+full_audio                50.0%           100.0%           20.0%           37.5%           100.0%           12.1%
+transcript_only          100.0%           100.0%           20.0%           35.7%           100.0%           12.1%
+clue_removed              50.0%            92.9%           20.0%           25.0%            92.9%           12.1%
+
+Explicit hidden-state belief tracking
+condition                 valid     pre  post obs  pre-final  revision    stale    Brier     ECE
+full_audio               100.0%   42.9%     64.3%      78.6%     56.2%     0.6%    0.370   16.4%
+transcript_only          100.0%   42.9%    100.0%     100.0%     59.3%     0.0%    0.176    7.5%
+clue_removed             100.0%   28.6%     57.1%      50.0%     31.4%     0.7%    0.609   29.4%
+
+Belief-action and risk consistency
+condition                 pre A-B  final A-B  risk flag  uncertain act  uncertain check
+full_audio                  42.9%      64.3%      85.7%           0.0%             0.0%
+transcript_only             50.0%     100.0%      88.1%           0.0%             0.0%
+clue_removed                21.4%      85.7%      61.9%           4.8%             2.4%
+
+Belief x action outcome matrix (pre-gap and final decisions)
+  FULL_SUCCESS                         38  45.2%
+  ACTION_SELECTION_FAILURE             10  11.9%
+  LUCKY_ACTION                         19  22.6%
+  STATE_SYNCHRONIZATION_FAILURE        17  20.2%
+
+Transcript minus audio paired effects (domain clustered)
+  pre-gap action           +42.9% [+14.3%, +71.4%] p=0.2500
+  post-gap action          +50.0% [+14.3%, +85.7%] p=0.1250
+  post-observation belief  +35.7% [+14.3%, +64.3%] p=0.1250
+  strict trajectory        +28.6% [+7.1%, +57.1%] p=0.2500
+
+Clue-ablation check: full minus clue-removed post-gap accuracy = +0.0% [-35.7%, +28.6%], p=1.0000; 7 domain clusters, 14 paired trials.
+WARNING: the domain-clustered clue effect is inconclusive.
+
+Failure tags (multilabel counts; percentages need not sum to 100%)
+  STATE_BELIEF_ERROR               32  94.1% of failed trajectories
+  EARLY_CLUE_LOSS                   7  20.6% of failed trajectories
+  TIME_INFERENCE_FAILURE            4  11.8% of failed trajectories
+  PREMATURE_ESCALATION              4  11.8% of failed trajectories
+  PREMATURE_CLOSE                   3  8.8% of failed trajectories

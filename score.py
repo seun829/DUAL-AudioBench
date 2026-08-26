@@ -205,6 +205,105 @@ def paired_checkpoint_effect(
     )
 
 
+def _gold_label_map(rows: list[dict]) -> dict[str, str]:
+    """Map public option description to internal action name, from the logs.
+
+    Harvested from rows where the model selected a valid option: the row records
+    both the chosen label and the internal action it resolved to, and the menu in
+    the same row supplies that label's description.  Deliberately avoids
+    re-running the menu shuffle, so nothing here depends on CPython's RNG
+    remaining stable.  A description that ever resolves to two different actions
+    is dropped rather than guessed.
+    """
+
+    mapping: dict[str, str] = {}
+    conflicting: set[str] = set()
+    for row in rows:
+        label = row.get("post_gap_action_label")
+        action = row.get("post_gap_action")
+        if action is None or label is None:
+            continue
+        for item in row.get("post_gap_menu") or ():
+            if item.get("label") == label:
+                previous = mapping.setdefault(item["description"], action)
+                if previous != action:
+                    conflicting.add(item["description"])
+    for description in conflicting:
+        mapping.pop(description, None)
+    return mapping
+
+
+def majority_class_action_chance(rows: list[dict]) -> float:
+    """Best constant post-gap action for a policy that knows only the domain.
+
+    Uniform chance is the wrong comparison on this benchmark: the gold action is
+    heavily skewed toward close_case, so a policy naming one action per domain
+    scores far above 1/menu_size.  Every model is told the domain in the
+    conversation, so this is the fair floor.
+    """
+
+    per_domain: dict[str, Counter] = defaultdict(Counter)
+    for row in rows:
+        cluster = row.get("domain") or row["scenario_id"]
+        per_domain[cluster][row.get("expected_post_gap_action")] += 1
+    if not per_domain:
+        return math.nan
+    best = sum(counts.most_common(1)[0][1] for counts in per_domain.values())
+    return best / len(rows)
+
+
+def fixed_position_action_chance(rows: list[dict]) -> tuple[float, float]:
+    """Best single-letter policy, and the share of rows it could be scored on.
+
+    Returns (rate, coverage).  Coverage is below 1.0 only when the description
+    harvest could not identify the gold option's label for some rows.
+    """
+
+    mapping = _gold_label_map(rows)
+    counts: Counter = Counter()
+    covered = 0
+    for row in rows:
+        gold = row.get("expected_post_gap_action")
+        labels = [
+            item["label"]
+            for item in row.get("post_gap_menu") or ()
+            if mapping.get(item["description"]) == gold
+        ]
+        if len(labels) != 1:
+            continue
+        covered += 1
+        counts[labels[0]] += 1
+    if not covered:
+        return math.nan, 0.0
+    return max(counts.values()) / covered, covered / len(rows)
+
+
+def majority_class_belief_chance(rows: list[dict]) -> float:
+    """Best constant joint belief assignment for a domain-aware policy.
+
+    The paper's belief metric is the all-variables conjunction, and the gold
+    joint state takes only two values across the benchmark (one per causal
+    branch) in equal numbers, so a constant answer scores near half rather than
+    the 1/|S| the uniform figure implies.
+    """
+
+    per_domain: dict[str, Counter] = defaultdict(Counter)
+    for row in rows:
+        checkpoints = row.get("belief_checkpoints") or {}
+        evaluation = (checkpoints.get("pre_gap") or {}).get("evaluation") or {}
+        variables = tuple(sorted((evaluation.get("variables") or {}).keys()))
+        if not variables:
+            continue
+        state = row.get("state_after_gap") or {}
+        cluster = row.get("domain") or row["scenario_id"]
+        per_domain[cluster][tuple(str(state.get(v)) for v in variables)] += 1
+    total = sum(sum(counts.values()) for counts in per_domain.values())
+    if not total:
+        return math.nan
+    best = sum(counts.most_common(1)[0][1] for counts in per_domain.values())
+    return best / total
+
+
 def summarize(rows: list[dict]) -> dict:
     """Compute primary reliability metrics and dynamic chance baselines."""
 
@@ -231,6 +330,9 @@ def summarize(rows: list[dict]) -> dict:
         ]
         for key in by_scenario
     }
+    fixed_position_chance, fixed_position_coverage = fixed_position_action_chance(
+        rows
+    )
     return {
         "n": len(rows),
         "scenarios": len(by_scenario),
@@ -274,6 +376,12 @@ def summarize(rows: list[dict]) -> dict:
             for row in rows
         ),
         "action_chance": _mean(1 / row["post_gap_menu_size"] for row in rows),
+        # Corrected constant-policy baselines. Uniform chance above understates
+        # the floor by roughly a factor of two for actions and four for belief.
+        "majority_class_action_chance": majority_class_action_chance(rows),
+        "fixed_position_action_chance": fixed_position_chance,
+        "fixed_position_coverage": fixed_position_coverage,
+        "majority_class_belief_chance": majority_class_belief_chance(rows),
     }
 
 
@@ -310,6 +418,28 @@ def condition_table(rows: list[dict]) -> None:
             f"{stats['action_chance']:>15.1%}"
             f"{stats['two_action_chance']:>18.1%}"
             f"{stats['trajectory_chance']:>14.3%}"
+        )
+    print(
+        "\nCorrected constant-policy baselines"
+        " (majority class is the primary floor; uniform is secondary)"
+    )
+    print(
+        f"{'condition':<23}{'post':>8}{'majority action':>17}"
+        f"{'uniform action':>16}{'fixed position':>16}"
+        f"{'majority belief':>17}{'uniform belief':>16}"
+    )
+    for condition, group in groups.items():
+        stats = summarize(group)
+        uniform_belief = _mean(
+            row.get("belief_checkpoint_chance", 1.0) for row in group
+        )
+        print(
+            f"{condition:<23}{stats['post']:>8.1%}"
+            f"{stats['majority_class_action_chance']:>17.1%}"
+            f"{stats['action_chance']:>16.1%}"
+            f"{stats['fixed_position_action_chance']:>16.1%}"
+            f"{stats['majority_class_belief_chance']:>17.1%}"
+            f"{uniform_belief:>16.1%}"
         )
 
 
@@ -776,11 +906,26 @@ def retention_curve(rows: list[dict], path: Path) -> None:
         stats["two_action_chance"] for _, stats in points
     )
     action_chance = _mean(stats["action_chance"] for _, stats in points)
+    majority_action_chance = _mean(
+        stats["majority_class_action_chance"] for _, stats in points
+    )
+    # Majority class is the primary floor: uniform chance understates it by
+    # roughly a factor of two because the gold action is skewed to close_case.
+    plt.axhline(
+        majority_action_chance,
+        color="black",
+        linestyle="-",
+        linewidth=1.0,
+        label=(
+            f"majority-class action baseline "
+            f"({majority_action_chance:.0%})"
+        ),
+    )
     plt.axhline(
         action_chance,
         color="gray",
         linestyle=":",
-        label=f"random action chance ({action_chance:.0%})",
+        label=f"uniform action chance ({action_chance:.0%})",
     )
     plt.axhline(
         action_trajectory_chance,

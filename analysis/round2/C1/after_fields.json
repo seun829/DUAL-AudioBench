@@ -1,0 +1,77 @@
+{
+ "clue_removed": {
+  "action_chance": 0.2,
+  "action_trajectory_chance": 0.04,
+  "all_trials": 0.0,
+  "ci": [
+   0.0,
+   0.0
+  ],
+  "fixed_position_action_chance": 0.25,
+  "fixed_position_coverage": 0.5714285714285714,
+  "majority": 0.0,
+  "majority_class_action_chance": 0.9285714285714286,
+  "majority_class_belief_chance": 0.9285714285714286,
+  "n": 14,
+  "pass1": 0.0,
+  "pass_at_5": null,
+  "pass_at_k": 0.0,
+  "pass_k": 2,
+  "post": 0.5,
+  "pre": 0.5,
+  "scenarios": 7,
+  "seed_variance": 0.0,
+  "trajectory_chance": 7.267857142857142e-05,
+  "two_action_chance": 0.04
+ },
+ "full_audio": {
+  "action_chance": 0.2,
+  "action_trajectory_chance": 0.04,
+  "all_trials": 0.0,
+  "ci": [
+   0.0,
+   0.2857142857142857
+  ],
+  "fixed_position_action_chance": 0.375,
+  "fixed_position_coverage": 0.5714285714285714,
+  "majority": 0.0,
+  "majority_class_action_chance": 1.0,
+  "majority_class_belief_chance": 1.0,
+  "n": 14,
+  "pass1": 0.14285714285714285,
+  "pass_at_5": null,
+  "pass_at_k": 0.2857142857142857,
+  "pass_k": 2,
+  "post": 0.5,
+  "pre": 0.5714285714285714,
+  "scenarios": 7,
+  "seed_variance": 0.0,
+  "trajectory_chance": 7.267857142857142e-05,
+  "two_action_chance": 0.04
+ },
+ "transcript_only": {
+  "action_chance": 0.2,
+  "action_trajectory_chance": 0.04,
+  "all_trials": 0.2857142857142857,
+  "ci": [
+   0.14285714285714285,
+   0.7142857142857143
+  ],
+  "fixed_position_action_chance": 0.35714285714285715,
+  "fixed_position_coverage": 1.0,
+  "majority": 0.2857142857142857,
+  "majority_class_action_chance": 1.0,
+  "majority_class_belief_chance": 1.0,
+  "n": 14,
+  "pass1": 0.42857142857142855,
+  "pass_at_5": null,
+  "pass_at_k": 0.5714285714285714,
+  "pass_k": 2,
+  "post": 1.0,
+  "pre": 1.0,
+  "scenarios": 7,
+  "seed_variance": 0.0,
+  "trajectory_chance": 7.267857142857142e-05,
+  "two_action_chance": 0.04
+ }
+}

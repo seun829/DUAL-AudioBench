@@ -332,6 +332,126 @@ def causal_clue_summary(rows: list[dict]) -> dict[str, Any] | None:
     return output
 
 
+BELIEF_ACTION_OUTCOMES = (
+    "FULL_SUCCESS",
+    "ACTION_SELECTION_FAILURE",
+    "LUCKY_ACTION",
+    "STATE_SYNCHRONIZATION_FAILURE",
+)
+REVISION_KEYS = (
+    "belief_revision_gain",
+    "final_revision_gain",
+    "reflection_gain",
+    "stale_belief_persistence",
+)
+
+
+def _contributing_label(contributing: dict[str, int]) -> str:
+    """Condense the contributing-variable mix to one readable cell.
+
+    The domain outcome variables are named per domain, so listing all fourteen
+    is noise; what matters is whether ``causal_alignment`` contributed, since it
+    only changes under the explicit-user-update condition.
+    """
+
+    if not contributing:
+        return "none"
+    alignment = contributing.get("causal_alignment", 0)
+    outcome = sum(
+        count for name, count in contributing.items() if name != "causal_alignment"
+    )
+    parts = [f"{outcome} domain-outcome"]
+    if alignment:
+        parts.append(f"{alignment} causal_alignment")
+    else:
+        parts.append("no causal_alignment")
+    return ", ".join(parts)
+
+
+def belief_action_outcomes(rows: list[dict]) -> dict[str, Any]:
+    """Surface the joint belief/action split already stored per trajectory.
+
+    ``_belief_checkpoint`` writes ``belief_action_outcome`` at every checkpoint
+    that has an expected action, i.e. pre_gap and pre_final_action.
+    ``LUCKY_ACTION`` is a correct action on top of an incorrect belief, so
+    ``lucky_share_of_correct`` is the fraction of reported action accuracy that
+    is not backed by a correct state estimate.
+    """
+
+    output: dict[str, Any] = {}
+    for checkpoint in ("pre_gap", "pre_final_action"):
+        counts = Counter(
+            row["belief_checkpoints"][checkpoint].get("belief_action_outcome")
+            for row in rows
+        )
+        total = len(rows)
+        consistent = [
+            row["belief_checkpoints"][checkpoint].get("action_belief_consistent")
+            for row in rows
+        ]
+        calibrated = [
+            row["belief_checkpoints"][checkpoint].get(
+                "risk_calibration_consistent"
+            )
+            for row in rows
+        ]
+        correct = sum(
+            1
+            for row in rows
+            if row["belief_checkpoints"][checkpoint].get("action_correct")
+        )
+        lucky = counts.get("LUCKY_ACTION", 0)
+        output[checkpoint] = {
+            "n": total,
+            "outcomes": {
+                name: counts.get(name, 0) / total if total else None
+                for name in BELIEF_ACTION_OUTCOMES
+            },
+            "outcome_counts": {
+                name: counts.get(name, 0) for name in BELIEF_ACTION_OUTCOMES
+            },
+            "lucky_share_of_correct": lucky / correct if correct else None,
+            "action_belief_consistent": _mean(
+                value for value in consistent if isinstance(value, bool)
+            ),
+            "risk_calibration_consistent": _mean(
+                value for value in calibrated if isinstance(value, bool)
+            ),
+        }
+    return output
+
+
+def belief_revision_summary(rows: list[dict]) -> dict[str, Any]:
+    """Pool revision gain and stale mass over variables whose state changed.
+
+    Pooling at the variable level rather than averaging the stored per-trajectory
+    ``mean_*`` fields avoids weighting a trajectory with one changed variable the
+    same as one with two.  ``contributing_variables`` records which variables
+    actually moved, because ``causal_alignment`` only changes under the
+    explicit-user-update condition.
+    """
+
+    pooled: dict[str, list[float]] = {key: [] for key in REVISION_KEYS}
+    contributing: Counter = Counter()
+    for row in rows:
+        for variable, entry in row["belief_revision"]["variables"].items():
+            if not entry.get("state_changed"):
+                continue
+            contributing[variable] += 1
+            for key in REVISION_KEYS:
+                value = entry.get(key)
+                if value is not None:
+                    pooled[key].append(float(value))
+    return {
+        "changed_variable_observations": sum(contributing.values()),
+        "contributing_variables": dict(contributing),
+        **{
+            key: (sum(values) / len(values) if values else None)
+            for key, values in pooled.items()
+        },
+    }
+
+
 def build_metrics(rows: list[dict]) -> dict[str, Any]:
     """Build complete nested metrics grouped by model and condition."""
 
@@ -369,6 +489,8 @@ def build_metrics(rows: list[dict]) -> dict[str, Any]:
                     row["action_trajectory_success"] for row in group
                 ),
                 "beliefs": beliefs,
+                "belief_action_outcomes": belief_action_outcomes(group),
+                "belief_revision": belief_revision_summary(group),
                 "usage": usage_summary(group),
                 "failure_tags": dict(
                     Counter(
@@ -944,6 +1066,59 @@ def markdown_report(metrics: dict[str, Any]) -> str:
                 )
         else:
             lines.append("- None.")
+        lines.extend(["", "### Joint belief/action outcomes (final checkpoint)", ""])
+        lines.append(
+            "| Condition | Full success | Action fail | Lucky | State fail "
+            "| Lucky share of correct | Action/belief consistent |"
+        )
+        lines.append("|---|---|---|---|---|---|---|")
+        for condition, cdata in data["conditions"].items():
+            split = cdata.get("belief_action_outcomes", {}).get(
+                "pre_final_action", {}
+            )
+            outcomes = split.get("outcomes", {})
+            lines.append(
+                f"| {condition} "
+                f"| {_percent(outcomes.get('FULL_SUCCESS'))} "
+                f"| {_percent(outcomes.get('ACTION_SELECTION_FAILURE'))} "
+                f"| {_percent(outcomes.get('LUCKY_ACTION'))} "
+                f"| {_percent(outcomes.get('STATE_SYNCHRONIZATION_FAILURE'))} "
+                f"| {_percent(split.get('lucky_share_of_correct'))} "
+                f"| {_percent(split.get('action_belief_consistent'))} |"
+            )
+        lines.append("")
+        lines.append(
+            "`Lucky` is a correct action on top of an incorrect state belief. "
+            "`Lucky share of correct` is therefore the fraction of the reported "
+            "action accuracy that is not backed by a correct state estimate."
+        )
+
+        lines.extend(["", "### Belief revision across the gap", ""])
+        lines.append(
+            "| Condition | k obs | Revision gain | Reflection gain "
+            "| Final revision gain | Stale mass | Contributing variables |"
+        )
+        lines.append("|---|---|---|---|---|---|---|")
+        for condition, cdata in data["conditions"].items():
+            rev = cdata.get("belief_revision", {})
+            lines.append(
+                f"| {condition} "
+                f"| {rev.get('changed_variable_observations', 0)} "
+                f"| {_number(rev.get('belief_revision_gain'))} "
+                f"| {_number(rev.get('reflection_gain'))} "
+                f"| {_number(rev.get('final_revision_gain'))} "
+                f"| {_number(rev.get('stale_belief_persistence'))} "
+                f"| {_contributing_label(rev.get('contributing_variables', {}))} |"
+            )
+        lines.append("")
+        lines.append(
+            "Revision gain is the probability mass moved onto the new true state "
+            "by the resumed evidence, pooled over variables whose true state "
+            "actually changed. Reflection gain is the further movement between the "
+            "belief-only checkpoint and the final action, where no new evidence "
+            "arrives. Stale mass is the probability still on the superseded state."
+        )
+
         lines.extend(["", "### Difficulty assessment", ""])
         lines.extend(f"- {flag}" for flag in data["difficulty_flags"])
     lines.extend(
