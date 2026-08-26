@@ -1,11 +1,19 @@
 {
- "trajectories": 39,
- "cost_usd": 0.2339,
- "model_calls": 546,
+ "trajectories": 504,
+ "cost_usd": 8.9686,
+ "model_calls": 7148,
  "by_model": {
+  "Gemini 2.5": {
+   "trajectories": 168,
+   "cost_usd": 3.7807
+  },
+  "Gemini 3": {
+   "trajectories": 168,
+   "cost_usd": 4.0926
+  },
   "GPT Audio Mini": {
-   "trajectories": 39,
-   "cost_usd": 0.2339
+   "trajectories": 168,
+   "cost_usd": 1.0952
   }
  }
 }

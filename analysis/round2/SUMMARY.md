@@ -46,6 +46,7 @@ Recommendation: change the freeze check to hash LF-normalised content, otherwise
 | R9 | No-change belief effect holds and strengthens without travel | One-line sensitivity footnote closes the hole |
 | R10 | 72 of 84 user actions overwrite `causal_alignment` | Explicit-user-update needs an explicit qualification |
 | R11 | 54 of 84 prosody pairs are not higher on both axes; listening audit 2/21 done | Prosody cannot be pooled; report per contrast |
+| E1 | Oracle state gains +11.9/+21.4/+30.4, but only 1 of 3 models clears its floor even with the state supplied | State inference is the largest component of the failure, not the whole of it |
 
 ## 3. Sentences in `paper/main.tex` these results contradict
 
@@ -110,6 +111,12 @@ Now quantifiable rather than qualitative, from `belief_action_outcome` which was
 > Across all conditions, the automatic diagnostics marked an incorrect state belief in 83.5--95.9\% of failed trajectories.
 
 Not contradicted; R6 sharpens it. The missed variable is almost always the domain outcome, not the branch: under ordinary audio `causal_alignment` is recovered 76.2/90.5/84.5% while the outcome variable is recovered only 42.3/51.8/35.1%. The dominant single failure mode is *alignment right, outcome wrong* (36.9/39.3/53.6% of all trajectories), i.e. the bottleneck is applying the completion rule to a clue the model has already retrieved, not losing the clue.
+
+### `main.tex:75`
+
+> This scope keeps failures attributable to state inference and belief revision.
+
+E1 shows this is only partly true, and the qualification is now measurable. Supplying the realized post-gap state in plain language immediately before the menu -- removing all state uncertainty while holding scenarios, menus and audio fixed -- raises final-action accuracy by 11.9/21.4/30.4 points. That is a large effect and it supports the paper's emphasis. But 2 of 3 models still fail to exceed a domain-aware constant policy under the oracle, so a substantial residual failure is *not* attributable to state inference. Suggested addition to the results: *An oracle-state control that supplies the realized state in plain language recovers 11.9/21.4/30.4 points of final-action accuracy, establishing state inference as the largest single component of post-gap failure; a residual gap to the constant-policy baseline remains for two of three models, indicating that applying the completion rule is a second, separable difficulty.*
 
 ### Additional statement the paper should add (no existing sentence to fix)
 
@@ -443,7 +450,9 @@ All use the `\dualcolhead` macro already defined at `main.tex:33` and `booktabs`
     \toprule
     \dualcolhead{Model} & \dualcolhead{$n$} & \dualcolhead{Oracle} & \dualcolhead{Ordinary} & \dualcolhead{Misaligned} & \dualcolhead{Aligned} & \dualcolhead{$\Delta$ [95\% CI]} \\
     \midrule
-    GPT Audio Mini & 39 & 48.7 & 22.0 & 30.0 & 68.4 & 22.9 [4.2, 52.1] \\
+    Gemini 2.5 & 168 & 47.0 & 35.1 & 50.0 & 44.0 & 11.9 [-0.0, 23.2] \\
+    Gemini 3 & 168 & 68.5 & 47.0 & 58.3 & 78.6 & 21.4 [11.9, 30.4] \\
+    GPT Audio Mini & 168 & 52.4 & 22.0 & 47.6 & 57.1 & 30.4 [17.9, 44.0] \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -451,11 +460,21 @@ All use the `\dualcolhead` macro already defined at `main.tex:33` and `booktabs`
 
 ## 5. Phase 3: the oracle-state run (E1)
 
-Ran and scored; see `analysis/round2/E1/README.md` for the full table and reading.
+Complete: 504 trajectories (3 models x 84 scenarios x 2 passes), **$8.97** against the $25 cap and the $11 estimate. Scored on `post_gap_success` only, because the belief checkpoint is deliberately suppressed in this condition.
 
-| Model | Condition | n | Final action | 95% CI | Misaligned | Aligned |
-|---|---|---|---|---|---|---|
-| GPT Audio Mini | Oracle state | 39 | 48.7 | [8.3, 70.8] | 30.0 | 68.4 |
+| Model | n | Oracle | 95% CI | Ordinary | Delta | p | Misaligned | Aligned | Majority floor | Clears floor? |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Gemini 2.5 | 168 | **47.0** | [35.1, 58.3] | 35.1 | +11.9 | 0.0958 | 50.0 | 44.0 | 51.2 | no |
+| Gemini 3 | 168 | **68.5** | [58.9, 77.4] | 47.0 | +21.4 | 0.0022 | 58.3 | 78.6 | 50.6 | **YES** |
+| GPT Audio Mini | 168 | **52.4** | [38.1, 65.5] | 22.0 | +30.4 | 0.0005 | 47.6 | 57.1 | 54.8 | no |
+
+### Verdict
+
+**Mixed, and it lands on the side the work order called worth more.** Supplying the realized state in plain language raises final-action accuracy by +11.9 / +21.4 / +30.4 points, significantly for two of three models (p = 0.0958 / 0.0022 / 0.0005). State inference is therefore a genuine and large part of the bottleneck, which supports the paper's central claim.
+
+But **only Gemini 3 exceeds a domain-aware constant policy even with the state handed to it** (68.5 against a 50.6 floor). The other two move from clearly below their floor to roughly at it. A substantial residual failure survives the complete removal of state uncertainty, and that residual is rule-to-action mapping, not synchronization. The paper cannot claim the benchmark isolates state tracking; it can claim that state tracking is the largest single component of a failure that also includes applying the completion rule.
+
+**The aligned branch is settled.** R2 found models failing there because they would not conclude a resolved case was resolved. Under the oracle, aligned-branch accuracy moves 20.2 / 33.3 / 4.8 to 44.0 / 78.6 / 57.1. The refusal was a state error, not a policy preference: told the operation succeeded, all three models close the case. The misaligned branch barely moves (50.0 / 60.7 / 39.3 to 50.0 / 58.3 / 47.6), which is where the rule-application residual sits.
 
 ## 6. Code changes (Phase 2)
 
