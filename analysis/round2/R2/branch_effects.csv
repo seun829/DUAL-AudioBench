@@ -1,0 +1,79 @@
+model,condition,metric,paired_n,domain_clusters,misaligned_minus_aligned,ci95,p_value
+Gemini 2.5,Ordinary audio,first action,84,14,-20.2,"[-40.5, -1.2]",0.0894
+Gemini 2.5,Ordinary audio,final action,84,14,29.8,"[9.5, 50.0]",0.0229
+Gemini 2.5,Ordinary audio,belief after gap,84,14,28.6,"[13.1, 45.2]",0.0078
+Gemini 2.5,No state change,first action,84,14,-26.2,"[-42.9, -10.7]",0.0195
+Gemini 2.5,No state change,final action,84,14,-27.4,"[-39.3, -15.5]",0.0024
+Gemini 2.5,No state change,belief after gap,84,14,-31.0,"[-45.2, -15.5]",0.0054
+Gemini 2.5,Short clue,first action,84,14,-32.1,"[-52.4, -11.9]",0.0166
+Gemini 2.5,Short clue,final action,84,14,19.0,"[4.8, 34.5]",0.0347
+Gemini 2.5,Short clue,belief after gap,84,14,31.0,"[13.1, 50.0]",0.0088
+Gemini 2.5,Clue removed,first action,84,14,-9.5,"[-21.4, 1.2]",0.1953
+Gemini 2.5,Clue removed,final action,84,14,38.1,"[25.0, 51.2]",0.0010
+Gemini 2.5,Clue removed,belief after gap,84,14,52.4,"[35.7, 69.0]",0.0005
+Gemini 2.5,Transcript,first action,84,14,-21.4,"[-36.9, -7.1]",0.0234
+Gemini 2.5,Transcript,final action,84,14,54.8,"[36.9, 70.2]",0.0005
+Gemini 2.5,Transcript,belief after gap,84,14,51.2,"[34.5, 66.7]",0.0005
+Gemini 2.5,Neutral audio,first action,84,14,-20.2,"[-36.9, -2.4]",0.0664
+Gemini 2.5,Neutral audio,final action,84,14,36.9,"[21.4, 52.4]",0.0020
+Gemini 2.5,Neutral audio,belief after gap,84,14,32.1,"[21.4, 42.9]",0.0005
+Gemini 2.5,Explicit user update,first action,84,14,-15.5,"[-34.5, 2.4]",0.1855
+Gemini 2.5,Explicit user update,final action,84,14,-3.6,"[-14.3, 8.3]",0.7031
+Gemini 2.5,Explicit user update,belief after gap,84,14,-7.1,"[-25.0, 10.7]",0.5547
+Gemini 2.5,High prosody,first action,84,14,-8.3,"[-28.6, 10.7]",0.5071
+Gemini 2.5,High prosody,final action,84,14,47.6,"[31.0, 65.5]",0.0002
+Gemini 2.5,High prosody,belief after gap,84,14,36.9,"[23.8, 51.2]",0.0005
+Gemini 2.5,Low prosody,first action,84,14,-25.0,"[-41.7, -9.5]",0.0173
+Gemini 2.5,Low prosody,final action,84,14,40.5,"[23.8, 58.3]",0.0010
+Gemini 2.5,Low prosody,belief after gap,84,14,40.5,"[26.2, 54.8]",0.0005
+Gemini 3,Ordinary audio,first action,84,14,-22.6,"[-41.7, -6.0]",0.0352
+Gemini 3,Ordinary audio,final action,84,14,27.4,"[3.6, 51.2]",0.0640
+Gemini 3,Ordinary audio,belief after gap,84,14,38.1,"[16.7, 59.5]",0.0094
+Gemini 3,No state change,first action,84,14,-21.4,"[-36.9, -7.1]",0.0156
+Gemini 3,No state change,final action,84,14,-51.2,"[-65.5, -38.1]",0.0001
+Gemini 3,No state change,belief after gap,84,14,-26.2,"[-41.7, -11.9]",0.0059
+Gemini 3,Short clue,first action,84,14,-39.3,"[-56.0, -22.6]",0.0015
+Gemini 3,Short clue,final action,84,14,13.1,"[-6.0, 32.1]",0.2627
+Gemini 3,Short clue,belief after gap,84,14,39.3,"[19.0, 59.5]",0.0068
+Gemini 3,Clue removed,first action,84,14,-2.4,"[-15.5, 9.5]",0.8594
+Gemini 3,Clue removed,final action,84,14,34.5,"[15.5, 54.8]",0.0088
+Gemini 3,Clue removed,belief after gap,84,14,33.3,"[17.9, 51.2]",0.0020
+Gemini 3,Transcript,first action,84,14,-19.0,"[-33.3, -4.8]",0.0430
+Gemini 3,Transcript,final action,84,14,28.6,"[2.4, 54.8]",0.0762
+Gemini 3,Transcript,belief after gap,84,14,54.8,"[32.1, 76.2]",0.0020
+Gemini 3,Neutral audio,first action,84,14,-32.1,"[-46.4, -19.0]",0.0020
+Gemini 3,Neutral audio,final action,84,14,26.2,"[4.8, 46.4]",0.0469
+Gemini 3,Neutral audio,belief after gap,84,14,36.9,"[21.4, 53.6]",0.0020
+Gemini 3,Explicit user update,first action,84,14,-11.9,"[-29.8, 6.0]",0.2949
+Gemini 3,Explicit user update,final action,84,14,7.1,"[-6.0, 20.2]",0.4062
+Gemini 3,Explicit user update,belief after gap,84,14,3.6,"[0.0, 9.5]",0.5000
+Gemini 3,High prosody,first action,84,14,-29.8,"[-48.8, -11.9]",0.0117
+Gemini 3,High prosody,final action,84,14,29.8,"[6.0, 54.8]",0.0488
+Gemini 3,High prosody,belief after gap,84,14,33.3,"[17.9, 50.0]",0.0020
+Gemini 3,Low prosody,first action,84,14,-29.8,"[-47.6, -14.3]",0.0039
+Gemini 3,Low prosody,final action,84,14,33.3,"[9.5, 57.1]",0.0352
+Gemini 3,Low prosody,belief after gap,84,14,41.7,"[20.2, 60.7]",0.0051
+GPT Audio Mini,Ordinary audio,first action,84,14,-42.9,"[-61.9, -22.6]",0.0039
+GPT Audio Mini,Ordinary audio,final action,84,14,34.5,"[17.9, 52.4]",0.0046
+GPT Audio Mini,Ordinary audio,belief after gap,84,14,28.6,"[7.1, 50.0]",0.0352
+GPT Audio Mini,No state change,first action,84,14,-29.8,"[-47.6, -13.1]",0.0117
+GPT Audio Mini,No state change,final action,84,14,-11.9,"[-27.4, 1.2]",0.2031
+GPT Audio Mini,No state change,belief after gap,84,14,-21.4,"[-36.9, -6.0]",0.0352
+GPT Audio Mini,Short clue,first action,84,14,-45.2,"[-65.5, -23.8]",0.0039
+GPT Audio Mini,Short clue,final action,84,14,34.5,"[19.0, 51.2]",0.0017
+GPT Audio Mini,Short clue,belief after gap,84,14,27.4,"[10.7, 41.7]",0.0122
+GPT Audio Mini,Clue removed,first action,84,14,1.2,"[-9.5, 13.1]",1.0000
+GPT Audio Mini,Clue removed,final action,84,14,39.3,"[16.7, 60.7]",0.0095
+GPT Audio Mini,Clue removed,belief after gap,84,14,6.0,"[-7.1, 19.0]",0.5000
+GPT Audio Mini,Neutral audio,first action,84,14,-33.3,"[-52.4, -14.3]",0.0107
+GPT Audio Mini,Neutral audio,final action,84,14,33.3,"[16.7, 50.0]",0.0029
+GPT Audio Mini,Neutral audio,belief after gap,84,14,16.7,"[1.2, 31.0]",0.0747
+GPT Audio Mini,Explicit user update,first action,84,14,-35.7,"[-53.6, -17.9]",0.0059
+GPT Audio Mini,Explicit user update,final action,84,14,-23.8,"[-39.3, -8.3]",0.0205
+GPT Audio Mini,Explicit user update,belief after gap,84,14,-16.7,"[-29.8, -4.8]",0.0449
+GPT Audio Mini,High prosody,first action,84,14,-35.7,"[-52.4, -17.9]",0.0044
+GPT Audio Mini,High prosody,final action,84,14,32.1,"[17.9, 47.6]",0.0015
+GPT Audio Mini,High prosody,belief after gap,84,14,22.6,"[10.7, 35.7]",0.0039
+GPT Audio Mini,Low prosody,first action,84,14,-33.3,"[-52.4, -14.3]",0.0088
+GPT Audio Mini,Low prosody,final action,84,14,35.7,"[20.2, 51.2]",0.0020
+GPT Audio Mini,Low prosody,belief after gap,84,14,28.6,"[13.1, 42.9]",0.0068

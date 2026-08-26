@@ -1,0 +1,47 @@
+% R2: action and belief accuracy split by causal branch.
+% On the misaligned branch the always-close policy scores 0, so these
+% numbers cannot be inflated by the answer skew documented in R16.
+\begin{table*}[htbp]
+  \centering
+  \scriptsize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.04}
+  \caption{Accuracy split by causal branch (percent). On the misaligned branch the gold final action is always the domain repair action, so a constant close-the-case policy scores 0 and uniform chance is 20. Effect is the paired misaligned-minus-aligned difference with a domain-clustered 95\% interval.}
+  \label{tab:branch-split}
+  \begin{tabular}{@{}ll rrr rrr r@{}}
+    \toprule
+    & & \multicolumn{3}{c}{\dualcolhead{Misaligned}} & \multicolumn{3}{c}{\dualcolhead{Aligned}} & \\
+    \cmidrule(lr){3-5}\cmidrule(lr){6-8}
+    \dualcolhead{Model} & \dualcolhead{Condition} & \dualcolhead{First} & \dualcolhead{Final} & \dualcolhead{Belief} & \dualcolhead{First} & \dualcolhead{Final} & \dualcolhead{Belief} & \dualcolhead{$\Delta$ Final} \\
+    \midrule
+    Gemini 2.5 & Ordinary audio & 59.5 & 50.0 & 53.6 & 79.8 & 20.2 & 25.0 & 29.8 \\
+    Gemini 2.5 & No state change & 54.8 & 25.0 & 45.2 & 81.0 & 52.4 & 76.2 & -27.4 \\
+    Gemini 2.5 & Short clue & 47.6 & 45.2 & 51.2 & 79.8 & 26.2 & 20.2 & 19.0 \\
+    Gemini 2.5 & Clue removed & 54.8 & 44.0 & 56.0 & 64.3 & 6.0 & 3.6 & 38.1 \\
+    Gemini 2.5 & Transcript & 66.7 & 63.1 & 77.4 & 88.1 & 8.3 & 26.2 & 54.8 \\
+    Gemini 2.5 & Neutral audio & 54.8 & 50.0 & 48.8 & 75.0 & 13.1 & 16.7 & 36.9 \\
+    Gemini 2.5 & Explicit user update & 56.0 & 70.2 & 69.0 & 71.4 & 73.8 & 76.2 & -3.6 \\
+    Gemini 2.5 & High prosody & 64.3 & 60.7 & 56.0 & 72.6 & 13.1 & 19.0 & 47.6 \\
+    Gemini 2.5 & Low prosody & 51.2 & 52.4 & 56.0 & 76.2 & 11.9 & 15.5 & 40.5 \\
+    \addlinespace
+    Gemini 3 & Ordinary audio & 69.0 & 60.7 & 70.2 & 91.7 & 33.3 & 32.1 & 27.4 \\
+    Gemini 3 & No state change & 64.3 & 22.6 & 65.5 & 85.7 & 73.8 & 91.7 & -51.2 \\
+    Gemini 3 & Short clue & 46.4 & 48.8 & 70.2 & 85.7 & 35.7 & 31.0 & 13.1 \\
+    Gemini 3 & Clue removed & 65.5 & 44.0 & 48.8 & 67.9 & 9.5 & 15.5 & 34.5 \\
+    Gemini 3 & Transcript & 75.0 & 72.6 & 91.7 & 94.0 & 44.0 & 36.9 & 28.6 \\
+    Gemini 3 & Neutral audio & 61.9 & 58.3 & 72.6 & 94.0 & 32.1 & 35.7 & 26.2 \\
+    Gemini 3 & Explicit user update & 69.0 & 83.3 & 86.9 & 81.0 & 76.2 & 83.3 & 7.1 \\
+    Gemini 3 & High prosody & 59.5 & 59.5 & 67.9 & 89.3 & 29.8 & 34.5 & 29.8 \\
+    Gemini 3 & Low prosody & 57.1 & 57.1 & 73.8 & 86.9 & 23.8 & 32.1 & 33.3 \\
+    \addlinespace
+    GPT Audio Mini & Ordinary audio & 44.0 & 39.3 & 45.2 & 86.9 & 4.8 & 16.7 & 34.5 \\
+    GPT Audio Mini & No state change & 46.4 & 15.5 & 52.4 & 76.2 & 27.4 & 73.8 & -11.9 \\
+    GPT Audio Mini & Short clue & 44.0 & 38.1 & 46.4 & 89.3 & 3.6 & 19.0 & 34.5 \\
+    GPT Audio Mini & Clue removed & 56.0 & 46.4 & 20.2 & 54.8 & 7.1 & 14.3 & 39.3 \\
+    GPT Audio Mini & Neutral audio & 46.4 & 35.7 & 40.5 & 79.8 & 2.4 & 23.8 & 33.3 \\
+    GPT Audio Mini & Explicit user update & 47.6 & 51.2 & 59.5 & 83.3 & 75.0 & 76.2 & -23.8 \\
+    GPT Audio Mini & High prosody & 42.9 & 35.7 & 41.7 & 78.6 & 3.6 & 19.0 & 32.1 \\
+    GPT Audio Mini & Low prosody & 44.0 & 38.1 & 54.8 & 77.4 & 2.4 & 26.2 & 35.7 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
