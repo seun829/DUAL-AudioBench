@@ -1,0 +1,383 @@
+{
+  "schema_version": "0.5",
+  "scenario_id": "tenancy_12to20_b1_s05",
+  "domain": "housing",
+  "bucket": "12-20",
+  "clue_turn_distance": 20,
+  "distance_definition": "Number of agent/user turns after the causal clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "The contractor has the current authority required by the present managing agent.",
+  "clue_answer": "the contractor had the required current authority",
+  "clue_ablation_text": "I am not sure; I cannot confirm the building-management history.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, the heating in my flat has not worked for three days.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I am sorry about that. Can you confirm the flat number?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it is flat twelve on the third floor.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "The visit can be completed only when the contractor's authority matches the current managing agent's requirements; expired authority blocks access.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "user",
+      "text": "Understood; I checked the contractor's access authority.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "agent",
+      "text": "Does the contractor hold the access authority required by the current managing agent?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "The contractor has the current authority required by the present managing agent.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is there a buzzer at the main entrance?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, there is one.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you checked the thermostat setting?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it is turned right up.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is there a boiler cupboard inside the flat?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, in the hallway.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like a text before anyone arrives?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, a text would help.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would daytime access be possible?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I work from home.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the number ending in nine-zero-six still right?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that is my number.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is it the whole flat or one room?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "The whole flat is cold.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Does the hot water still run?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, the water is fine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Are neighbours reporting the same problem?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "One of them mentioned it too.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Raise the job and send it to the contractor rota.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will wait for someone to come.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "work_order_status": "not_created",
+    "dispatch_attempts": 0,
+    "vendor_credentials": "current",
+    "required_credentials": "current",
+    "credentials_reissued": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_arranged_neighbour_access": false,
+    "causal_alignment": "aligned",
+    "benchmark_schema": "0.5"
+  },
+  "pre_gap": {
+    "agent_turn_index": 25,
+    "correct_action": "dispatch_maintenance_visit"
+  },
+  "transition": {
+    "elapsed_minutes": 35,
+    "external_event": {
+      "type": "visit_window_elapsed",
+      "minimum_minutes": 35
+    },
+    "user_action": {
+      "action": "refresh_contractor_access_authority",
+      "at_minute": 10,
+      "observation": "While you were unavailable, I had the contractor's access authority updated to the current required credentials.",
+      "effects": [
+        {
+          "target": "vendor_credentials",
+          "copy_from": "required_credentials"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
+    }
+  },
+  "belief_schema": {
+    "work_order_status": [
+      "not_created",
+      "dispatched",
+      "access_refused",
+      "completed"
+    ],
+    "causal_alignment": [
+      "misaligned",
+      "aligned"
+    ]
+  },
+  "belief_definitions": {
+    "work_order_status": {
+      "not_created": "no maintenance work order has been created",
+      "dispatched": "a contractor has been sent to the property",
+      "access_refused": "the contractor could not enter under the available authority",
+      "completed": "the maintenance visit finished the work"
+    },
+    "causal_alignment": {
+      "misaligned": "the contractor holds expired authority from the former agent",
+      "aligned": "the contractor holds current authority accepted by the managing agent"
+    }
+  },
+  "revalidation_actions": [
+    "reissue_access_authority"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "dispatch_maintenance_visit",
+      "description": "Raise the job and send it to the contractor rota.",
+      "failure_tags": []
+    },
+    {
+      "action": "rehouse_tenant",
+      "description": "Move the tenant elsewhere before any visit is attempted.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "authorise_full_replacement",
+      "description": "Approve a complete new heating system immediately.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "send_portable_heaters",
+      "description": "Post out portable heaters and leave it there.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and ask the tenant to report it again.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "reissue_access_authority",
+      "description": "Get fresh entry permissions issued for whoever now holds the contract.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "dispatch_maintenance_visit",
+      "description": "Send the same job to the contractor rota again now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "send_portable_heaters",
+      "description": "Post out portable heaters instead.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the job alone and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
+      "failure_tags": []
+    }
+  ],
+  "causal_design": {
+    "pair_id": "tenancy:12-20:s05",
+    "paired_scenario_id": "tenancy_12to20_b0_s05",
+    "branch": "aligned",
+    "outcome_variable": "work_order_status",
+    "hidden_outcomes": [
+      "access_refused",
+      "completed"
+    ],
+    "expected_post_action": "close_case",
+    "intervention": "early_clue_only"
+  },
+  "causal_post_gap_observation": {
+    "state_variable": "work_order_status",
+    "hidden_values": [
+      "access_refused",
+      "completed"
+    ],
+    "text": "Thirty-five minutes have passed and the visit window ended, but the work-order outcome is hidden. Based on the authority detail I gave earlier, what should happen next?"
+  },
+  "menu_pairing_id": "tenancy:12-20:s05",
+  "prosody_pair": {
+    "native_prosody": "frustrated",
+    "high": {
+      "prosody": "frustrated",
+      "expected_style": "acknowledge_impact"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "tenancy:12-20:s05:aligned",
+    "transcript_variant": 2,
+    "voice_variant": 0
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f3",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "Does the contractor hold the access authority required by the current managing agent?",
+      "gold_answer": "the contractor had the required current authority",
+      "targets": "clue",
+      "turn_distance": 20,
+      "bucket": "12-20"
+    },
+    {
+      "q_id": "q2",
+      "question": "Does the hot water still run?",
+      "gold_answer": "yes",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "Why did the visit fail?",
+      "gold_answer": "the work was completed",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

@@ -1,0 +1,383 @@
+{
+  "schema_version": "0.5",
+  "scenario_id": "warranty_5to8_b0_s05",
+  "domain": "repair",
+  "bucket": "5-8",
+  "clue_turn_distance": 6,
+  "distance_definition": "Number of agent/user turns after the causal clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "We bought it as a discounted display unit, while this cover route applies to standard retail purchases.",
+  "clue_answer": "it was a display-unit purchase outside the standard route",
+  "clue_ablation_text": "I am not sure; I do not have the original purchase detail available.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, my washing machine has stopped draining properly.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I can look at that. Do you have the model number?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it starts with W-D-nine.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "The standard cover route authorises purchases from the covered retail channel; another purchase channel falls outside its terms.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "user",
+      "text": "Understood; I checked how the item was purchased.",
+      "kind": "causal_rule"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you cleaned the filter recently?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I cleared it yesterday.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is there parking near the property?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, right outside.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the number ending in one-seven-four still yours?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that is mine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like the outcome confirmed in writing?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, in writing please.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the machine level on the floor?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it sits flat.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "How long has it been doing this?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "About four days now.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is it plumbed into a standard waste pipe?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, the usual arrangement.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Was the purchase made through the channel covered by this claim route?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "We bought it as a discounted display unit, while this cover route applies to standard retail purchases.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would weekday or weekend suit for a visit?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Weekdays are easier.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Does it make any unusual noise?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "There is a low humming sound.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Open the cover claim and send it for assessment.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will wait to hear the outcome.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "claim_state": "not_opened",
+    "claim_attempts": 0,
+    "purchase_channel": "display_unit",
+    "covered_channel": "standard_retail",
+    "retailer_route_used": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_located_paperwork": false,
+    "causal_alignment": "misaligned",
+    "benchmark_schema": "0.5"
+  },
+  "pre_gap": {
+    "agent_turn_index": 25,
+    "correct_action": "open_cover_claim"
+  },
+  "transition": {
+    "elapsed_minutes": 30,
+    "external_event": {
+      "type": "assessment_cycle",
+      "minimum_minutes": 30
+    },
+    "user_action": {
+      "action": "switch_to_matching_purchase_route",
+      "at_minute": 11,
+      "observation": "While you were unavailable, I moved the repair request to the purchase route that covers the original seller channel.",
+      "effects": [
+        {
+          "target": "covered_channel",
+          "copy_from": "purchase_channel"
+        },
+        {
+          "target": "causal_alignment",
+          "value": "aligned"
+        }
+      ]
+    }
+  },
+  "belief_schema": {
+    "claim_state": [
+      "not_opened",
+      "in_assessment",
+      "outside_terms",
+      "authorised"
+    ],
+    "causal_alignment": [
+      "misaligned",
+      "aligned"
+    ]
+  },
+  "belief_definitions": {
+    "claim_state": {
+      "not_opened": "the repair-cover claim has not been opened",
+      "in_assessment": "the claim is being assessed",
+      "outside_terms": "assessment found that the claim does not fit the submitted cover route",
+      "authorised": "the repair claim was approved"
+    },
+    "causal_alignment": {
+      "misaligned": "the purchase channel falls outside the submitted cover route",
+      "aligned": "the purchase channel is covered by the submitted route"
+    }
+  },
+  "revalidation_actions": [
+    "use_retailer_route"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "open_cover_claim",
+      "description": "Open the cover claim and send it for assessment.",
+      "failure_tags": []
+    },
+    {
+      "action": "dispatch_engineer_now",
+      "description": "Send an engineer before any assessment happens.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "authorise_replacement",
+      "description": "Approve a whole replacement machine straight away.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "suggest_self_repair",
+      "description": "Talk the user through fixing it themselves first.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and ask the user to call back.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "use_retailer_route",
+      "description": "Take the repair through the seller channel that matches the original purchase route.",
+      "failure_tags": []
+    },
+    {
+      "action": "open_cover_claim",
+      "description": "Send the identical claim for assessment again now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "suggest_self_repair",
+      "description": "Talk the user through fixing it themselves.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the claim alone and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Conclude that the completed operation succeeded, then close the request.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "causal_design": {
+    "pair_id": "warranty:5-8:s05",
+    "paired_scenario_id": "warranty_5to8_b1_s05",
+    "branch": "misaligned",
+    "outcome_variable": "claim_state",
+    "hidden_outcomes": [
+      "outside_terms",
+      "authorised"
+    ],
+    "expected_post_action": "use_retailer_route",
+    "intervention": "early_clue_only"
+  },
+  "causal_post_gap_observation": {
+    "state_variable": "claim_state",
+    "hidden_values": [
+      "outside_terms",
+      "authorised"
+    ],
+    "text": "Thirty minutes have passed and the assessment finished, but the outcome is not shown. Based on the purchase detail I gave earlier, what should we do next?"
+  },
+  "menu_pairing_id": "warranty:5-8:s05",
+  "prosody_pair": {
+    "native_prosody": "confused",
+    "high": {
+      "prosody": "confused",
+      "expected_style": "clarify_and_reassure"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "warranty:5-8:s05:misaligned",
+    "transcript_variant": 1,
+    "voice_variant": 1
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f4",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "Was the purchase made through the channel covered by this claim route?",
+      "gold_answer": "it was a display-unit purchase outside the standard route",
+      "targets": "clue",
+      "turn_distance": 6,
+      "bucket": "5-8"
+    },
+    {
+      "q_id": "q2",
+      "question": "How long has the fault lasted?",
+      "gold_answer": "about four days",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What did the assessment return?",
+      "gold_answer": "it fell outside the terms",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

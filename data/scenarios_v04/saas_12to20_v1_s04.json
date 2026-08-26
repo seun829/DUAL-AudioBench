@@ -1,0 +1,331 @@
+{
+  "schema_version": "0.4",
+  "scenario_id": "saas_12to20_v1_s04",
+  "domain": "account_access",
+  "bucket": "12-20",
+  "clue_turn_distance": 16,
+  "distance_definition": "Number of agent/user turns after the clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "Relevant detail: our company switched to single sign-on just before the holidays.",
+  "clue_answer": "the company switched to single sign-on",
+  "clue_ablation_text": "I am not sure; I cannot confirm the sign-in configuration history.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, I cannot get into my work account this morning.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I can help. Does it reject you at the first screen?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it will not take me past that point.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Does the same thing happen on your phone?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, exactly the same.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you have the authenticator application installed?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it is on my phone.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Has the way your company handles logins changed at all?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "Relevant detail: our company switched to single sign-on just before the holidays.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Are colleagues able to get in normally?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "As far as I know, yes.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the recovery contact ending in eight-three-seven current?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that is still current.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would a written summary afterwards be useful?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, please send one.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the address you enter the work one?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, my work address.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Have you tried a different browser?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I tried two of them.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Did you change anything on your machine recently?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, nothing that I noticed.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Are you connected through the office network?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, I am at home today.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Start the standard credential reset for the account.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will try once that comes through.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "access_status": "locked",
+    "reset_attempts": 0,
+    "authentication_mode": "federated",
+    "reset_target": "local",
+    "identity_provider_engaged": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_tried_recovery_contact": false
+  },
+  "pre_gap": {
+    "agent_turn_index": 23,
+    "correct_action": "initiate_credential_reset"
+  },
+  "transition": {
+    "elapsed_minutes": 20,
+    "external_event": {
+      "type": "reset_propagation_window",
+      "minimum_minutes": 20
+    },
+    "user_action": {
+      "action": "try_recovery_contact",
+      "at_minute": 7
+    }
+  },
+  "belief_schema": {
+    "access_status": [
+      "locked",
+      "reset_pending",
+      "still_locked",
+      "restored"
+    ]
+  },
+  "belief_definitions": {
+    "access_status": {
+      "locked": "the user cannot currently access the account",
+      "reset_pending": "a credential reset has started but has not resolved access",
+      "still_locked": "the reset completed or timed out without restoring access",
+      "restored": "account access is working again"
+    }
+  },
+  "revalidation_actions": [
+    "engage_identity_provider"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "initiate_credential_reset",
+      "description": "Start the standard credential reset for the account.",
+      "failure_tags": []
+    },
+    {
+      "action": "provision_new_account",
+      "description": "Create an entirely new account for the user instead.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "grant_temporary_bypass",
+      "description": "Hand out a temporary way around the login screen.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "clear_browser_state",
+      "description": "Have the user wipe stored browser data before anything else.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request and ask the user to retry tomorrow.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "engage_identity_provider",
+      "description": "Take the account to the external directory team that owns the sign-in path.",
+      "failure_tags": []
+    },
+    {
+      "action": "initiate_credential_reset",
+      "description": "Run the same credential reset over again now.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "clear_browser_state",
+      "description": "Have the user wipe stored browser data.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "continue_monitoring",
+      "description": "Leave the reset alone and wait another interval.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request because the reset interval has passed.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "prosody_pair": {
+    "native_prosody": "urgent",
+    "high": {
+      "prosody": "urgent",
+      "expected_style": "acknowledge_urgency"
+    },
+    "low": {
+      "prosody": "confident",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "prosody_stimulus": {
+    "stimulus_id": "saas:12-20:voice1",
+    "transcript_variant": 2,
+    "voice_variant": 1
+  },
+  "audio_profile": {
+    "user_voice": "en-us+f4",
+    "agent_voice": "en-us+m3"
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's frustration or experienced impact before proceeding."
+    },
+    {
+      "style": "acknowledge_urgency",
+      "description": "Acknowledge the time pressure and prioritize the immediate next step."
+    },
+    {
+      "style": "clarify_and_reassure",
+      "description": "Briefly clarify the situation and reassure the user before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "What changed about company logins?",
+      "gold_answer": "they switched to single sign-on",
+      "targets": "clue",
+      "turn_distance": 16,
+      "bucket": "12-20"
+    },
+    {
+      "q_id": "q2",
+      "question": "Where was the user working from?",
+      "gold_answer": "at home",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "What happened after the reset?",
+      "gold_answer": "the account was still locked",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

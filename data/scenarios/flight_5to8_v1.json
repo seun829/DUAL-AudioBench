@@ -1,0 +1,307 @@
+{
+  "schema_version": "0.3",
+  "scenario_id": "flight_5to8_v1",
+  "domain": "travel",
+  "bucket": "5-8",
+  "clue_turn_distance": 8,
+  "distance_definition": "Number of agent/user turns after the clue and before fast-forward; includes the evaluated pre-gap action and user acknowledgement.",
+  "clue": "Keep in mind I have another flight out of Denver, and there are only ninety minutes between them.",
+  "clue_answer": "a 90-minute onward connection in Denver",
+  "clue_ablation_text": "Denver is the only part of the trip I need help with right now.",
+  "turns": [
+    {
+      "speaker": "user",
+      "text": "Hi, I am checking on my flight to Denver this afternoon.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "I see the two-fifteen departure. Is that the flight you mean?",
+      "kind": "setup"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes. I want to make sure everything is on track.",
+      "kind": "setup"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you have dietary or accessibility needs?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, nothing like that.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Does anything else on the reservation look wrong?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, everything else looks right.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Would you like gate-change notifications by text?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that would help.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you need directions to the departure terminal?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "No, I know where to go.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Are you checking any bags?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Just one checked bag.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "The security wait is about twenty minutes. Are you leaving soon?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, I am heading to the airport shortly.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is this trip ending in Denver, or is there another segment afterward?",
+      "kind": "clue_prompt"
+    },
+    {
+      "speaker": "user",
+      "text": "Keep in mind I have another flight out of Denver, and there are only ninety minutes between them.",
+      "kind": "clue"
+    },
+    {
+      "speaker": "agent",
+      "text": "Do you already have a seat assignment?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, fourteen C, an aisle.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the contact phone number on the booking current?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, it is current.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Is the rewards number ending in nine-nine-three yours?",
+      "kind": "filler"
+    },
+    {
+      "speaker": "user",
+      "text": "Yes, that is mine.",
+      "kind": "filler"
+    },
+    {
+      "speaker": "agent",
+      "text": "Enable active monitoring for changes to the itinerary.",
+      "kind": "pre_gap_action"
+    },
+    {
+      "speaker": "user",
+      "text": "Okay, I will watch for what happens.",
+      "kind": "pre_gap_acknowledgement"
+    }
+  ],
+  "initial_state": {
+    "flight_status": "on_time",
+    "departure_delay_minutes": 0,
+    "layover_minutes": 90,
+    "connection_status": "at_risk_if_delayed",
+    "monitoring_enabled": false,
+    "elapsed_minutes": 0,
+    "ticket_status": "open",
+    "action_history": [],
+    "user_action_history": [],
+    "user_rebooked_onward_segment": false
+  },
+  "pre_gap": {
+    "agent_turn_index": 23,
+    "correct_action": "enable_itinerary_monitoring"
+  },
+  "transition": {
+    "elapsed_minutes": 45,
+    "external_event": {
+      "type": "departure_delay",
+      "delay_minutes": 120
+    },
+    "user_action": {
+      "action": "self_protect_onward_segment",
+      "at_minute": 20
+    }
+  },
+  "belief_schema": {
+    "connection_status": [
+      "at_risk_if_delayed",
+      "missed",
+      "protected",
+      "viable"
+    ]
+  },
+  "revalidation_actions": [
+    "enable_itinerary_monitoring"
+  ],
+  "belief_confidence_threshold": 0.6,
+  "pre_gap_actions": [
+    {
+      "action": "enable_itinerary_monitoring",
+      "description": "Enable active monitoring for changes to the itinerary.",
+      "failure_tags": []
+    },
+    {
+      "action": "protect_onward_segment",
+      "description": "Change the later segment immediately despite the current on-time status.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "change_departing_segment",
+      "description": "Replace the current departure even though it is still on time.",
+      "failure_tags": [
+        "PREMATURE_ESCALATION"
+      ]
+    },
+    {
+      "action": "offer_service_recovery",
+      "description": "Offer disruption compensation before a disruption occurs.",
+      "failure_tags": [
+        "ACTION_SELECTION_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Close the request without monitoring for changes.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "post_gap_actions": [
+    {
+      "action": "protect_onward_segment",
+      "description": "Protect the later segment now and offer a compatible alternative.",
+      "failure_tags": []
+    },
+    {
+      "action": "enable_itinerary_monitoring",
+      "description": "Continue monitoring the existing itinerary without changing it.",
+      "failure_tags": [
+        "TIME_INFERENCE_FAILURE",
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "change_departing_segment",
+      "description": "Work only on the delayed departure and leave later segments unchanged.",
+      "failure_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    {
+      "action": "offer_service_recovery",
+      "description": "Offer disruption compensation without changing the itinerary.",
+      "failure_tags": [
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    {
+      "action": "close_case",
+      "description": "Confirm the delay and close the request.",
+      "failure_tags": [
+        "PREMATURE_CLOSE"
+      ]
+    }
+  ],
+  "prosody_pair": {
+    "native_prosody": "calm",
+    "high": {
+      "prosody": "urgent",
+      "expected_style": "acknowledge_impact"
+    },
+    "low": {
+      "prosody": "calm",
+      "expected_style": "proceed_directly"
+    }
+  },
+  "response_styles": [
+    {
+      "style": "acknowledge_impact",
+      "description": "Briefly acknowledge the user's impact or urgency before proceeding."
+    },
+    {
+      "style": "proceed_directly",
+      "description": "Proceed directly and neutrally to the next operational step."
+    }
+  ],
+  "questions": [
+    {
+      "q_id": "q1",
+      "question": "How much time is there between the flights?",
+      "gold_answer": "90 minutes",
+      "targets": "clue",
+      "turn_distance": 8,
+      "bucket": "5-8"
+    },
+    {
+      "q_id": "q2",
+      "question": "What seat is assigned?",
+      "gold_answer": "14C",
+      "targets": "filler",
+      "turn_distance": null,
+      "bucket": "filler"
+    },
+    {
+      "q_id": "q3",
+      "question": "How long is the delay?",
+      "gold_answer": "120 minutes",
+      "targets": "post_ff",
+      "turn_distance": null,
+      "bucket": "post_ff"
+    }
+  ],
+  "tag_definitions": {
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "PROSODY_GROUNDING_FAILURE": "The response approach does not match the audible delivery.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  }
+}

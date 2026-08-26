@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+
+# Runtime-generated turn/replay audio.
+data/turn_audio/
+data/replay_audio/
+data/runtime_audio/
+
+# Locally extracted command-line dependencies.
+.tools/
+
+# Local smoke artifact created during development.
+results/fake_closed_loop_smoke_retention.png
+
+# Local API credentials (OpenRouter/Gemini keys).
+.env
+
+# Blinded internal-audit answer keys; distribute only the public packets.
+paper_results/v05/internal_audit/private/
+paper_results/v05/internal_audit/**/private/
