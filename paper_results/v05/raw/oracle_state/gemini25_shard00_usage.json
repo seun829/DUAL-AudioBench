@@ -1,0 +1,16 @@
+{
+  "model": "google/gemini-2.5-flash",
+  "calls": 392,
+  "audio_calls": 392,
+  "text_calls": 0,
+  "prompt_tokens": 628216,
+  "completion_tokens": 7218,
+  "total_tokens": 635434,
+  "audio_bytes_sent": 601625828,
+  "audio_seconds_sent": 18800.266,
+  "cost_usd": 0.624244,
+  "errors": 0,
+  "provider_counts": {
+    "Google AI Studio": 392
+  }
+}
