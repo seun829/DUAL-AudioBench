@@ -30,7 +30,10 @@ FROZEN_TREES = ["data/scenarios_v05", "paper_results"]
 # pre-existing may change.
 NEW_RUN_PREFIXES = ("paper_results/v05/raw/oracle_state/",)
 
-TEXT_SUFFIXES = {".py", ".json", ".jsonl", ".md", ".csv", ".tex", ".txt", ".sty", ".ps1", ".bib"}
+TEXT_SUFFIXES = {
+    ".py", ".json", ".jsonl", ".md", ".csv", ".tex", ".txt", ".sty",
+    ".ps1", ".bib", ".log", ".sh", ".yml", ".yaml", ".cfg", ".ini",
+}
 
 
 def digest(path: Path) -> str:
