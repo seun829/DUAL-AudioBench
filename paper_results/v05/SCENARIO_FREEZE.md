@@ -15,6 +15,6 @@ immediately before paid execution.
 
 This freeze includes the pre-gap flight-belief repair, semantically valid
 aligned-branch close options, and scored hidden-user interventions. The blinded
-internal-audit packets were regenerated from this exact scenario set; response
+independent-audit packets were regenerated from this exact scenario set; response
 sheets were reset to blank because no earlier audit answers may be carried
 across a scenario revision.

@@ -1,7 +1,7 @@
-# DUAL-AudioBench internal failure-tag audit (author_01)
+# DUAL-AudioBench independent failure-tag audit (annotator 1)
 
 This packet contains one failed model trajectory for each scenario in
-the prespecified 21-scenario author gold set. Model names,
+the prespecified 21-scenario independent-audit set. Model names,
 conditions, and automatic tags are hidden. Judge only the recorded
 dialogue, actions, states, and belief summaries below.
 

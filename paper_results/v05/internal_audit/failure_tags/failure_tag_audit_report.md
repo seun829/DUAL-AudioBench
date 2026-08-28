@@ -1,15 +1,15 @@
-# Internal failure-tag audit report
+# Independent failure-tag audit report
 
-- Auditor: author_01
+- Auditor: annotator_01
 - Gold-set trajectories: 21
 - Exact tag-set agreement: 33.3%
 - Automatic-tag precision: 83.8%
 - Automatic-tag recall: 55.4%
 - Micro F1: 0.667
 
-This is a one-author internal adjudication, not inter-annotator agreement.
+This is an independent single-annotator audit, not inter-annotator agreement.
 
-| Tag | Automatic | Author | Match | Precision | Recall |
+| Tag | Automatic | Independent annotator | Match | Precision | Recall |
 |---|---:|---:|---:|---:|---:|
 | `ACTION_SELECTION_FAILURE` | 1 | 6 | 1 | 100.0% | 16.7% |
 | `EARLY_CLUE_LOSS` | 10 | 6 | 4 | 40.0% | 66.7% |

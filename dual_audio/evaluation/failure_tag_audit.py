@@ -1,13 +1,13 @@
-"""Export and score a blinded one-author audit of automatic failure tags.
+"""Export and score a blinded independent audit of automatic failure tags.
 
 Usage:
   python -m dual_audio.evaluation.failure_tag_audit export \
       data/scenarios_v05 \
       paper_results/v05/reports/priority_preliminary/trajectories.csv \
-      paper_results/v05/internal_audit author_01
+      paper_results/v05/internal_audit annotator_01
 
   python -m dual_audio.evaluation.failure_tag_audit report \
-      paper_results/v05/internal_audit author_01
+      paper_results/v05/internal_audit annotator_01
 """
 
 from __future__ import annotations
@@ -252,10 +252,10 @@ def export_packet(
     stable_rng(auditor, "failure_tag_item_order").shuffle(paired)
 
     lines = [
-        f"# DUAL-AudioBench internal failure-tag audit ({auditor})",
+        f"# DUAL-AudioBench independent failure-tag audit ({auditor})",
         "",
         "This packet contains one failed model trajectory for each scenario in",
-        f"the prespecified {len(gold_items)}-scenario author gold set. Model names,",
+        f"the prespecified {len(gold_items)}-scenario independent-audit set. Model names,",
         "conditions, and automatic tags are hidden. Judge only the recorded",
         "dialogue, actions, states, and belief summaries below.",
         "",
@@ -274,7 +274,7 @@ def export_packet(
     key: dict[str, Any] = {
         "auditor": auditor,
         "gold_set_size": len(gold_items),
-        "selection": "one failed trajectory per completed author-gold scenario",
+        "selection": "one failed trajectory per completed independent-audit scenario",
         "tag_definitions": definitions,
         "items": {},
     }
@@ -354,7 +354,7 @@ def _parse_labels(raw: str, allowed: set[str]) -> set[str]:
 
 
 def report(audit_root: str, auditor: str) -> None:
-    """Compare automatic tags with the completed one-author gold labels."""
+    """Compare automatic tags with the independent annotator's labels."""
 
     root = Path(audit_root) / "failure_tags"
     slug = safe_slug(auditor)
@@ -363,6 +363,7 @@ def report(audit_root: str, auditor: str) -> None:
             encoding="utf-8"
         )
     )
+    reported_auditor = str(key.get("auditor", auditor))
     responses_path = root / "public" / f"{slug}_failure_tag_responses.csv"
     with responses_path.open(encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -408,7 +409,7 @@ def report(audit_root: str, auditor: str) -> None:
             }
         )
     metrics = {
-        "auditor": auditor,
+        "auditor": reported_auditor,
         "n": len(comparisons),
         "exact_set_agreement": exact,
         "micro_precision": precision,
@@ -417,18 +418,18 @@ def report(audit_root: str, auditor: str) -> None:
         "per_tag": per_tag,
     }
     lines = [
-        "# Internal failure-tag audit report",
+        "# Independent failure-tag audit report",
         "",
-        f"- Auditor: {auditor}",
+        f"- Auditor: {reported_auditor}",
         f"- Gold-set trajectories: {len(comparisons)}",
         f"- Exact tag-set agreement: {exact:.1%}",
         f"- Automatic-tag precision: {precision:.1%}",
         f"- Automatic-tag recall: {recall:.1%}",
         f"- Micro F1: {f1:.3f}",
         "",
-        "This is a one-author internal adjudication, not inter-annotator agreement.",
+        "This is an independent single-annotator audit, not inter-annotator agreement.",
         "",
-        "| Tag | Automatic | Author | Match | Precision | Recall |",
+        "| Tag | Automatic | Independent annotator | Match | Precision | Recall |",
         "|---|---:|---:|---:|---:|---:|",
     ]
     for item in per_tag:

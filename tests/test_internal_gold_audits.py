@@ -26,7 +26,7 @@ def _write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
         writer.writerows(rows)
 
 
-class InternalGoldAuditTests(unittest.TestCase):
+class IndependentGoldAuditTests(unittest.TestCase):
     def test_completed_gold_items_uses_two_phase_intersection(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

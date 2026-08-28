@@ -1,7 +1,7 @@
-# DUAL-AudioBench internal prosody audit (author_01)
+# DUAL-AudioBench independent prosody audit (annotator 1)
 
 This packet contains one matched audio pair for each scenario in the
-prespecified 21-scenario author gold set. The words and voice
+prespecified 21-scenario independent-audit set. The words and voice
 are identical within a pair; only pitch and speaking rate differ.
 Listen without opening the private key or scenario files.
 

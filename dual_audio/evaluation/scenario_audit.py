@@ -1,11 +1,11 @@
-"""Export and score blinded internal scenario-audit packets.
+"""Export and score blinded independent scenario-audit packets.
 
 Usage:
   python -m dual_audio.evaluation.scenario_audit export \
-      data/scenarios_v05 paper_results/v05/internal_audit author_01 author_02
+      data/scenarios_v05 paper_results/v05/internal_audit annotator_01 annotator_02
 
   python -m dual_audio.evaluation.scenario_audit report \
-      paper_results/v05/internal_audit author_01 author_02
+      paper_results/v05/internal_audit annotator_01 annotator_02
 
 Auditors complete phase 1 before receiving/opening phase 2. Private keys must
 not be distributed with the public booklets and blank response sheets.
@@ -161,7 +161,7 @@ def export_packet(tasks_dir: str, output_dir: str, auditor: str) -> None:
     if not tasks:
         raise SystemExit(f"No task JSON files found in {tasks_dir}.")
     if {str(task.get("schema_version")) for task in tasks} != {"0.5"}:
-        raise SystemExit("Internal causal audit requires schema-v0.5 tasks.")
+        raise SystemExit("Independent causal audit requires schema-v0.5 tasks.")
 
     root = Path(output_dir)
     public = root / "public"
@@ -174,7 +174,7 @@ def export_packet(tasks_dir: str, output_dir: str, auditor: str) -> None:
     width = len(str(len(ordered)))
 
     phase1 = [
-        f"# DUAL-AudioBench v0.5 internal audit — phase 1 ({auditor})",
+        f"# DUAL-AudioBench v0.5 independent audit — phase 1 ({auditor})",
         "",
         f"Scenario freeze: `{scenario_hash}`",
         "",
@@ -189,7 +189,7 @@ def export_packet(tasks_dir: str, output_dir: str, auditor: str) -> None:
         "",
     ]
     phase2 = [
-        f"# DUAL-AudioBench v0.5 internal audit — phase 2 ({auditor})",
+        f"# DUAL-AudioBench v0.5 independent audit — phase 2 ({auditor})",
         "",
         f"Scenario freeze: `{scenario_hash}`",
         "",
@@ -420,7 +420,7 @@ def _score_auditor(root: Path, auditor: str) -> tuple[dict[str, Any], dict[str, 
 
 
 def report(output_dir: str, auditors: list[str]) -> None:
-    """Score completed packets and report cross-author exact agreement."""
+    """Score completed packets and report cross-annotator exact agreement."""
 
     if len(auditors) < 2:
         raise SystemExit("At least two auditors are required for agreement reporting.")
@@ -431,7 +431,7 @@ def report(output_dir: str, auditors: list[str]) -> None:
     if len(hashes) != 1 or None in hashes:
         raise SystemExit("Auditor packets do not share one recorded scenario freeze.")
     canonical = {metric["auditor"]: rows for metric, rows in scored}
-    lines = ["# Schema-v0.5 internal author-audit report", ""]
+    lines = ["# Schema-v0.5 independent-audit report", ""]
     for metric in metrics:
         lines.extend(
             [
@@ -448,7 +448,7 @@ def report(output_dir: str, auditors: list[str]) -> None:
                 "",
             ]
         )
-    lines.extend(["## Cross-author agreement", ""])
+    lines.extend(["## Cross-annotator agreement", ""])
     fields = ("pre_action", "causal_alignment", "terminal_state", "post_action")
     for left, right in combinations(auditors, 2):
         shared = set(canonical[left]) & set(canonical[right])

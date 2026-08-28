@@ -1,85 +1,22 @@
 auditor,audit_item_id,pre_action_label,causal_alignment,answerable_yes_no,ambiguity_1_to_5,evidence_turn_or_reason,notes
-author_01,AUTHOR_01-01,D,aligned,no,3,Turn 21/22,unrelated parking question
-author_01,AUTHOR_01-02,D,misaligned,yes,1,Turn4/21,names don't match
-author_01,AUTHOR_01-03,C,aligned,yes,1,Turn 4/15,transfer has received assessment
-author_01,AUTHOR_01-04,E,aligned,yes,1,Turn 4/25,all in the same name
-author_01,AUTHOR_01-05,D,aligned,yes,2,Turn4/7,turn 7 uses diff lang
-author_01,AUTHOR_01-06,A,misaligned,yes,3,Turn 4/21,none of the options are appropriate
-author_01,AUTHOR_01-07,A,aligned,yes,2,Turn 4/19,diff lang
-author_01,AUTHOR_01-08,A,misaligned,no,2,Turn 4/19, inappropriate options
-author_01,AUTHOR_01-09,E,aligned,yes,1,Turn 4/19,n/a
-author_01,AUTHOR_01-10,C,misaligned,no,2,Turn 4/25,n/a
-author_01,AUTHOR_01-11,n/a,misaligned,no,2,Turn 4/19,no info on departure delay
-author_01,AUTHOR_01-12,C,aligned,yes,1,Turn 4/9,n/a
-author_01,AUTHOR_01-13,D,misaligned,no,2,Turn 4/7, expired authority
-author_01,AUTHOR_01-14,B,misaligned,no,2,Turn 4/9,intermediary record
-author_01,AUTHOR_01-15,C,misaligned,no,2,Turn 4/25,names don't match
-author_01,AUTHOR_01-16,C,misaligned,no,2,Turn 4/21,unlisted meters
-author_01,AUTHOR_01-17,D,misaligned,no,2,Turn 4/25,diff systems
-author_01,AUTHOR_01-18,A,aligned,yes,1,Turn 4/15,n/a
-author_01,AUTHOR_01-19,E,aligned,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-20,E,misaligned,no,2,Turn 4/25,identifier and record don't match
-author_01,AUTHOR_01-21,B,aligned,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-22,,,,,,
-author_01,AUTHOR_01-23,,,,,,
-author_01,AUTHOR_01-24,,,,,,
-author_01,AUTHOR_01-25,,,,,,
-author_01,AUTHOR_01-26,,,,,,
-author_01,AUTHOR_01-27,,,,,,
-author_01,AUTHOR_01-28,,,,,,
-author_01,AUTHOR_01-29,,,,,,
-author_01,AUTHOR_01-30,,,,,,
-author_01,AUTHOR_01-31,,,,,,
-author_01,AUTHOR_01-32,,,,,,
-author_01,AUTHOR_01-33,,,,,,
-author_01,AUTHOR_01-34,,,,,,
-author_01,AUTHOR_01-35,,,,,,
-author_01,AUTHOR_01-36,,,,,,
-author_01,AUTHOR_01-37,,,,,,
-author_01,AUTHOR_01-38,,,,,,
-author_01,AUTHOR_01-39,,,,,,
-author_01,AUTHOR_01-40,,,,,,
-author_01,AUTHOR_01-41,,,,,,
-author_01,AUTHOR_01-42,,,,,,
-author_01,AUTHOR_01-43,,,,,,
-author_01,AUTHOR_01-44,,,,,,
-author_01,AUTHOR_01-45,,,,,,
-author_01,AUTHOR_01-46,,,,,,
-author_01,AUTHOR_01-47,,,,,,
-author_01,AUTHOR_01-48,,,,,,
-author_01,AUTHOR_01-49,,,,,,
-author_01,AUTHOR_01-50,,,,,,
-author_01,AUTHOR_01-51,,,,,,
-author_01,AUTHOR_01-52,,,,,,
-author_01,AUTHOR_01-53,,,,,,
-author_01,AUTHOR_01-54,,,,,,
-author_01,AUTHOR_01-55,,,,,,
-author_01,AUTHOR_01-56,,,,,,
-author_01,AUTHOR_01-57,,,,,,
-author_01,AUTHOR_01-58,,,,,,
-author_01,AUTHOR_01-59,,,,,,
-author_01,AUTHOR_01-60,,,,,,
-author_01,AUTHOR_01-61,,,,,,
-author_01,AUTHOR_01-62,,,,,,
-author_01,AUTHOR_01-63,,,,,,
-author_01,AUTHOR_01-64,,,,,,
-author_01,AUTHOR_01-65,,,,,,
-author_01,AUTHOR_01-66,,,,,,
-author_01,AUTHOR_01-67,,,,,,
-author_01,AUTHOR_01-68,,,,,,
-author_01,AUTHOR_01-69,,,,,,
-author_01,AUTHOR_01-70,,,,,,
-author_01,AUTHOR_01-71,,,,,,
-author_01,AUTHOR_01-72,,,,,,
-author_01,AUTHOR_01-73,,,,,,
-author_01,AUTHOR_01-74,,,,,,
-author_01,AUTHOR_01-75,,,,,,
-author_01,AUTHOR_01-76,,,,,,
-author_01,AUTHOR_01-77,,,,,,
-author_01,AUTHOR_01-78,,,,,,
-author_01,AUTHOR_01-79,,,,,,
-author_01,AUTHOR_01-80,,,,,,
-author_01,AUTHOR_01-81,,,,,,
-author_01,AUTHOR_01-82,,,,,,
-author_01,AUTHOR_01-83,,,,,,
-author_01,AUTHOR_01-84,,,,,,
+annotator_01,ANNOTATOR_01-01,D,aligned,no,3,Turn 21/22,unrelated parking question
+annotator_01,ANNOTATOR_01-02,D,misaligned,yes,1,Turn4/21,names don't match
+annotator_01,ANNOTATOR_01-03,C,aligned,yes,1,Turn 4/15,transfer has received assessment
+annotator_01,ANNOTATOR_01-04,E,aligned,yes,1,Turn 4/25,all in the same name
+annotator_01,ANNOTATOR_01-05,D,aligned,yes,2,Turn4/7,turn 7 uses diff lang
+annotator_01,ANNOTATOR_01-06,A,misaligned,yes,3,Turn 4/21,none of the options are appropriate
+annotator_01,ANNOTATOR_01-07,A,aligned,yes,2,Turn 4/19,diff lang
+annotator_01,ANNOTATOR_01-08,A,misaligned,no,2,Turn 4/19, inappropriate options
+annotator_01,ANNOTATOR_01-09,E,aligned,yes,1,Turn 4/19,n/a
+annotator_01,ANNOTATOR_01-10,C,misaligned,no,2,Turn 4/25,n/a
+annotator_01,ANNOTATOR_01-11,n/a,misaligned,no,2,Turn 4/19,no info on departure delay
+annotator_01,ANNOTATOR_01-12,C,aligned,yes,1,Turn 4/9,n/a
+annotator_01,ANNOTATOR_01-13,D,misaligned,no,2,Turn 4/7, expired authority
+annotator_01,ANNOTATOR_01-14,B,misaligned,no,2,Turn 4/9,intermediary record
+annotator_01,ANNOTATOR_01-15,C,misaligned,no,2,Turn 4/25,names don't match
+annotator_01,ANNOTATOR_01-16,C,misaligned,no,2,Turn 4/21,unlisted meters
+annotator_01,ANNOTATOR_01-17,D,misaligned,no,2,Turn 4/25,diff systems
+annotator_01,ANNOTATOR_01-18,A,aligned,yes,1,Turn 4/15,n/a
+annotator_01,ANNOTATOR_01-19,E,aligned,yes,1,Turn 4/25,n/a
+annotator_01,ANNOTATOR_01-20,E,misaligned,no,2,Turn 4/25,identifier and record don't match
+annotator_01,ANNOTATOR_01-21,B,aligned,yes,1,Turn 4/25,n/a

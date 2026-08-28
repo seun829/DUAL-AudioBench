@@ -1,4 +1,4 @@
-# DUAL-AudioBench v0.5 internal audit — phase 1 (author_01)
+# DUAL-AudioBench v0.5 independent audit — phase 1 (annotator 1)
 
 Scenario freeze: `e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9`
 
@@ -11,7 +11,7 @@ clue satisfies the stated success rule, or `misaligned` when it
 violates that rule. It does not ask whether you agree with the gold.
 Ambiguity is 1 (unambiguous) through 5 (not answerable).
 
-## Item AUTHOR_01-01
+## Item ANNOTATOR_01-01
 
 ### Public dialogue
 
@@ -59,7 +59,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-02
+## Item ANNOTATOR_01-02
 
 ### Public dialogue
 
@@ -107,7 +107,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-03
+## Item ANNOTATOR_01-03
 
 ### Public dialogue
 
@@ -155,7 +155,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-04
+## Item ANNOTATOR_01-04
 
 ### Public dialogue
 
@@ -203,7 +203,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-05
+## Item ANNOTATOR_01-05
 
 ### Public dialogue
 
@@ -251,7 +251,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-06
+## Item ANNOTATOR_01-06
 
 ### Public dialogue
 
@@ -299,7 +299,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-07
+## Item ANNOTATOR_01-07
 
 ### Public dialogue
 
@@ -347,7 +347,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-08
+## Item ANNOTATOR_01-08
 
 ### Public dialogue
 
@@ -395,7 +395,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-09
+## Item ANNOTATOR_01-09
 
 ### Public dialogue
 
@@ -443,7 +443,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-10
+## Item ANNOTATOR_01-10
 
 ### Public dialogue
 
@@ -491,7 +491,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-11
+## Item ANNOTATOR_01-11
 
 ### Public dialogue
 
@@ -539,7 +539,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-12
+## Item ANNOTATOR_01-12
 
 ### Public dialogue
 
@@ -587,7 +587,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-13
+## Item ANNOTATOR_01-13
 
 ### Public dialogue
 
@@ -635,7 +635,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-14
+## Item ANNOTATOR_01-14
 
 ### Public dialogue
 
@@ -683,7 +683,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-15
+## Item ANNOTATOR_01-15
 
 ### Public dialogue
 
@@ -731,7 +731,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-16
+## Item ANNOTATOR_01-16
 
 ### Public dialogue
 
@@ -779,7 +779,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-17
+## Item ANNOTATOR_01-17
 
 ### Public dialogue
 
@@ -827,7 +827,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-18
+## Item ANNOTATOR_01-18
 
 ### Public dialogue
 
@@ -875,7 +875,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-19
+## Item ANNOTATOR_01-19
 
 ### Public dialogue
 
@@ -923,7 +923,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-20
+## Item ANNOTATOR_01-20
 
 ### Public dialogue
 
@@ -971,7 +971,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-21
+## Item ANNOTATOR_01-21
 
 ### Public dialogue
 
@@ -1019,7 +1019,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-22
+## Item ANNOTATOR_01-22
 
 ### Public dialogue
 
@@ -1067,7 +1067,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-23
+## Item ANNOTATOR_01-23
 
 ### Public dialogue
 
@@ -1115,7 +1115,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-24
+## Item ANNOTATOR_01-24
 
 ### Public dialogue
 
@@ -1163,7 +1163,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-25
+## Item ANNOTATOR_01-25
 
 ### Public dialogue
 
@@ -1211,7 +1211,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-26
+## Item ANNOTATOR_01-26
 
 ### Public dialogue
 
@@ -1259,7 +1259,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-27
+## Item ANNOTATOR_01-27
 
 ### Public dialogue
 
@@ -1307,7 +1307,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-28
+## Item ANNOTATOR_01-28
 
 ### Public dialogue
 
@@ -1355,7 +1355,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-29
+## Item ANNOTATOR_01-29
 
 ### Public dialogue
 
@@ -1403,7 +1403,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-30
+## Item ANNOTATOR_01-30
 
 ### Public dialogue
 
@@ -1451,7 +1451,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-31
+## Item ANNOTATOR_01-31
 
 ### Public dialogue
 
@@ -1499,7 +1499,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-32
+## Item ANNOTATOR_01-32
 
 ### Public dialogue
 
@@ -1547,7 +1547,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-33
+## Item ANNOTATOR_01-33
 
 ### Public dialogue
 
@@ -1595,7 +1595,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-34
+## Item ANNOTATOR_01-34
 
 ### Public dialogue
 
@@ -1643,7 +1643,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-35
+## Item ANNOTATOR_01-35
 
 ### Public dialogue
 
@@ -1691,7 +1691,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-36
+## Item ANNOTATOR_01-36
 
 ### Public dialogue
 
@@ -1739,7 +1739,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-37
+## Item ANNOTATOR_01-37
 
 ### Public dialogue
 
@@ -1787,7 +1787,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-38
+## Item ANNOTATOR_01-38
 
 ### Public dialogue
 
@@ -1835,7 +1835,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-39
+## Item ANNOTATOR_01-39
 
 ### Public dialogue
 
@@ -1883,7 +1883,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-40
+## Item ANNOTATOR_01-40
 
 ### Public dialogue
 
@@ -1931,7 +1931,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-41
+## Item ANNOTATOR_01-41
 
 ### Public dialogue
 
@@ -1979,7 +1979,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-42
+## Item ANNOTATOR_01-42
 
 ### Public dialogue
 
@@ -2027,7 +2027,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-43
+## Item ANNOTATOR_01-43
 
 ### Public dialogue
 
@@ -2075,7 +2075,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-44
+## Item ANNOTATOR_01-44
 
 ### Public dialogue
 
@@ -2123,7 +2123,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-45
+## Item ANNOTATOR_01-45
 
 ### Public dialogue
 
@@ -2171,7 +2171,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-46
+## Item ANNOTATOR_01-46
 
 ### Public dialogue
 
@@ -2219,7 +2219,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-47
+## Item ANNOTATOR_01-47
 
 ### Public dialogue
 
@@ -2267,7 +2267,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-48
+## Item ANNOTATOR_01-48
 
 ### Public dialogue
 
@@ -2315,7 +2315,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-49
+## Item ANNOTATOR_01-49
 
 ### Public dialogue
 
@@ -2363,7 +2363,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-50
+## Item ANNOTATOR_01-50
 
 ### Public dialogue
 
@@ -2411,7 +2411,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-51
+## Item ANNOTATOR_01-51
 
 ### Public dialogue
 
@@ -2459,7 +2459,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-52
+## Item ANNOTATOR_01-52
 
 ### Public dialogue
 
@@ -2507,7 +2507,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-53
+## Item ANNOTATOR_01-53
 
 ### Public dialogue
 
@@ -2555,7 +2555,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-54
+## Item ANNOTATOR_01-54
 
 ### Public dialogue
 
@@ -2603,7 +2603,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-55
+## Item ANNOTATOR_01-55
 
 ### Public dialogue
 
@@ -2651,7 +2651,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-56
+## Item ANNOTATOR_01-56
 
 ### Public dialogue
 
@@ -2699,7 +2699,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-57
+## Item ANNOTATOR_01-57
 
 ### Public dialogue
 
@@ -2747,7 +2747,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-58
+## Item ANNOTATOR_01-58
 
 ### Public dialogue
 
@@ -2795,7 +2795,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-59
+## Item ANNOTATOR_01-59
 
 ### Public dialogue
 
@@ -2843,7 +2843,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-60
+## Item ANNOTATOR_01-60
 
 ### Public dialogue
 
@@ -2891,7 +2891,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-61
+## Item ANNOTATOR_01-61
 
 ### Public dialogue
 
@@ -2939,7 +2939,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-62
+## Item ANNOTATOR_01-62
 
 ### Public dialogue
 
@@ -2987,7 +2987,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-63
+## Item ANNOTATOR_01-63
 
 ### Public dialogue
 
@@ -3035,7 +3035,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-64
+## Item ANNOTATOR_01-64
 
 ### Public dialogue
 
@@ -3083,7 +3083,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-65
+## Item ANNOTATOR_01-65
 
 ### Public dialogue
 
@@ -3131,7 +3131,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-66
+## Item ANNOTATOR_01-66
 
 ### Public dialogue
 
@@ -3179,7 +3179,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-67
+## Item ANNOTATOR_01-67
 
 ### Public dialogue
 
@@ -3227,7 +3227,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-68
+## Item ANNOTATOR_01-68
 
 ### Public dialogue
 
@@ -3275,7 +3275,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-69
+## Item ANNOTATOR_01-69
 
 ### Public dialogue
 
@@ -3323,7 +3323,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-70
+## Item ANNOTATOR_01-70
 
 ### Public dialogue
 
@@ -3371,7 +3371,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-71
+## Item ANNOTATOR_01-71
 
 ### Public dialogue
 
@@ -3419,7 +3419,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-72
+## Item ANNOTATOR_01-72
 
 ### Public dialogue
 
@@ -3467,7 +3467,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-73
+## Item ANNOTATOR_01-73
 
 ### Public dialogue
 
@@ -3515,7 +3515,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-74
+## Item ANNOTATOR_01-74
 
 ### Public dialogue
 
@@ -3563,7 +3563,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-75
+## Item ANNOTATOR_01-75
 
 ### Public dialogue
 
@@ -3611,7 +3611,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-76
+## Item ANNOTATOR_01-76
 
 ### Public dialogue
 
@@ -3659,7 +3659,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-77
+## Item ANNOTATOR_01-77
 
 ### Public dialogue
 
@@ -3707,7 +3707,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-78
+## Item ANNOTATOR_01-78
 
 ### Public dialogue
 
@@ -3755,7 +3755,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-79
+## Item ANNOTATOR_01-79
 
 ### Public dialogue
 
@@ -3803,7 +3803,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-80
+## Item ANNOTATOR_01-80
 
 ### Public dialogue
 
@@ -3851,7 +3851,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-81
+## Item ANNOTATOR_01-81
 
 ### Public dialogue
 
@@ -3899,7 +3899,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-82
+## Item ANNOTATOR_01-82
 
 ### Public dialogue
 
@@ -3947,7 +3947,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-83
+## Item ANNOTATOR_01-83
 
 ### Public dialogue
 
@@ -3995,7 +3995,7 @@ ambiguity, and supporting dialogue turn in the phase-1 CSV.
 
 ---
 
-## Item AUTHOR_01-84
+## Item ANNOTATOR_01-84
 
 ### Public dialogue
 

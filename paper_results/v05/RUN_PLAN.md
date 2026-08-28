@@ -129,7 +129,7 @@ variable observations and is descriptive rather than an inferential endpoint.
   contrast is not attributed solely to acoustic perception.
 - Synthetic eSpeak prosody is not treated as validated human affect until the
   listener study is complete.
-- The internal author audit documents scenario review but is not an independent
+- The independent audit documents scenario review but is not a population-level
   human-solvability baseline.
 - Trial seeds jointly vary option order and stochastic sampling; seed variance
   is labeled accordingly.

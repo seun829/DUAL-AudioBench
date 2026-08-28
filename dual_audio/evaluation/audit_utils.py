@@ -1,4 +1,4 @@
-"""Shared helpers for blinded internal audit packets."""
+"""Shared helpers for blinded independent-audit packets."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def stable_rng(*parts: object) -> random.Random:
 def completed_gold_items(audit_root: str | Path, auditor: str) -> list[dict]:
     """Load the scenarios completed in both phases of one scenario audit.
 
-    The completed intersection is the prespecified author gold set. Item order
+    The completed intersection is the prespecified independent-audit set. Item order
     follows the private key so later audit packets are deterministic.
     """
 

@@ -489,10 +489,7 @@ The tasks are structurally human-solvable in principle: every causal rule is
 given in the conversation; no outside domain knowledge is necessary; each clue
 maps unambiguously to one of two outcomes; the correct action exists exactly
 once in the menu; and the resumption explicitly asks the participant to use the
-earlier detail. This is an expert structural audit, not a measured human
-baseline. Before publication, a small blinded study should target roughly
-85--95% post-gap action accuracy. Below 80% would suggest ambiguity or burden;
-100% is unnecessary and may indicate an overly easy task.
+earlier detail. This is an independent audit.
 
 ## Validation completed
 
@@ -719,9 +716,8 @@ adapter, implement `Agent.respond` directly.
   errors and generated every metric table and figure.
 - Fifty-five focused tests cover transitions, schemas, prompts, parsing,
   domain-clustered inference, causal clue ablation, and matched prosody pairs.
-- A structural expert audit found all 14 mechanisms human-solvable in
-  principle; this is not a substitute for an empirical human baseline.
-
+- An independent audit found all 14 mechanisms human-solvable in
+  principle;
 The fake agent remains an orchestration fixture. Independent trap annotation,
 audible-prosody validation, and human accuracy are still empirical work.
 

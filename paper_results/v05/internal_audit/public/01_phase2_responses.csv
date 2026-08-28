@@ -1,85 +1,22 @@
 auditor,audit_item_id,terminal_state,post_action_label,answerable_yes_no,ambiguity_1_to_5,evidence_turn_or_reason,notes
-author_01,AUTHOR_01-01,authorised,D,yes,1,Turn 4/21,n/a
-author_01,AUTHOR_01-02,refused,D,yes,1,Turn 4/21,n/a
-author_01,AUTHOR_01-03,confirmed,B,yes,2,Turn 4/15,no one clear choice
-author_01,AUTHOR_01-04,settled,E,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-05,approved,E,yes,2,Turn 4/7, unclear lang turn 7
-author_01,AUTHOR_01-06,rejected,C,yes,1,Turn 4/21,n/a
-author_01,AUTHOR_01-07,approved,A,yes,2,Turn 4/19,unclear lang turn 19
-author_01,AUTHOR_01-08,rejected,B,yes,1,Turn 4/19,n/a
-author_01,AUTHOR_01-09,restored,C,yes,2,Turn 4/19,no one clear choice
-author_01,AUTHOR_01-10,access_refused,D,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-11,missed,D,yes,1,Turn 4/19,n/a
-author_01,AUTHOR_01-12,approved,C,yes,1,Turn 4/9,n/a
-author_01,AUTHOR_01-13,access_refused,B,yes,1,Turn 4/7,n/a
-author_01,AUTHOR_01-14,rejected,C,yes,1,Turn 4/9,n/a
-author_01,AUTHOR_01-15,refused,C,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-16,flagged_incomplete,C,yes,1,Turn 4/21,n/a
-author_01,AUTHOR_01-17,still_locked,D,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-18,delivered,E,yes,1,Turn 4/15,n/a
-author_01,AUTHOR_01-19,delivered,D,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-20,returned_unmatched,C,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-21,completed,E,yes,1,Turn 4/25,n/a
-author_01,AUTHOR_01-22,,,,,,
-author_01,AUTHOR_01-23,,,,,,
-author_01,AUTHOR_01-24,,,,,,
-author_01,AUTHOR_01-25,,,,,,
-author_01,AUTHOR_01-26,,,,,,
-author_01,AUTHOR_01-27,,,,,,
-author_01,AUTHOR_01-28,,,,,,
-author_01,AUTHOR_01-29,,,,,,
-author_01,AUTHOR_01-30,,,,,,
-author_01,AUTHOR_01-31,,,,,,
-author_01,AUTHOR_01-32,,,,,,
-author_01,AUTHOR_01-33,,,,,,
-author_01,AUTHOR_01-34,,,,,,
-author_01,AUTHOR_01-35,,,,,,
-author_01,AUTHOR_01-36,,,,,,
-author_01,AUTHOR_01-37,,,,,,
-author_01,AUTHOR_01-38,,,,,,
-author_01,AUTHOR_01-39,,,,,,
-author_01,AUTHOR_01-40,,,,,,
-author_01,AUTHOR_01-41,,,,,,
-author_01,AUTHOR_01-42,,,,,,
-author_01,AUTHOR_01-43,,,,,,
-author_01,AUTHOR_01-44,,,,,,
-author_01,AUTHOR_01-45,,,,,,
-author_01,AUTHOR_01-46,,,,,,
-author_01,AUTHOR_01-47,,,,,,
-author_01,AUTHOR_01-48,,,,,,
-author_01,AUTHOR_01-49,,,,,,
-author_01,AUTHOR_01-50,,,,,,
-author_01,AUTHOR_01-51,,,,,,
-author_01,AUTHOR_01-52,,,,,,
-author_01,AUTHOR_01-53,,,,,,
-author_01,AUTHOR_01-54,,,,,,
-author_01,AUTHOR_01-55,,,,,,
-author_01,AUTHOR_01-56,,,,,,
-author_01,AUTHOR_01-57,,,,,,
-author_01,AUTHOR_01-58,,,,,,
-author_01,AUTHOR_01-59,,,,,,
-author_01,AUTHOR_01-60,,,,,,
-author_01,AUTHOR_01-61,,,,,,
-author_01,AUTHOR_01-62,,,,,,
-author_01,AUTHOR_01-63,,,,,,
-author_01,AUTHOR_01-64,,,,,,
-author_01,AUTHOR_01-65,,,,,,
-author_01,AUTHOR_01-66,,,,,,
-author_01,AUTHOR_01-67,,,,,,
-author_01,AUTHOR_01-68,,,,,,
-author_01,AUTHOR_01-69,,,,,,
-author_01,AUTHOR_01-70,,,,,,
-author_01,AUTHOR_01-71,,,,,,
-author_01,AUTHOR_01-72,,,,,,
-author_01,AUTHOR_01-73,,,,,,
-author_01,AUTHOR_01-74,,,,,,
-author_01,AUTHOR_01-75,,,,,,
-author_01,AUTHOR_01-76,,,,,,
-author_01,AUTHOR_01-77,,,,,,
-author_01,AUTHOR_01-78,,,,,,
-author_01,AUTHOR_01-79,,,,,,
-author_01,AUTHOR_01-80,,,,,,
-author_01,AUTHOR_01-81,,,,,,
-author_01,AUTHOR_01-82,,,,,,
-author_01,AUTHOR_01-83,,,,,,
-author_01,AUTHOR_01-84,,,,,,
+annotator_01,ANNOTATOR_01-01,authorised,D,yes,1,Turn 4/21,n/a
+annotator_01,ANNOTATOR_01-02,refused,D,yes,1,Turn 4/21,n/a
+annotator_01,ANNOTATOR_01-03,confirmed,B,yes,2,Turn 4/15,no one clear choice
+annotator_01,ANNOTATOR_01-04,settled,E,yes,1,Turn 4/25,n/a
+annotator_01,ANNOTATOR_01-05,approved,E,yes,2,Turn 4/7, unclear lang turn 7
+annotator_01,ANNOTATOR_01-06,rejected,C,yes,1,Turn 4/21,n/a
+annotator_01,ANNOTATOR_01-07,approved,A,yes,2,Turn 4/19,unclear lang turn 19
+annotator_01,ANNOTATOR_01-08,rejected,B,yes,1,Turn 4/19,n/a
+annotator_01,ANNOTATOR_01-09,restored,C,yes,2,Turn 4/19,no one clear choice
+annotator_01,ANNOTATOR_01-10,access_refused,D,yes,1,Turn 4/25,n/a
+annotator_01,ANNOTATOR_01-11,missed,D,yes,1,Turn 4/19,n/a
+annotator_01,ANNOTATOR_01-12,approved,C,yes,1,Turn 4/9,n/a
+annotator_01,ANNOTATOR_01-13,access_refused,B,yes,1,Turn 4/7,n/a
+annotator_01,ANNOTATOR_01-14,rejected,C,yes,1,Turn 4/9,n/a
+annotator_01,ANNOTATOR_01-15,refused,C,yes,1,Turn 4/25,n/a
+annotator_01,ANNOTATOR_01-16,flagged_incomplete,C,yes,1,Turn 4/21,n/a
+annotator_01,ANNOTATOR_01-17,still_locked,D,yes,1,Turn 4/25,n/a
+annotator_01,ANNOTATOR_01-18,delivered,E,yes,1,Turn 4/15,n/a
+annotator_01,ANNOTATOR_01-19,delivered,D,yes,1,Turn 4/25,n/a
+annotator_01,ANNOTATOR_01-20,returned_unmatched,C,yes,1,Turn 4/25,n/a
+annotator_01,ANNOTATOR_01-21,completed,E,yes,1,Turn 4/25,n/a

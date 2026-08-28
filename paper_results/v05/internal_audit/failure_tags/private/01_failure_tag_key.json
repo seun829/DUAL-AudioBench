@@ -1,0 +1,329 @@
+{
+  "auditor": "annotator_01",
+  "gold_set_size": 21,
+  "selection": "one failed trajectory per completed independent-audit scenario",
+  "tag_definitions": {
+    "OFF_MENU_RESPONSE": "No valid action from the displayed menu was recorded.",
+    "EARLY_CLUE_LOSS": "The selected action is attractive when the early clue is unavailable or unused.",
+    "STATE_SYNC_FAILURE": "The action treats the pre-gap world as if it still held after time advanced.",
+    "TIME_INFERENCE_FAILURE": "The action fails to use elapsed time when interpreting the observation.",
+    "REPEATED_ACTION": "The action repeats a step already attempted without a new justification.",
+    "PREMATURE_CLOSE": "The action closes an interaction whose state is unresolved.",
+    "PREMATURE_ESCALATION": "The action escalates before supported diagnostic or policy steps are exhausted.",
+    "ACTION_SELECTION_FAILURE": "The action is inconsistent with the current state but has no narrower failure label.",
+    "BELIEF_REPORT_INVALID": "One or more required state-belief distributions or revalidation flags are missing or malformed.",
+    "STATE_BELIEF_ERROR": "At least one required checkpoint assigns its highest probability to the wrong hidden state."
+  },
+  "items": {
+    "FAILURE-01": {
+      "source_audit_item_id": "ANNOTATOR_01-16",
+      "scenario_id": "utility_5to8_b0_s05",
+      "causal_pair_id": "utility:5-8:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "openai/gpt-audio-mini",
+      "condition": "clue_removed",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gpt_audio_mini_causal\\gpt_audio_mini_causal_shard04-of-12.jsonl",
+      "automatic_tags": [
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-02": {
+      "source_audit_item_id": "ANNOTATOR_01-20",
+      "scenario_id": "bank_1to2_b0_s05",
+      "causal_pair_id": "bank:1-2:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-2.5-flash",
+      "condition": "clue_removed",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini25_priority\\gemini25_priority_shard02-of-12.jsonl",
+      "automatic_tags": [
+        "PREMATURE_CLOSE",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-03": {
+      "source_audit_item_id": "ANNOTATOR_01-12",
+      "scenario_id": "pharmacy_12to20_b1_s05",
+      "causal_pair_id": "pharmacy:12-20:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-2.5-flash",
+      "condition": "clue_removed",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini25_priority\\gemini25_priority_shard07-of-12.jsonl",
+      "automatic_tags": [
+        "ACTION_SELECTION_FAILURE",
+        "STATE_BELIEF_ERROR",
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    "FAILURE-04": {
+      "source_audit_item_id": "ANNOTATOR_01-14",
+      "scenario_id": "telecom_12to20_b0_s05",
+      "causal_pair_id": "telecom:12-20:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-2.5-flash",
+      "condition": "transcript_only",
+      "seed": 1,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini25_priority\\gemini25_priority_shard00-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS"
+      ]
+    },
+    "FAILURE-05": {
+      "source_audit_item_id": "ANNOTATOR_01-21",
+      "scenario_id": "telecom_1to2_b1_s05",
+      "causal_pair_id": "telecom:1-2:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-3-flash-preview",
+      "condition": "transcript_only",
+      "seed": 1,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_priority\\gemini3_priority_shard03-of-12.jsonl",
+      "automatic_tags": [
+        "STATE_BELIEF_ERROR",
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    "FAILURE-06": {
+      "source_audit_item_id": "ANNOTATOR_01-19",
+      "scenario_id": "delivery_1to2_b1_s05",
+      "causal_pair_id": "delivery:1-2:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-3-flash-preview",
+      "condition": "clue_removed",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_priority\\gemini3_priority_shard09-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-07": {
+      "source_audit_item_id": "ANNOTATOR_01-06",
+      "scenario_id": "pharmacy_5to8_b0_s05",
+      "causal_pair_id": "pharmacy:5-8:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-2.5-flash",
+      "condition": "transcript_only",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini25_priority\\gemini25_priority_shard10-of-12.jsonl",
+      "automatic_tags": [
+        "PREMATURE_ESCALATION",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-08": {
+      "source_audit_item_id": "ANNOTATOR_01-03",
+      "scenario_id": "college_12to20_b1_s05",
+      "causal_pair_id": "college:12-20:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-3-flash-preview",
+      "condition": "clue_removed",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_priority\\gemini3_priority_shard01-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-09": {
+      "source_audit_item_id": "ANNOTATOR_01-01",
+      "scenario_id": "warranty_5to8_b1_s05",
+      "causal_pair_id": "warranty:5-8:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-3-flash-preview",
+      "condition": "full_audio",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_priority\\gemini3_priority_shard11-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-10": {
+      "source_audit_item_id": "ANNOTATOR_01-15",
+      "scenario_id": "permit_1to2_b0_s05",
+      "causal_pair_id": "permit:1-2:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "openai/gpt-audio-mini",
+      "condition": "full_audio",
+      "seed": 1,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gpt_audio_mini_causal\\gpt_audio_mini_causal_shard02-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-11": {
+      "source_audit_item_id": "ANNOTATOR_01-10",
+      "scenario_id": "tenancy_1to2_b0_s05",
+      "causal_pair_id": "tenancy:1-2:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-2.5-flash",
+      "condition": "full_audio",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini25_priority\\gemini25_priority_shard08-of-12.jsonl",
+      "automatic_tags": [
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-12": {
+      "source_audit_item_id": "ANNOTATOR_01-18",
+      "scenario_id": "delivery_12to20_b1_s05",
+      "causal_pair_id": "delivery:12-20:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-2.5-flash",
+      "condition": "full_audio",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini25_priority\\gemini25_priority_shard07-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-13": {
+      "source_audit_item_id": "ANNOTATOR_01-05",
+      "scenario_id": "bank_12to20_b1_s05",
+      "causal_pair_id": "bank:12-20:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-3-flash-preview",
+      "condition": "transcript_only",
+      "seed": 1,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_priority\\gemini3_priority_shard01-of-12.jsonl",
+      "automatic_tags": [
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-14": {
+      "source_audit_item_id": "ANNOTATOR_01-07",
+      "scenario_id": "bank_5to8_b1_s05",
+      "causal_pair_id": "bank:5-8:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "openai/gpt-audio-mini",
+      "condition": "full_audio",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gpt_audio_mini_causal\\gpt_audio_mini_causal_shard05-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-15": {
+      "source_audit_item_id": "ANNOTATOR_01-09",
+      "scenario_id": "saas_5to8_b1_s05",
+      "causal_pair_id": "saas:5-8:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-3-flash-preview",
+      "condition": "full_audio",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_priority\\gemini3_priority_shard11-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-16": {
+      "source_audit_item_id": "ANNOTATOR_01-13",
+      "scenario_id": "tenancy_12to20_b0_s05",
+      "causal_pair_id": "tenancy:12-20:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "openai/gpt-audio-mini",
+      "condition": "full_audio",
+      "seed": 1,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gpt_audio_mini_causal\\gpt_audio_mini_causal_shard06-of-12.jsonl",
+      "automatic_tags": [
+        "STATE_BELIEF_ERROR",
+        "STATE_SYNC_FAILURE"
+      ]
+    },
+    "FAILURE-17": {
+      "source_audit_item_id": "ANNOTATOR_01-11",
+      "scenario_id": "flight_5to8_b0_s05",
+      "causal_pair_id": "flight:5-8:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-3-flash-preview",
+      "condition": "clue_removed",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_priority\\gemini3_priority_shard04-of-12.jsonl",
+      "automatic_tags": [
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-18": {
+      "source_audit_item_id": "ANNOTATOR_01-02",
+      "scenario_id": "permit_5to8_b0_s05",
+      "causal_pair_id": "permit:5-8:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-2.5-flash",
+      "condition": "full_audio",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini25_priority\\gemini25_priority_shard04-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR",
+        "TIME_INFERENCE_FAILURE"
+      ]
+    },
+    "FAILURE-19": {
+      "source_audit_item_id": "ANNOTATOR_01-04",
+      "scenario_id": "motor_1to2_b1_s05",
+      "causal_pair_id": "motor:1-2:s05",
+      "causal_branch": "aligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-2.5-flash",
+      "condition": "clue_removed",
+      "seed": 0,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini25_priority\\gemini25_priority_shard09-of-12.jsonl",
+      "automatic_tags": [
+        "EARLY_CLUE_LOSS",
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-20": {
+      "source_audit_item_id": "ANNOTATOR_01-08",
+      "scenario_id": "telecom_5to8_b0_s05",
+      "causal_pair_id": "telecom:5-8:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "openai/gpt-audio-mini",
+      "condition": "clue_removed",
+      "seed": 1,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gpt_audio_mini_causal\\gpt_audio_mini_causal_shard04-of-12.jsonl",
+      "automatic_tags": [
+        "STATE_BELIEF_ERROR"
+      ]
+    },
+    "FAILURE-21": {
+      "source_audit_item_id": "ANNOTATOR_01-17",
+      "scenario_id": "saas_1to2_b0_s05",
+      "causal_pair_id": "saas:1-2:s05",
+      "causal_branch": "misaligned",
+      "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+      "model": "google/gemini-3-flash-preview",
+      "condition": "full_audio",
+      "seed": 1,
+      "source": "C:\\Users\\shlee\\OneDrive\\Documents\\GitHub\\DUAL-AudioBench\\paper_results\\v05\\raw\\gemini3_priority\\gemini3_priority_shard08-of-12.jsonl",
+      "automatic_tags": [
+        "STATE_BELIEF_ERROR"
+      ]
+    }
+  }
+}

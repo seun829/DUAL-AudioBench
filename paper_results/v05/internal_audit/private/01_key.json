@@ -1,0 +1,2192 @@
+{
+  "schema_version": "0.5",
+  "scenario_manifest_sha256": "e16319a791ab4600f88a33f7957e66eec18be262649caac03845c161119044b9",
+  "auditor": "annotator_01",
+  "instructions": "PRIVATE: do not distribute before both phases are complete.",
+  "items": {
+    "ANNOTATOR_01-01": {
+      "scenario_id": "warranty_5to8_b1_s05",
+      "causal_pair_id": "warranty:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "suggest_self_repair",
+        "B": "dispatch_engineer_now",
+        "C": "close_case",
+        "D": "open_cover_claim",
+        "E": "authorise_replacement"
+      },
+      "gold_pre_action": "open_cover_claim",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_state",
+      "gold_terminal_state": "authorised",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "continue_monitoring",
+        "C": "open_cover_claim",
+        "D": "use_retailer_route",
+        "E": "suggest_self_repair"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-02": {
+      "scenario_id": "permit_5to8_b0_s05",
+      "causal_pair_id": "permit:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "escalate_to_appeals",
+        "B": "issue_temporary_permit",
+        "C": "close_case",
+        "D": "submit_permit_application",
+        "E": "reconfirm_vehicle_plate"
+      },
+      "gold_pre_action": "submit_permit_application",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "permit_status",
+      "gold_terminal_state": "refused",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "reconfirm_vehicle_plate",
+        "C": "continue_monitoring",
+        "D": "supply_alternative_proof",
+        "E": "submit_permit_application"
+      },
+      "gold_post_action": "supply_alternative_proof",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-03": {
+      "scenario_id": "college_12to20_b1_s05",
+      "causal_pair_id": "college:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "waive_requirements",
+        "B": "reconfirm_module_choices",
+        "C": "submit_enrolment",
+        "D": "close_case",
+        "E": "defer_to_next_term"
+      },
+      "gold_pre_action": "submit_enrolment",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "enrolment_status",
+      "gold_terminal_state": "confirmed",
+      "post_action_mapping": {
+        "A": "request_prior_study_assessment",
+        "B": "close_case",
+        "C": "submit_enrolment",
+        "D": "reconfirm_module_choices",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-04": {
+      "scenario_id": "motor_1to2_b1_s05",
+      "causal_pair_id": "motor:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "collect_witness_statement",
+        "B": "declare_total_loss",
+        "C": "authorise_immediate_repair",
+        "D": "close_case",
+        "E": "lodge_claim"
+      },
+      "gold_pre_action": "lodge_claim",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_progress",
+      "gold_terminal_state": "settled",
+      "post_action_mapping": {
+        "A": "lodge_claim",
+        "B": "continue_monitoring",
+        "C": "align_policy_records",
+        "D": "collect_witness_statement",
+        "E": "close_case"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-05": {
+      "scenario_id": "bank_12to20_b1_s05",
+      "causal_pair_id": "bank:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "request_merchant_receipt",
+        "B": "order_replacement_card",
+        "C": "close_case",
+        "D": "file_dispute",
+        "E": "freeze_account"
+      },
+      "gold_pre_action": "file_dispute",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "dispute_status",
+      "gold_terminal_state": "approved",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "close_case",
+        "C": "file_dispute",
+        "D": "reconcile_card_records",
+        "E": "request_merchant_receipt"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-06": {
+      "scenario_id": "pharmacy_5to8_b0_s05",
+      "causal_pair_id": "pharmacy:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "close_case",
+        "C": "apply_alternate_payment",
+        "D": "contact_prescriber",
+        "E": "submit_claim"
+      },
+      "gold_pre_action": "submit_claim",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_status",
+      "gold_terminal_state": "rejected",
+      "post_action_mapping": {
+        "A": "submit_claim",
+        "B": "close_case",
+        "C": "review_account_configuration",
+        "D": "contact_prescriber",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "review_account_configuration",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-07": {
+      "scenario_id": "bank_5to8_b1_s05",
+      "causal_pair_id": "bank:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "file_dispute",
+        "B": "request_merchant_receipt",
+        "C": "freeze_account",
+        "D": "close_case",
+        "E": "order_replacement_card"
+      },
+      "gold_pre_action": "file_dispute",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "dispute_status",
+      "gold_terminal_state": "approved",
+      "post_action_mapping": {
+        "A": "request_merchant_receipt",
+        "B": "continue_monitoring",
+        "C": "file_dispute",
+        "D": "close_case",
+        "E": "reconcile_card_records"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-08": {
+      "scenario_id": "telecom_5to8_b0_s05",
+      "causal_pair_id": "telecom:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "verify_transfer_code",
+        "C": "issue_new_number",
+        "D": "submit_port_request",
+        "E": "ship_replacement_sim"
+      },
+      "gold_pre_action": "submit_port_request",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "port_status",
+      "gold_terminal_state": "rejected",
+      "post_action_mapping": {
+        "A": "verify_transfer_code",
+        "B": "align_ownership_record",
+        "C": "close_case",
+        "D": "continue_monitoring",
+        "E": "submit_port_request"
+      },
+      "gold_post_action": "align_ownership_record",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-09": {
+      "scenario_id": "saas_5to8_b1_s05",
+      "causal_pair_id": "saas:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "provision_new_account",
+        "B": "close_case",
+        "C": "clear_browser_state",
+        "D": "grant_temporary_bypass",
+        "E": "initiate_credential_reset"
+      },
+      "gold_pre_action": "initiate_credential_reset",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "access_status",
+      "gold_terminal_state": "restored",
+      "post_action_mapping": {
+        "A": "engage_identity_provider",
+        "B": "initiate_credential_reset",
+        "C": "close_case",
+        "D": "continue_monitoring",
+        "E": "clear_browser_state"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-10": {
+      "scenario_id": "tenancy_1to2_b0_s05",
+      "causal_pair_id": "tenancy:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "rehouse_tenant",
+        "C": "dispatch_maintenance_visit",
+        "D": "authorise_full_replacement",
+        "E": "send_portable_heaters"
+      },
+      "gold_pre_action": "dispatch_maintenance_visit",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "work_order_status",
+      "gold_terminal_state": "access_refused",
+      "post_action_mapping": {
+        "A": "dispatch_maintenance_visit",
+        "B": "continue_monitoring",
+        "C": "close_case",
+        "D": "reissue_access_authority",
+        "E": "send_portable_heaters"
+      },
+      "gold_post_action": "reissue_access_authority",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-11": {
+      "scenario_id": "flight_5to8_b0_s05",
+      "causal_pair_id": "flight:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "change_departing_segment",
+        "B": "protect_onward_segment",
+        "C": "offer_service_recovery",
+        "D": "enable_itinerary_monitoring",
+        "E": "close_case"
+      },
+      "gold_pre_action": "enable_itinerary_monitoring",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "connection_status",
+      "gold_terminal_state": "missed",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "enable_itinerary_monitoring",
+        "C": "offer_service_recovery",
+        "D": "protect_onward_segment",
+        "E": "change_departing_segment"
+      },
+      "gold_post_action": "protect_onward_segment",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-12": {
+      "scenario_id": "pharmacy_12to20_b1_s05",
+      "causal_pair_id": "pharmacy:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "apply_alternate_payment",
+        "B": "close_case",
+        "C": "submit_claim",
+        "D": "contact_prescriber",
+        "E": "continue_monitoring"
+      },
+      "gold_pre_action": "submit_claim",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_status",
+      "gold_terminal_state": "approved",
+      "post_action_mapping": {
+        "A": "review_account_configuration",
+        "B": "continue_monitoring",
+        "C": "contact_prescriber",
+        "D": "close_case",
+        "E": "submit_claim"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-13": {
+      "scenario_id": "tenancy_12to20_b0_s05",
+      "causal_pair_id": "tenancy:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "authorise_full_replacement",
+        "B": "dispatch_maintenance_visit",
+        "C": "rehouse_tenant",
+        "D": "send_portable_heaters",
+        "E": "close_case"
+      },
+      "gold_pre_action": "dispatch_maintenance_visit",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "work_order_status",
+      "gold_terminal_state": "access_refused",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "reissue_access_authority",
+        "C": "dispatch_maintenance_visit",
+        "D": "continue_monitoring",
+        "E": "send_portable_heaters"
+      },
+      "gold_post_action": "reissue_access_authority",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-14": {
+      "scenario_id": "telecom_12to20_b0_s05",
+      "causal_pair_id": "telecom:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "ship_replacement_sim",
+        "C": "issue_new_number",
+        "D": "submit_port_request",
+        "E": "verify_transfer_code"
+      },
+      "gold_pre_action": "submit_port_request",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "port_status",
+      "gold_terminal_state": "rejected",
+      "post_action_mapping": {
+        "A": "submit_port_request",
+        "B": "verify_transfer_code",
+        "C": "align_ownership_record",
+        "D": "close_case",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "align_ownership_record",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-15": {
+      "scenario_id": "permit_1to2_b0_s05",
+      "causal_pair_id": "permit:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "escalate_to_appeals",
+        "B": "reconfirm_vehicle_plate",
+        "C": "submit_permit_application",
+        "D": "close_case",
+        "E": "issue_temporary_permit"
+      },
+      "gold_pre_action": "submit_permit_application",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "permit_status",
+      "gold_terminal_state": "refused",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "reconfirm_vehicle_plate",
+        "C": "supply_alternative_proof",
+        "D": "submit_permit_application",
+        "E": "close_case"
+      },
+      "gold_post_action": "supply_alternative_proof",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-16": {
+      "scenario_id": "utility_5to8_b0_s05",
+      "causal_pair_id": "utility:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "submit_reading",
+        "B": "close_case",
+        "C": "issue_refund",
+        "D": "book_engineer_visit",
+        "E": "review_tariff_history"
+      },
+      "gold_pre_action": "submit_reading",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "reading_status",
+      "gold_terminal_state": "flagged_incomplete",
+      "post_action_mapping": {
+        "A": "submit_reading",
+        "B": "continue_monitoring",
+        "C": "register_all_supply_points",
+        "D": "close_case",
+        "E": "review_tariff_history"
+      },
+      "gold_post_action": "register_all_supply_points",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-17": {
+      "scenario_id": "saas_1to2_b0_s05",
+      "causal_pair_id": "saas:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "provision_new_account",
+        "B": "clear_browser_state",
+        "C": "close_case",
+        "D": "grant_temporary_bypass",
+        "E": "initiate_credential_reset"
+      },
+      "gold_pre_action": "initiate_credential_reset",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "access_status",
+      "gold_terminal_state": "still_locked",
+      "post_action_mapping": {
+        "A": "clear_browser_state",
+        "B": "continue_monitoring",
+        "C": "initiate_credential_reset",
+        "D": "engage_identity_provider",
+        "E": "close_case"
+      },
+      "gold_post_action": "engage_identity_provider",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-18": {
+      "scenario_id": "delivery_12to20_b1_s05",
+      "causal_pair_id": "delivery:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "schedule_redelivery",
+        "B": "dispatch_replacement_goods",
+        "C": "open_loss_claim",
+        "D": "close_case",
+        "E": "contact_courier_depot"
+      },
+      "gold_pre_action": "schedule_redelivery",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "shipment_status",
+      "gold_terminal_state": "delivered",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "close_case",
+        "C": "schedule_redelivery",
+        "D": "contact_courier_depot",
+        "E": "correct_destination_record"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-19": {
+      "scenario_id": "delivery_1to2_b1_s05",
+      "causal_pair_id": "delivery:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "dispatch_replacement_goods",
+        "B": "contact_courier_depot",
+        "C": "close_case",
+        "D": "open_loss_claim",
+        "E": "schedule_redelivery"
+      },
+      "gold_pre_action": "schedule_redelivery",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "shipment_status",
+      "gold_terminal_state": "delivered",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "close_case",
+        "C": "contact_courier_depot",
+        "D": "correct_destination_record",
+        "E": "schedule_redelivery"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-20": {
+      "scenario_id": "bank_1to2_b0_s05",
+      "causal_pair_id": "bank:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "request_merchant_receipt",
+        "B": "freeze_account",
+        "C": "file_dispute",
+        "D": "order_replacement_card",
+        "E": "close_case"
+      },
+      "gold_pre_action": "file_dispute",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "dispute_status",
+      "gold_terminal_state": "returned_unmatched",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "file_dispute",
+        "C": "reconcile_card_records",
+        "D": "request_merchant_receipt",
+        "E": "close_case"
+      },
+      "gold_post_action": "reconcile_card_records",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-21": {
+      "scenario_id": "telecom_1to2_b1_s05",
+      "causal_pair_id": "telecom:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "ship_replacement_sim",
+        "B": "submit_port_request",
+        "C": "verify_transfer_code",
+        "D": "close_case",
+        "E": "issue_new_number"
+      },
+      "gold_pre_action": "submit_port_request",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "port_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "submit_port_request",
+        "B": "continue_monitoring",
+        "C": "align_ownership_record",
+        "D": "verify_transfer_code",
+        "E": "close_case"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-22": {
+      "scenario_id": "flight_1to2_b1_s05",
+      "causal_pair_id": "flight:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "offer_service_recovery",
+        "B": "protect_onward_segment",
+        "C": "close_case",
+        "D": "change_departing_segment",
+        "E": "enable_itinerary_monitoring"
+      },
+      "gold_pre_action": "enable_itinerary_monitoring",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "connection_status",
+      "gold_terminal_state": "viable",
+      "post_action_mapping": {
+        "A": "protect_onward_segment",
+        "B": "enable_itinerary_monitoring",
+        "C": "close_case",
+        "D": "offer_service_recovery",
+        "E": "change_departing_segment"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-23": {
+      "scenario_id": "warranty_12to20_b0_s05",
+      "causal_pair_id": "warranty:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "dispatch_engineer_now",
+        "B": "authorise_replacement",
+        "C": "open_cover_claim",
+        "D": "suggest_self_repair",
+        "E": "close_case"
+      },
+      "gold_pre_action": "open_cover_claim",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_state",
+      "gold_terminal_state": "outside_terms",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "open_cover_claim",
+        "C": "suggest_self_repair",
+        "D": "use_retailer_route",
+        "E": "close_case"
+      },
+      "gold_post_action": "use_retailer_route",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-24": {
+      "scenario_id": "warranty_1to2_b0_s05",
+      "causal_pair_id": "warranty:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "open_cover_claim",
+        "B": "suggest_self_repair",
+        "C": "close_case",
+        "D": "authorise_replacement",
+        "E": "dispatch_engineer_now"
+      },
+      "gold_pre_action": "open_cover_claim",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_state",
+      "gold_terminal_state": "outside_terms",
+      "post_action_mapping": {
+        "A": "use_retailer_route",
+        "B": "close_case",
+        "C": "continue_monitoring",
+        "D": "open_cover_claim",
+        "E": "suggest_self_repair"
+      },
+      "gold_post_action": "use_retailer_route",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-25": {
+      "scenario_id": "saas_1to2_b1_s05",
+      "causal_pair_id": "saas:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "grant_temporary_bypass",
+        "B": "close_case",
+        "C": "clear_browser_state",
+        "D": "provision_new_account",
+        "E": "initiate_credential_reset"
+      },
+      "gold_pre_action": "initiate_credential_reset",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "access_status",
+      "gold_terminal_state": "restored",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "initiate_credential_reset",
+        "C": "continue_monitoring",
+        "D": "clear_browser_state",
+        "E": "engage_identity_provider"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-26": {
+      "scenario_id": "pharmacy_1to2_b1_s05",
+      "causal_pair_id": "pharmacy:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "apply_alternate_payment",
+        "B": "submit_claim",
+        "C": "close_case",
+        "D": "continue_monitoring",
+        "E": "contact_prescriber"
+      },
+      "gold_pre_action": "submit_claim",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_status",
+      "gold_terminal_state": "approved",
+      "post_action_mapping": {
+        "A": "contact_prescriber",
+        "B": "review_account_configuration",
+        "C": "submit_claim",
+        "D": "close_case",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-27": {
+      "scenario_id": "delivery_12to20_b0_s05",
+      "causal_pair_id": "delivery:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "schedule_redelivery",
+        "B": "contact_courier_depot",
+        "C": "close_case",
+        "D": "open_loss_claim",
+        "E": "dispatch_replacement_goods"
+      },
+      "gold_pre_action": "schedule_redelivery",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "shipment_status",
+      "gold_terminal_state": "returned_to_sender",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "schedule_redelivery",
+        "C": "contact_courier_depot",
+        "D": "correct_destination_record",
+        "E": "close_case"
+      },
+      "gold_post_action": "correct_destination_record",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-28": {
+      "scenario_id": "clinic_5to8_b0_s05",
+      "causal_pair_id": "clinic:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "book_without_authorization",
+        "B": "close_case",
+        "C": "offer_private_payment",
+        "D": "request_authorization",
+        "E": "contact_specialist_office"
+      },
+      "gold_pre_action": "request_authorization",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "authorization_status",
+      "gold_terminal_state": "declined",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "close_case",
+        "C": "obtain_qualifying_referral",
+        "D": "request_authorization",
+        "E": "contact_specialist_office"
+      },
+      "gold_post_action": "obtain_qualifying_referral",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-29": {
+      "scenario_id": "pharmacy_5to8_b1_s05",
+      "causal_pair_id": "pharmacy:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "apply_alternate_payment",
+        "B": "close_case",
+        "C": "continue_monitoring",
+        "D": "submit_claim",
+        "E": "contact_prescriber"
+      },
+      "gold_pre_action": "submit_claim",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_status",
+      "gold_terminal_state": "approved",
+      "post_action_mapping": {
+        "A": "review_account_configuration",
+        "B": "close_case",
+        "C": "submit_claim",
+        "D": "continue_monitoring",
+        "E": "contact_prescriber"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-30": {
+      "scenario_id": "telecom_12to20_b1_s05",
+      "causal_pair_id": "telecom:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "issue_new_number",
+        "B": "close_case",
+        "C": "verify_transfer_code",
+        "D": "ship_replacement_sim",
+        "E": "submit_port_request"
+      },
+      "gold_pre_action": "submit_port_request",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "port_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "align_ownership_record",
+        "C": "submit_port_request",
+        "D": "continue_monitoring",
+        "E": "verify_transfer_code"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-31": {
+      "scenario_id": "telecom_1to2_b0_s05",
+      "causal_pair_id": "telecom:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "verify_transfer_code",
+        "B": "close_case",
+        "C": "ship_replacement_sim",
+        "D": "issue_new_number",
+        "E": "submit_port_request"
+      },
+      "gold_pre_action": "submit_port_request",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "port_status",
+      "gold_terminal_state": "rejected",
+      "post_action_mapping": {
+        "A": "align_ownership_record",
+        "B": "verify_transfer_code",
+        "C": "continue_monitoring",
+        "D": "submit_port_request",
+        "E": "close_case"
+      },
+      "gold_post_action": "align_ownership_record",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-32": {
+      "scenario_id": "permit_5to8_b1_s05",
+      "causal_pair_id": "permit:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "issue_temporary_permit",
+        "B": "submit_permit_application",
+        "C": "reconfirm_vehicle_plate",
+        "D": "escalate_to_appeals",
+        "E": "close_case"
+      },
+      "gold_pre_action": "submit_permit_application",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "permit_status",
+      "gold_terminal_state": "issued",
+      "post_action_mapping": {
+        "A": "supply_alternative_proof",
+        "B": "continue_monitoring",
+        "C": "reconfirm_vehicle_plate",
+        "D": "submit_permit_application",
+        "E": "close_case"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-33": {
+      "scenario_id": "router_5to8_b1_s05",
+      "causal_pair_id": "router:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "replace_hardware",
+        "B": "run_maintenance",
+        "C": "inspect_upstream_service",
+        "D": "close_case",
+        "E": "repeat_power_cycle"
+      },
+      "gold_pre_action": "run_maintenance",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "firmware_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "inspect_persistent_state",
+        "B": "run_maintenance",
+        "C": "close_case",
+        "D": "repeat_power_cycle",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-34": {
+      "scenario_id": "router_12to20_b0_s05",
+      "causal_pair_id": "router:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "replace_hardware",
+        "C": "run_maintenance",
+        "D": "inspect_upstream_service",
+        "E": "repeat_power_cycle"
+      },
+      "gold_pre_action": "run_maintenance",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "firmware_status",
+      "gold_terminal_state": "stuck",
+      "post_action_mapping": {
+        "A": "inspect_persistent_state",
+        "B": "close_case",
+        "C": "repeat_power_cycle",
+        "D": "continue_monitoring",
+        "E": "run_maintenance"
+      },
+      "gold_post_action": "inspect_persistent_state",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-35": {
+      "scenario_id": "flight_5to8_b1_s05",
+      "causal_pair_id": "flight:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "change_departing_segment",
+        "C": "enable_itinerary_monitoring",
+        "D": "offer_service_recovery",
+        "E": "protect_onward_segment"
+      },
+      "gold_pre_action": "enable_itinerary_monitoring",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "connection_status",
+      "gold_terminal_state": "viable",
+      "post_action_mapping": {
+        "A": "change_departing_segment",
+        "B": "offer_service_recovery",
+        "C": "close_case",
+        "D": "enable_itinerary_monitoring",
+        "E": "protect_onward_segment"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-36": {
+      "scenario_id": "clinic_1to2_b1_s05",
+      "causal_pair_id": "clinic:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "request_authorization",
+        "C": "offer_private_payment",
+        "D": "contact_specialist_office",
+        "E": "book_without_authorization"
+      },
+      "gold_pre_action": "request_authorization",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "authorization_status",
+      "gold_terminal_state": "granted",
+      "post_action_mapping": {
+        "A": "contact_specialist_office",
+        "B": "request_authorization",
+        "C": "continue_monitoring",
+        "D": "close_case",
+        "E": "obtain_qualifying_referral"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-37": {
+      "scenario_id": "tenancy_5to8_b0_s05",
+      "causal_pair_id": "tenancy:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "rehouse_tenant",
+        "B": "close_case",
+        "C": "authorise_full_replacement",
+        "D": "dispatch_maintenance_visit",
+        "E": "send_portable_heaters"
+      },
+      "gold_pre_action": "dispatch_maintenance_visit",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "work_order_status",
+      "gold_terminal_state": "access_refused",
+      "post_action_mapping": {
+        "A": "send_portable_heaters",
+        "B": "reissue_access_authority",
+        "C": "close_case",
+        "D": "dispatch_maintenance_visit",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "reissue_access_authority",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-38": {
+      "scenario_id": "bank_5to8_b0_s05",
+      "causal_pair_id": "bank:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "request_merchant_receipt",
+        "C": "freeze_account",
+        "D": "order_replacement_card",
+        "E": "file_dispute"
+      },
+      "gold_pre_action": "file_dispute",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "dispute_status",
+      "gold_terminal_state": "returned_unmatched",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "request_merchant_receipt",
+        "C": "continue_monitoring",
+        "D": "file_dispute",
+        "E": "reconcile_card_records"
+      },
+      "gold_post_action": "reconcile_card_records",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-39": {
+      "scenario_id": "clinic_5to8_b1_s05",
+      "causal_pair_id": "clinic:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "contact_specialist_office",
+        "B": "request_authorization",
+        "C": "book_without_authorization",
+        "D": "offer_private_payment",
+        "E": "close_case"
+      },
+      "gold_pre_action": "request_authorization",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "authorization_status",
+      "gold_terminal_state": "granted",
+      "post_action_mapping": {
+        "A": "contact_specialist_office",
+        "B": "request_authorization",
+        "C": "close_case",
+        "D": "continue_monitoring",
+        "E": "obtain_qualifying_referral"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-40": {
+      "scenario_id": "utility_5to8_b1_s05",
+      "causal_pair_id": "utility:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "review_tariff_history",
+        "B": "submit_reading",
+        "C": "issue_refund",
+        "D": "book_engineer_visit",
+        "E": "close_case"
+      },
+      "gold_pre_action": "submit_reading",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "reading_status",
+      "gold_terminal_state": "accepted",
+      "post_action_mapping": {
+        "A": "register_all_supply_points",
+        "B": "close_case",
+        "C": "continue_monitoring",
+        "D": "submit_reading",
+        "E": "review_tariff_history"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-41": {
+      "scenario_id": "college_12to20_b0_s05",
+      "causal_pair_id": "college:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "submit_enrolment",
+        "B": "close_case",
+        "C": "defer_to_next_term",
+        "D": "waive_requirements",
+        "E": "reconfirm_module_choices"
+      },
+      "gold_pre_action": "submit_enrolment",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "enrolment_status",
+      "gold_terminal_state": "held_for_review",
+      "post_action_mapping": {
+        "A": "request_prior_study_assessment",
+        "B": "close_case",
+        "C": "continue_monitoring",
+        "D": "submit_enrolment",
+        "E": "reconfirm_module_choices"
+      },
+      "gold_post_action": "request_prior_study_assessment",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-42": {
+      "scenario_id": "motor_12to20_b1_s05",
+      "causal_pair_id": "motor:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "authorise_immediate_repair",
+        "B": "lodge_claim",
+        "C": "close_case",
+        "D": "collect_witness_statement",
+        "E": "declare_total_loss"
+      },
+      "gold_pre_action": "lodge_claim",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_progress",
+      "gold_terminal_state": "settled",
+      "post_action_mapping": {
+        "A": "align_policy_records",
+        "B": "close_case",
+        "C": "collect_witness_statement",
+        "D": "continue_monitoring",
+        "E": "lodge_claim"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-43": {
+      "scenario_id": "clinic_12to20_b1_s05",
+      "causal_pair_id": "clinic:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "contact_specialist_office",
+        "B": "book_without_authorization",
+        "C": "offer_private_payment",
+        "D": "close_case",
+        "E": "request_authorization"
+      },
+      "gold_pre_action": "request_authorization",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "authorization_status",
+      "gold_terminal_state": "granted",
+      "post_action_mapping": {
+        "A": "contact_specialist_office",
+        "B": "close_case",
+        "C": "continue_monitoring",
+        "D": "obtain_qualifying_referral",
+        "E": "request_authorization"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-44": {
+      "scenario_id": "pharmacy_1to2_b0_s05",
+      "causal_pair_id": "pharmacy:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "contact_prescriber",
+        "B": "submit_claim",
+        "C": "continue_monitoring",
+        "D": "apply_alternate_payment",
+        "E": "close_case"
+      },
+      "gold_pre_action": "submit_claim",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_status",
+      "gold_terminal_state": "rejected",
+      "post_action_mapping": {
+        "A": "review_account_configuration",
+        "B": "continue_monitoring",
+        "C": "contact_prescriber",
+        "D": "submit_claim",
+        "E": "close_case"
+      },
+      "gold_post_action": "review_account_configuration",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-45": {
+      "scenario_id": "flight_12to20_b1_s05",
+      "causal_pair_id": "flight:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "offer_service_recovery",
+        "B": "enable_itinerary_monitoring",
+        "C": "change_departing_segment",
+        "D": "protect_onward_segment",
+        "E": "close_case"
+      },
+      "gold_pre_action": "enable_itinerary_monitoring",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "connection_status",
+      "gold_terminal_state": "viable",
+      "post_action_mapping": {
+        "A": "enable_itinerary_monitoring",
+        "B": "protect_onward_segment",
+        "C": "offer_service_recovery",
+        "D": "close_case",
+        "E": "change_departing_segment"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-46": {
+      "scenario_id": "saas_12to20_b0_s05",
+      "causal_pair_id": "saas:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "initiate_credential_reset",
+        "B": "close_case",
+        "C": "clear_browser_state",
+        "D": "provision_new_account",
+        "E": "grant_temporary_bypass"
+      },
+      "gold_pre_action": "initiate_credential_reset",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "access_status",
+      "gold_terminal_state": "still_locked",
+      "post_action_mapping": {
+        "A": "engage_identity_provider",
+        "B": "continue_monitoring",
+        "C": "clear_browser_state",
+        "D": "close_case",
+        "E": "initiate_credential_reset"
+      },
+      "gold_post_action": "engage_identity_provider",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-47": {
+      "scenario_id": "saas_5to8_b0_s05",
+      "causal_pair_id": "saas:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "grant_temporary_bypass",
+        "C": "provision_new_account",
+        "D": "clear_browser_state",
+        "E": "initiate_credential_reset"
+      },
+      "gold_pre_action": "initiate_credential_reset",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "access_status",
+      "gold_terminal_state": "still_locked",
+      "post_action_mapping": {
+        "A": "engage_identity_provider",
+        "B": "close_case",
+        "C": "initiate_credential_reset",
+        "D": "clear_browser_state",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "engage_identity_provider",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-48": {
+      "scenario_id": "motor_1to2_b0_s05",
+      "causal_pair_id": "motor:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "authorise_immediate_repair",
+        "B": "declare_total_loss",
+        "C": "lodge_claim",
+        "D": "collect_witness_statement",
+        "E": "close_case"
+      },
+      "gold_pre_action": "lodge_claim",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_progress",
+      "gold_terminal_state": "held_for_proof",
+      "post_action_mapping": {
+        "A": "align_policy_records",
+        "B": "continue_monitoring",
+        "C": "collect_witness_statement",
+        "D": "close_case",
+        "E": "lodge_claim"
+      },
+      "gold_post_action": "align_policy_records",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-49": {
+      "scenario_id": "college_5to8_b0_s05",
+      "causal_pair_id": "college:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "reconfirm_module_choices",
+        "B": "close_case",
+        "C": "defer_to_next_term",
+        "D": "submit_enrolment",
+        "E": "waive_requirements"
+      },
+      "gold_pre_action": "submit_enrolment",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "enrolment_status",
+      "gold_terminal_state": "held_for_review",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "submit_enrolment",
+        "C": "reconfirm_module_choices",
+        "D": "close_case",
+        "E": "request_prior_study_assessment"
+      },
+      "gold_post_action": "request_prior_study_assessment",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-50": {
+      "scenario_id": "warranty_12to20_b1_s05",
+      "causal_pair_id": "warranty:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "dispatch_engineer_now",
+        "B": "close_case",
+        "C": "suggest_self_repair",
+        "D": "open_cover_claim",
+        "E": "authorise_replacement"
+      },
+      "gold_pre_action": "open_cover_claim",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_state",
+      "gold_terminal_state": "authorised",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "continue_monitoring",
+        "C": "use_retailer_route",
+        "D": "suggest_self_repair",
+        "E": "open_cover_claim"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-51": {
+      "scenario_id": "permit_12to20_b0_s05",
+      "causal_pair_id": "permit:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "reconfirm_vehicle_plate",
+        "B": "submit_permit_application",
+        "C": "close_case",
+        "D": "escalate_to_appeals",
+        "E": "issue_temporary_permit"
+      },
+      "gold_pre_action": "submit_permit_application",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "permit_status",
+      "gold_terminal_state": "refused",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "supply_alternative_proof",
+        "C": "reconfirm_vehicle_plate",
+        "D": "submit_permit_application",
+        "E": "close_case"
+      },
+      "gold_post_action": "supply_alternative_proof",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-52": {
+      "scenario_id": "warranty_5to8_b0_s05",
+      "causal_pair_id": "warranty:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "authorise_replacement",
+        "B": "open_cover_claim",
+        "C": "close_case",
+        "D": "suggest_self_repair",
+        "E": "dispatch_engineer_now"
+      },
+      "gold_pre_action": "open_cover_claim",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_state",
+      "gold_terminal_state": "outside_terms",
+      "post_action_mapping": {
+        "A": "suggest_self_repair",
+        "B": "close_case",
+        "C": "continue_monitoring",
+        "D": "use_retailer_route",
+        "E": "open_cover_claim"
+      },
+      "gold_post_action": "use_retailer_route",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-53": {
+      "scenario_id": "pharmacy_12to20_b0_s05",
+      "causal_pair_id": "pharmacy:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "apply_alternate_payment",
+        "B": "submit_claim",
+        "C": "contact_prescriber",
+        "D": "close_case",
+        "E": "continue_monitoring"
+      },
+      "gold_pre_action": "submit_claim",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_status",
+      "gold_terminal_state": "rejected",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "review_account_configuration",
+        "C": "contact_prescriber",
+        "D": "submit_claim",
+        "E": "close_case"
+      },
+      "gold_post_action": "review_account_configuration",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-54": {
+      "scenario_id": "tenancy_1to2_b1_s05",
+      "causal_pair_id": "tenancy:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "authorise_full_replacement",
+        "B": "dispatch_maintenance_visit",
+        "C": "close_case",
+        "D": "rehouse_tenant",
+        "E": "send_portable_heaters"
+      },
+      "gold_pre_action": "dispatch_maintenance_visit",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "work_order_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "continue_monitoring",
+        "C": "send_portable_heaters",
+        "D": "reissue_access_authority",
+        "E": "dispatch_maintenance_visit"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-55": {
+      "scenario_id": "router_1to2_b0_s05",
+      "causal_pair_id": "router:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "replace_hardware",
+        "B": "close_case",
+        "C": "repeat_power_cycle",
+        "D": "run_maintenance",
+        "E": "inspect_upstream_service"
+      },
+      "gold_pre_action": "run_maintenance",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "firmware_status",
+      "gold_terminal_state": "stuck",
+      "post_action_mapping": {
+        "A": "repeat_power_cycle",
+        "B": "continue_monitoring",
+        "C": "inspect_persistent_state",
+        "D": "run_maintenance",
+        "E": "close_case"
+      },
+      "gold_post_action": "inspect_persistent_state",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-56": {
+      "scenario_id": "bank_1to2_b1_s05",
+      "causal_pair_id": "bank:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "freeze_account",
+        "B": "request_merchant_receipt",
+        "C": "order_replacement_card",
+        "D": "close_case",
+        "E": "file_dispute"
+      },
+      "gold_pre_action": "file_dispute",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "dispute_status",
+      "gold_terminal_state": "approved",
+      "post_action_mapping": {
+        "A": "file_dispute",
+        "B": "request_merchant_receipt",
+        "C": "close_case",
+        "D": "continue_monitoring",
+        "E": "reconcile_card_records"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-57": {
+      "scenario_id": "delivery_1to2_b0_s05",
+      "causal_pair_id": "delivery:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "contact_courier_depot",
+        "C": "dispatch_replacement_goods",
+        "D": "open_loss_claim",
+        "E": "schedule_redelivery"
+      },
+      "gold_pre_action": "schedule_redelivery",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "shipment_status",
+      "gold_terminal_state": "returned_to_sender",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "contact_courier_depot",
+        "C": "schedule_redelivery",
+        "D": "correct_destination_record",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "correct_destination_record",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-58": {
+      "scenario_id": "college_5to8_b1_s05",
+      "causal_pair_id": "college:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "submit_enrolment",
+        "B": "defer_to_next_term",
+        "C": "reconfirm_module_choices",
+        "D": "close_case",
+        "E": "waive_requirements"
+      },
+      "gold_pre_action": "submit_enrolment",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "enrolment_status",
+      "gold_terminal_state": "confirmed",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "submit_enrolment",
+        "C": "close_case",
+        "D": "reconfirm_module_choices",
+        "E": "request_prior_study_assessment"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-59": {
+      "scenario_id": "delivery_5to8_b1_s05",
+      "causal_pair_id": "delivery:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "dispatch_replacement_goods",
+        "C": "contact_courier_depot",
+        "D": "schedule_redelivery",
+        "E": "open_loss_claim"
+      },
+      "gold_pre_action": "schedule_redelivery",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "shipment_status",
+      "gold_terminal_state": "delivered",
+      "post_action_mapping": {
+        "A": "contact_courier_depot",
+        "B": "close_case",
+        "C": "schedule_redelivery",
+        "D": "continue_monitoring",
+        "E": "correct_destination_record"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-60": {
+      "scenario_id": "motor_12to20_b0_s05",
+      "causal_pair_id": "motor:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "authorise_immediate_repair",
+        "B": "close_case",
+        "C": "declare_total_loss",
+        "D": "collect_witness_statement",
+        "E": "lodge_claim"
+      },
+      "gold_pre_action": "lodge_claim",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_progress",
+      "gold_terminal_state": "held_for_proof",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "close_case",
+        "C": "collect_witness_statement",
+        "D": "align_policy_records",
+        "E": "lodge_claim"
+      },
+      "gold_post_action": "align_policy_records",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-61": {
+      "scenario_id": "college_1to2_b0_s05",
+      "causal_pair_id": "college:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "submit_enrolment",
+        "B": "close_case",
+        "C": "reconfirm_module_choices",
+        "D": "defer_to_next_term",
+        "E": "waive_requirements"
+      },
+      "gold_pre_action": "submit_enrolment",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "enrolment_status",
+      "gold_terminal_state": "held_for_review",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "request_prior_study_assessment",
+        "C": "reconfirm_module_choices",
+        "D": "submit_enrolment",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "request_prior_study_assessment",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-62": {
+      "scenario_id": "clinic_12to20_b0_s05",
+      "causal_pair_id": "clinic:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "offer_private_payment",
+        "B": "book_without_authorization",
+        "C": "contact_specialist_office",
+        "D": "request_authorization",
+        "E": "close_case"
+      },
+      "gold_pre_action": "request_authorization",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "authorization_status",
+      "gold_terminal_state": "declined",
+      "post_action_mapping": {
+        "A": "contact_specialist_office",
+        "B": "continue_monitoring",
+        "C": "request_authorization",
+        "D": "close_case",
+        "E": "obtain_qualifying_referral"
+      },
+      "gold_post_action": "obtain_qualifying_referral",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-63": {
+      "scenario_id": "motor_5to8_b0_s05",
+      "causal_pair_id": "motor:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "lodge_claim",
+        "C": "collect_witness_statement",
+        "D": "declare_total_loss",
+        "E": "authorise_immediate_repair"
+      },
+      "gold_pre_action": "lodge_claim",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "claim_progress",
+      "gold_terminal_state": "held_for_proof",
+      "post_action_mapping": {
+        "A": "collect_witness_statement",
+        "B": "align_policy_records",
+        "C": "continue_monitoring",
+        "D": "close_case",
+        "E": "lodge_claim"
+      },
+      "gold_post_action": "align_policy_records",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-64": {
+      "scenario_id": "router_5to8_b0_s05",
+      "causal_pair_id": "router:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "inspect_upstream_service",
+        "B": "close_case",
+        "C": "replace_hardware",
+        "D": "run_maintenance",
+        "E": "repeat_power_cycle"
+      },
+      "gold_pre_action": "run_maintenance",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "firmware_status",
+      "gold_terminal_state": "stuck",
+      "post_action_mapping": {
+        "A": "run_maintenance",
+        "B": "continue_monitoring",
+        "C": "close_case",
+        "D": "repeat_power_cycle",
+        "E": "inspect_persistent_state"
+      },
+      "gold_post_action": "inspect_persistent_state",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-65": {
+      "scenario_id": "utility_1to2_b0_s05",
+      "causal_pair_id": "utility:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "submit_reading",
+        "C": "review_tariff_history",
+        "D": "issue_refund",
+        "E": "book_engineer_visit"
+      },
+      "gold_pre_action": "submit_reading",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "reading_status",
+      "gold_terminal_state": "flagged_incomplete",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "review_tariff_history",
+        "C": "submit_reading",
+        "D": "register_all_supply_points",
+        "E": "close_case"
+      },
+      "gold_post_action": "register_all_supply_points",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-66": {
+      "scenario_id": "saas_12to20_b1_s05",
+      "causal_pair_id": "saas:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "clear_browser_state",
+        "C": "provision_new_account",
+        "D": "grant_temporary_bypass",
+        "E": "initiate_credential_reset"
+      },
+      "gold_pre_action": "initiate_credential_reset",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "access_status",
+      "gold_terminal_state": "restored",
+      "post_action_mapping": {
+        "A": "clear_browser_state",
+        "B": "continue_monitoring",
+        "C": "initiate_credential_reset",
+        "D": "engage_identity_provider",
+        "E": "close_case"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-67": {
+      "scenario_id": "warranty_1to2_b1_s05",
+      "causal_pair_id": "warranty:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "open_cover_claim",
+        "C": "authorise_replacement",
+        "D": "suggest_self_repair",
+        "E": "dispatch_engineer_now"
+      },
+      "gold_pre_action": "open_cover_claim",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_state",
+      "gold_terminal_state": "authorised",
+      "post_action_mapping": {
+        "A": "open_cover_claim",
+        "B": "suggest_self_repair",
+        "C": "continue_monitoring",
+        "D": "use_retailer_route",
+        "E": "close_case"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-68": {
+      "scenario_id": "telecom_5to8_b1_s05",
+      "causal_pair_id": "telecom:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "ship_replacement_sim",
+        "C": "submit_port_request",
+        "D": "verify_transfer_code",
+        "E": "issue_new_number"
+      },
+      "gold_pre_action": "submit_port_request",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "port_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "align_ownership_record",
+        "B": "submit_port_request",
+        "C": "continue_monitoring",
+        "D": "verify_transfer_code",
+        "E": "close_case"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-69": {
+      "scenario_id": "tenancy_5to8_b1_s05",
+      "causal_pair_id": "tenancy:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "authorise_full_replacement",
+        "B": "send_portable_heaters",
+        "C": "rehouse_tenant",
+        "D": "dispatch_maintenance_visit",
+        "E": "close_case"
+      },
+      "gold_pre_action": "dispatch_maintenance_visit",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "work_order_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "reissue_access_authority",
+        "B": "close_case",
+        "C": "send_portable_heaters",
+        "D": "continue_monitoring",
+        "E": "dispatch_maintenance_visit"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-70": {
+      "scenario_id": "college_1to2_b1_s05",
+      "causal_pair_id": "college:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "submit_enrolment",
+        "B": "waive_requirements",
+        "C": "reconfirm_module_choices",
+        "D": "close_case",
+        "E": "defer_to_next_term"
+      },
+      "gold_pre_action": "submit_enrolment",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "enrolment_status",
+      "gold_terminal_state": "confirmed",
+      "post_action_mapping": {
+        "A": "request_prior_study_assessment",
+        "B": "submit_enrolment",
+        "C": "close_case",
+        "D": "continue_monitoring",
+        "E": "reconfirm_module_choices"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-71": {
+      "scenario_id": "bank_12to20_b0_s05",
+      "causal_pair_id": "bank:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "freeze_account",
+        "B": "close_case",
+        "C": "file_dispute",
+        "D": "order_replacement_card",
+        "E": "request_merchant_receipt"
+      },
+      "gold_pre_action": "file_dispute",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "dispute_status",
+      "gold_terminal_state": "returned_unmatched",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "request_merchant_receipt",
+        "C": "close_case",
+        "D": "file_dispute",
+        "E": "reconcile_card_records"
+      },
+      "gold_post_action": "reconcile_card_records",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-72": {
+      "scenario_id": "router_1to2_b1_s05",
+      "causal_pair_id": "router:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "inspect_upstream_service",
+        "B": "repeat_power_cycle",
+        "C": "replace_hardware",
+        "D": "run_maintenance",
+        "E": "close_case"
+      },
+      "gold_pre_action": "run_maintenance",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "firmware_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "run_maintenance",
+        "C": "continue_monitoring",
+        "D": "inspect_persistent_state",
+        "E": "repeat_power_cycle"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-73": {
+      "scenario_id": "permit_1to2_b1_s05",
+      "causal_pair_id": "permit:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "escalate_to_appeals",
+        "C": "issue_temporary_permit",
+        "D": "reconfirm_vehicle_plate",
+        "E": "submit_permit_application"
+      },
+      "gold_pre_action": "submit_permit_application",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "permit_status",
+      "gold_terminal_state": "issued",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "close_case",
+        "C": "reconfirm_vehicle_plate",
+        "D": "submit_permit_application",
+        "E": "supply_alternative_proof"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-74": {
+      "scenario_id": "flight_1to2_b0_s05",
+      "causal_pair_id": "flight:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "change_departing_segment",
+        "B": "protect_onward_segment",
+        "C": "enable_itinerary_monitoring",
+        "D": "close_case",
+        "E": "offer_service_recovery"
+      },
+      "gold_pre_action": "enable_itinerary_monitoring",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "connection_status",
+      "gold_terminal_state": "missed",
+      "post_action_mapping": {
+        "A": "offer_service_recovery",
+        "B": "close_case",
+        "C": "change_departing_segment",
+        "D": "protect_onward_segment",
+        "E": "enable_itinerary_monitoring"
+      },
+      "gold_post_action": "protect_onward_segment",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-75": {
+      "scenario_id": "utility_12to20_b1_s05",
+      "causal_pair_id": "utility:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "issue_refund",
+        "B": "book_engineer_visit",
+        "C": "submit_reading",
+        "D": "review_tariff_history",
+        "E": "close_case"
+      },
+      "gold_pre_action": "submit_reading",
+      "gold_pre_action_label": "C",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "reading_status",
+      "gold_terminal_state": "accepted",
+      "post_action_mapping": {
+        "A": "review_tariff_history",
+        "B": "submit_reading",
+        "C": "register_all_supply_points",
+        "D": "close_case",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-76": {
+      "scenario_id": "delivery_5to8_b0_s05",
+      "causal_pair_id": "delivery:5-8:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "open_loss_claim",
+        "B": "schedule_redelivery",
+        "C": "contact_courier_depot",
+        "D": "close_case",
+        "E": "dispatch_replacement_goods"
+      },
+      "gold_pre_action": "schedule_redelivery",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "shipment_status",
+      "gold_terminal_state": "returned_to_sender",
+      "post_action_mapping": {
+        "A": "correct_destination_record",
+        "B": "continue_monitoring",
+        "C": "close_case",
+        "D": "schedule_redelivery",
+        "E": "contact_courier_depot"
+      },
+      "gold_post_action": "correct_destination_record",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-77": {
+      "scenario_id": "clinic_1to2_b0_s05",
+      "causal_pair_id": "clinic:1-2:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "request_authorization",
+        "B": "offer_private_payment",
+        "C": "contact_specialist_office",
+        "D": "close_case",
+        "E": "book_without_authorization"
+      },
+      "gold_pre_action": "request_authorization",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "authorization_status",
+      "gold_terminal_state": "declined",
+      "post_action_mapping": {
+        "A": "request_authorization",
+        "B": "close_case",
+        "C": "obtain_qualifying_referral",
+        "D": "contact_specialist_office",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "obtain_qualifying_referral",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-78": {
+      "scenario_id": "utility_12to20_b0_s05",
+      "causal_pair_id": "utility:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "submit_reading",
+        "B": "review_tariff_history",
+        "C": "book_engineer_visit",
+        "D": "close_case",
+        "E": "issue_refund"
+      },
+      "gold_pre_action": "submit_reading",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "reading_status",
+      "gold_terminal_state": "flagged_incomplete",
+      "post_action_mapping": {
+        "A": "submit_reading",
+        "B": "register_all_supply_points",
+        "C": "review_tariff_history",
+        "D": "close_case",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "register_all_supply_points",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-79": {
+      "scenario_id": "permit_12to20_b1_s05",
+      "causal_pair_id": "permit:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "issue_temporary_permit",
+        "B": "reconfirm_vehicle_plate",
+        "C": "escalate_to_appeals",
+        "D": "submit_permit_application",
+        "E": "close_case"
+      },
+      "gold_pre_action": "submit_permit_application",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "permit_status",
+      "gold_terminal_state": "issued",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "submit_permit_application",
+        "C": "reconfirm_vehicle_plate",
+        "D": "continue_monitoring",
+        "E": "supply_alternative_proof"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "A"
+    },
+    "ANNOTATOR_01-80": {
+      "scenario_id": "utility_1to2_b1_s05",
+      "causal_pair_id": "utility:1-2:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "review_tariff_history",
+        "B": "submit_reading",
+        "C": "close_case",
+        "D": "book_engineer_visit",
+        "E": "issue_refund"
+      },
+      "gold_pre_action": "submit_reading",
+      "gold_pre_action_label": "B",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "reading_status",
+      "gold_terminal_state": "accepted",
+      "post_action_mapping": {
+        "A": "register_all_supply_points",
+        "B": "submit_reading",
+        "C": "close_case",
+        "D": "review_tariff_history",
+        "E": "continue_monitoring"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "C"
+    },
+    "ANNOTATOR_01-81": {
+      "scenario_id": "motor_5to8_b1_s05",
+      "causal_pair_id": "motor:5-8:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "close_case",
+        "B": "authorise_immediate_repair",
+        "C": "declare_total_loss",
+        "D": "lodge_claim",
+        "E": "collect_witness_statement"
+      },
+      "gold_pre_action": "lodge_claim",
+      "gold_pre_action_label": "D",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "claim_progress",
+      "gold_terminal_state": "settled",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "close_case",
+        "C": "collect_witness_statement",
+        "D": "align_policy_records",
+        "E": "lodge_claim"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "B"
+    },
+    "ANNOTATOR_01-82": {
+      "scenario_id": "tenancy_12to20_b1_s05",
+      "causal_pair_id": "tenancy:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "send_portable_heaters",
+        "B": "authorise_full_replacement",
+        "C": "rehouse_tenant",
+        "D": "close_case",
+        "E": "dispatch_maintenance_visit"
+      },
+      "gold_pre_action": "dispatch_maintenance_visit",
+      "gold_pre_action_label": "E",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "work_order_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "send_portable_heaters",
+        "C": "dispatch_maintenance_visit",
+        "D": "reissue_access_authority",
+        "E": "close_case"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "E"
+    },
+    "ANNOTATOR_01-83": {
+      "scenario_id": "router_12to20_b1_s05",
+      "causal_pair_id": "router:12-20:s05",
+      "causal_branch": "aligned",
+      "pre_action_mapping": {
+        "A": "run_maintenance",
+        "B": "close_case",
+        "C": "repeat_power_cycle",
+        "D": "replace_hardware",
+        "E": "inspect_upstream_service"
+      },
+      "gold_pre_action": "run_maintenance",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "aligned",
+      "outcome_variable": "firmware_status",
+      "gold_terminal_state": "completed",
+      "post_action_mapping": {
+        "A": "continue_monitoring",
+        "B": "inspect_persistent_state",
+        "C": "run_maintenance",
+        "D": "close_case",
+        "E": "repeat_power_cycle"
+      },
+      "gold_post_action": "close_case",
+      "gold_post_action_label": "D"
+    },
+    "ANNOTATOR_01-84": {
+      "scenario_id": "flight_12to20_b0_s05",
+      "causal_pair_id": "flight:12-20:s05",
+      "causal_branch": "misaligned",
+      "pre_action_mapping": {
+        "A": "enable_itinerary_monitoring",
+        "B": "close_case",
+        "C": "change_departing_segment",
+        "D": "offer_service_recovery",
+        "E": "protect_onward_segment"
+      },
+      "gold_pre_action": "enable_itinerary_monitoring",
+      "gold_pre_action_label": "A",
+      "gold_causal_alignment": "misaligned",
+      "outcome_variable": "connection_status",
+      "gold_terminal_state": "missed",
+      "post_action_mapping": {
+        "A": "close_case",
+        "B": "protect_onward_segment",
+        "C": "change_departing_segment",
+        "D": "offer_service_recovery",
+        "E": "enable_itinerary_monitoring"
+      },
+      "gold_post_action": "protect_onward_segment",
+      "gold_post_action_label": "B"
+    }
+  }
+}

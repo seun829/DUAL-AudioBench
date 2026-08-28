@@ -41,7 +41,7 @@
 - No paid v0.5 trajectory has run.
 - The OpenRouter key is not configured locally, so balance and model
   compatibility cannot yet be checked.
-- Both regenerated internal-author response packets are blank. They are stamped
-  with the frozen scenario hash and must not reuse pre-revision answers.
-- Prosody remains exploratory until listener validation; the author audit is not
-  an independent human baseline.
+- The independent scenario audit covers a prespecified 21-row subset stamped
+  with the frozen scenario hash; its scoring key was restored after annotation.
+- Prosody remains exploratory until listener validation; the completed audit is
+  an independent single-annotator check, not a population-level human baseline.

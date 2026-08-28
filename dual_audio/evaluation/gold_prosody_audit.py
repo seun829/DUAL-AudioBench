@@ -1,11 +1,11 @@
-"""Export and score a one-author prosody audit on the scenario gold set.
+"""Export and score an independent prosody audit on the scenario audit set.
 
 Usage:
   python -m dual_audio.evaluation.gold_prosody_audit export \
-      data/scenarios_v05 paper_results/v05/internal_audit author_01
+      data/scenarios_v05 paper_results/v05/internal_audit annotator_01
 
   python -m dual_audio.evaluation.gold_prosody_audit report \
-      paper_results/v05/internal_audit author_01
+      paper_results/v05/internal_audit annotator_01
 """
 
 from __future__ import annotations
@@ -119,10 +119,10 @@ def export_packet(tasks_dir: str, audit_root: str, auditor: str) -> None:
     items = list(gold_items)
     stable_rng(auditor, "prosody_item_order").shuffle(items)
     lines = [
-        f"# DUAL-AudioBench internal prosody audit ({auditor})",
+        f"# DUAL-AudioBench independent prosody audit ({auditor})",
         "",
         "This packet contains one matched audio pair for each scenario in the",
-        f"prespecified {len(items)}-scenario author gold set. The words and voice",
+        f"prespecified {len(items)}-scenario independent-audit set. The words and voice",
         "are identical within a pair; only pitch and speaking rate differ.",
         "Listen without opening the private key or scenario files.",
         "",
@@ -137,7 +137,7 @@ def export_packet(tasks_dir: str, audit_root: str, auditor: str) -> None:
     key: dict[str, Any] = {
         "auditor": auditor,
         "gold_set_size": len(items),
-        "selection": "both prosody variants for every completed author-gold scenario",
+        "selection": "both prosody variants for every completed independent-audit scenario",
         "items": {},
     }
     response_rows = []
@@ -242,6 +242,7 @@ def report(audit_root: str, auditor: str) -> None:
             encoding="utf-8"
         )
     )
+    reported_auditor = str(key.get("auditor", auditor))
     responses_path = root / "public" / f"{slug}_prosody_responses.csv"
     with responses_path.open(encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -287,7 +288,7 @@ def report(audit_root: str, auditor: str) -> None:
 
     n = len(rows)
     metrics = {
-        "auditor": auditor,
+        "auditor": reported_auditor,
         "n_pairs": n,
         "n_clips": 2 * n,
         "category_identification": category_correct / category_total,
@@ -302,9 +303,9 @@ def report(audit_root: str, auditor: str) -> None:
         ],
     }
     lines = [
-        "# Internal prosody audit report",
+        "# Independent prosody audit report",
         "",
-        f"- Auditor: {auditor}",
+        f"- Auditor: {reported_auditor}",
         f"- Gold-set pairs: {n} ({2*n} clips)",
         f"- Relative-intensity accuracy: {metrics['relative_intensity_accuracy']:.1%}",
         f"- Intended-tone accuracy: {metrics['category_identification']:.1%}",
@@ -312,7 +313,7 @@ def report(audit_root: str, auditor: str) -> None:
         f"- Both clips clear: {metrics['both_clips_clear']:.1%}",
         f"- Mean confidence: {metrics['mean_confidence']:.2f}/5",
         "",
-        "This is a one-author manipulation check, not inter-listener agreement.",
+        "This is an independent single-listener check, not inter-listener agreement.",
     ]
     (root / "prosody_audit_report.md").write_text(
         "\n".join(lines) + "\n", encoding="utf-8"
